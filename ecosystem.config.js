@@ -43,4 +43,18 @@ module.exports = {
       time: true,
     },
   ],
+  deploy: {
+    production: {
+      user: "root",
+      host: "185.188.249.171",
+      ref: "origin/main",
+      repo: "git@github.com:gwang08/VortexBotVN.git",
+      path: "/root/apps/vortexbotvn",
+      "pre-deploy-local": "",
+      "post-deploy":
+        "source ~/.bashrc && source ~/.nvm/nvm.sh && nvm use node && npm ci && npm run build && pm2 reload ecosystem.config.js --env production && pm2 save",
+      "pre-setup": "mkdir -p /root/apps/vortexbotvn",
+      ssh_options: "StrictHostKeyChecking=no",
+    },
+  },
 };
