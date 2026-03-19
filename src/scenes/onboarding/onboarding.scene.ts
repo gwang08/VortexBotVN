@@ -35,7 +35,7 @@ export class OnboardingScene {
       currentStep: 'Chào mừng - hỏi mục tiêu lợi nhuận',
       userName: this.botService.getDisplayName(ctx),
       templateText:
-        'Xin chào! Trước tiên, bạn muốn tạo ra bao nhiêu lợi nhuận mỗi tháng với VortexBot? (Tính bằng đô la)',
+        'Xin chào! Trước tiên, bạn muốn tạo ra bao nhiêu lợi nhuận mỗi tháng với BMR AI Trading? (Tính bằng đô la)',
     });
     await ctx.reply(text);
   }
