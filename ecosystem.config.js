@@ -45,15 +45,16 @@ module.exports = {
   ],
   deploy: {
     production: {
-      user: "root",
-      host: "185.188.249.171",
+      user: "gwang",
+      host: "bore.mated.dev",
+      port: "22005",
       ref: "origin/main",
-      repo: "git@github.com:gwang08/VortexBotVN.git",
-      path: "/root/apps/vortexbotvn",
+      repo: "https://github.com/gwang08/VortexBotVN.git",
+      path: "/home/gwang/apps/vortexbotvn",
       "pre-deploy-local": "",
       "post-deploy":
-        "source ~/.bashrc && source ~/.nvm/nvm.sh && nvm use node && npm ci && npm run build && pm2 reload ecosystem.config.js --env production && pm2 save",
-      "pre-setup": "mkdir -p /root/apps/vortexbotvn",
+        "source ~/.bashrc && source ~/.nvm/nvm.sh && nvm use 20 && npm ci && npm install --save-dev @swc/cli @swc/core && npx nest build --builder swc && pm2 reload ecosystem.config.js && pm2 save",
+      "pre-setup": "mkdir -p /home/gwang/apps/vortexbotvn",
       ssh_options: "StrictHostKeyChecking=no",
     },
   },
