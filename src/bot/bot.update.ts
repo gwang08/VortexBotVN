@@ -1,13 +1,13 @@
-import { Update, Start, On, Ctx, Command } from 'nestjs-telegraf';
+import { Update, Start, On, Ctx } from 'nestjs-telegraf';
 import type { BotContext } from '../common/interfaces/session.interface';
-import { GeminiService } from '../gemini/gemini.service';
 import { BotService } from './bot.service';
+import { AdminService } from '../admin/admin.service';
 
 @Update()
 export class BotUpdate {
   constructor(
-    private geminiService: GeminiService,
     private botService: BotService,
+    private adminService: AdminService,
   ) {}
 
   @Start()
@@ -31,12 +31,31 @@ export class BotUpdate {
     const message = (ctx.message as any)?.text;
     if (!message) return;
 
-    const response = await this.geminiService.handleFreeText({
-      userMessage: message,
-      currentStep: 'Không có flow nào đang hoạt động - người dùng nên /start',
-      userName: this.botService.getDisplayName(ctx),
-      availableActions: ['Gõ /start để bắt đầu'],
-    });
-    await ctx.reply(response);
+    const chatId = ctx.chat?.id;
+    if (!chatId) return;
+
+    // Admin reply tin nhắn đã forward từ user
+    if (this.adminService.isAdmin(chatId)) {
+      const replyTo = (ctx.message as any)?.reply_to_message?.text;
+      if (!replyTo) {
+        await ctx.reply('↩️ Reply vào tin nhắn của user để trả lời.');
+        return;
+      }
+
+      const userId = this.adminService.extractUserIdFromMessage(replyTo);
+      if (!userId) {
+        await ctx.reply('⚠️ Không tìm thấy User ID trong tin nhắn.');
+        return;
+      }
+
+      const sent = await this.adminService.sendReplyToUser(userId, message);
+      await ctx.reply(sent ? '✅ Đã gửi.' : '❌ Gửi thất bại.');
+      return;
+    }
+
+    // User gửi tin nhắn → forward tới admin
+    const displayName = this.botService.getDisplayName(ctx);
+    await this.adminService.forwardUserMessage(ctx.from!.id, displayName, message);
+    await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');
   }
 }
