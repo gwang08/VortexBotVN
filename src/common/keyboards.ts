@@ -12,8 +12,8 @@ export const mainMenuKeyboard = () =>
 // CopyTrading Step 1
 export const ctStep1Keyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('✅ Tôi đã có tài khoản Pu Prime', CALLBACKS.alreadyHavePuPrime)],
-    [Markup.button.callback('➡️ Bước Tiếp Theo 2', CALLBACKS.ctNextStep2)],
+    [Markup.button.callback('✅ Tôi đã có tài khoản PU Prime', CALLBACKS.alreadyHavePuPrime)],
+    [Markup.button.callback('➡️ Bước 2', CALLBACKS.ctNextStep2)],
     [Markup.button.callback('💬 Liên Hệ Admin', CALLBACKS.contactAdmin)],
   ]);
 
@@ -26,13 +26,13 @@ export const ctIbKeyboard = () =>
 // CopyTrading Step 2 → 3
 export const ctStep2Keyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('➡️ Bước Tiếp Theo 3', CALLBACKS.ctNextStep3)],
+    [Markup.button.callback('➡️ Bước 3', CALLBACKS.ctNextStep3)],
   ]);
 
 // CopyTrading Step 3 → 4
 export const ctStep3Keyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('➡️ Bước Tiếp Theo 4', CALLBACKS.ctNextStep4)],
+    [Markup.button.callback('➡️ Bước 4', CALLBACKS.ctNextStep4)],
   ]);
 
 // CopyTrading Step 4 → Final
@@ -45,7 +45,7 @@ export const ctStep4Keyboard = () =>
 export const sigStep1Keyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('✅ Tôi đã tạo tài khoản xong', CALLBACKS.sigCreatedAccount)],
-    [Markup.button.callback('✅ Tôi đã có tài khoản Pu Prime', CALLBACKS.sigAlreadyHaveAccount)],
+    [Markup.button.callback('✅ Tôi đã có tài khoản PU Prime', CALLBACKS.sigAlreadyHaveAccount)],
     [Markup.button.callback('💬 Liên Hệ Admin', CALLBACKS.contactAdmin)],
   ]);
 

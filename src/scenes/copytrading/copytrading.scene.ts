@@ -225,7 +225,7 @@ export class CopyTradingScene {
 
     const actions =
       ctx.session.currentStep === 'copytrading:step1'
-        ? ['Tôi đã có Pu Prime', 'Bước Tiếp Theo 2', 'Liên Hệ Admin']
+        ? ['Tôi đã có PU Prime', 'Bước 2', 'Liên Hệ Admin']
         : ['Sử dụng các nút bên trên để tiếp tục'];
 
     const response = await this.geminiService.handleFreeText({
