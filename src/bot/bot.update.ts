@@ -1,4 +1,4 @@
-import { Update, Start, On, Ctx } from 'nestjs-telegraf';
+import { Update, Start, Use, Ctx } from 'nestjs-telegraf';
 import type { BotContext } from '../common/interfaces/session.interface';
 import { BotService } from './bot.service';
 import { AdminService } from '../admin/admin.service';
@@ -10,29 +10,24 @@ export class BotUpdate {
     private adminService: AdminService,
   ) {}
 
-  @Start()
-  async onStart(@Ctx() ctx: BotContext) {
-    try {
-      await ctx.scene.leave();
-    } catch {}
-
-    ctx.session.profitTarget = undefined;
-    ctx.session.selectedFlow = undefined;
-    ctx.session.email = undefined;
-    ctx.session.awaitingEmail = false;
-    ctx.session.awaitingProfitTarget = false;
-    ctx.session.currentStep = undefined;
-
-    await ctx.scene.enter('onboarding');
-  }
-
-  @On('text')
-  async onText(@Ctx() ctx: BotContext) {
+  /**
+   * Middleware chạy TRƯỚC scenes - bắt admin reply
+   * và tin nhắn tự do của user trước khi scene xử lý.
+   */
+  @Use()
+  async middleware(@Ctx() ctx: BotContext, next: () => Promise<void>) {
     const message = (ctx.message as any)?.text;
-    if (!message) return;
-
     const chatId = ctx.chat?.id;
-    if (!chatId) return;
+
+    // Chỉ xử lý tin nhắn text
+    if (!message || !chatId) {
+      return next();
+    }
+
+    // Cho commands đi qua bình thường
+    if (message.startsWith('/')) {
+      return next();
+    }
 
     // Admin reply tin nhắn đã forward từ user
     if (this.adminService.isAdmin(chatId)) {
@@ -53,9 +48,30 @@ export class BotUpdate {
       return;
     }
 
-    // User gửi tin nhắn → forward tới admin
+    // User đang trong scene → để scene xử lý
+    if (ctx.session?.currentStep || ctx.session?.awaitingEmail || ctx.session?.awaitingProfitTarget) {
+      return next();
+    }
+
+    // User gửi tin nhắn tự do (không trong scene) → forward tới admin
     const displayName = this.botService.getDisplayName(ctx);
     await this.adminService.forwardUserMessage(ctx.from!.id, displayName, message);
     await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');
+  }
+
+  @Start()
+  async onStart(@Ctx() ctx: BotContext) {
+    try {
+      await ctx.scene.leave();
+    } catch {}
+
+    ctx.session.profitTarget = undefined;
+    ctx.session.selectedFlow = undefined;
+    ctx.session.email = undefined;
+    ctx.session.awaitingEmail = false;
+    ctx.session.awaitingProfitTarget = false;
+    ctx.session.currentStep = undefined;
+
+    await ctx.scene.enter('onboarding');
   }
 }

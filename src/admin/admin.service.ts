@@ -46,9 +46,9 @@ export class AdminService {
     }
   }
 
-  /** Trích xuất userId từ tin nhắn đã forward */
+  /** Trích xuất userId từ tin nhắn đã forward - match cả "(ID: xxx)" và "User ID: xxx" */
   extractUserIdFromMessage(text: string): number | null {
-    const match = text.match(/\(ID:\s*(\d+)\)/);
+    const match = text.match(/\(ID:\s*(\d+)\)/) || text.match(/User ID:\s*(\d+)/);
     return match ? parseInt(match[1], 10) : null;
   }
 
