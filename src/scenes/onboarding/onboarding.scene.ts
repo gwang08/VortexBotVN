@@ -130,7 +130,7 @@ export class OnboardingScene {
     await ctx.answerCbQuery();
     await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
     await ctx.reply(
-      '💎 Hỗ Trợ VIP\n\nBạn đã được phân bổ quản lý tài khoản riêng.\n\n👤 Liên hệ: @Kenfintech\n\nHãy liên hệ trực tiếp để được tư vấn 1-1!',
+      '💎 Hỗ Trợ VIP\n\nBạn đã được phân bổ quản lý tài khoản riêng.\n\n👤 Liên hệ: @Vitaperry để được tư vấn 1-1!',
     );
   }
 
