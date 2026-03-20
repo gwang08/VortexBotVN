@@ -3,6 +3,7 @@ import type { BotContext } from '../common/interfaces/session.interface';
 import { BotService } from './bot.service';
 import { AdminService } from '../admin/admin.service';
 import { GoogleSheetsService } from '../google-sheets/google-sheets.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Update()
 export class BotUpdate {
@@ -10,6 +11,7 @@ export class BotUpdate {
     private botService: BotService,
     private adminService: AdminService,
     private googleSheetsService: GoogleSheetsService,
+    private prisma: PrismaService,
   ) {}
 
   /**
@@ -127,6 +129,20 @@ export class BotUpdate {
     const startPayload = (ctx.message as any)?.text?.split(' ')[1] ?? '';
     const source = startPayload.startsWith('ref_') ? startPayload.slice(4) : '';
 
+    // Upsert User record in DB
+    if (ctx.from) {
+      await this.prisma.user.upsert({
+        where: { id: BigInt(ctx.from.id) },
+        update: { username: ctx.from.username, firstName: ctx.from.first_name },
+        create: {
+          id: BigInt(ctx.from.id),
+          username: ctx.from.username,
+          firstName: ctx.from.first_name,
+          source: source || null,
+        },
+      });
+    }
+
     if (source) {
       const displayName = this.botService.getDisplayName(ctx);
       await this.googleSheetsService.appendRow({
@@ -143,14 +159,14 @@ export class BotUpdate {
 
   /** Tạo tracking link với check trùng */
   private async createTrackingLink(ctx: BotContext, source: string): Promise<void> {
-    if (this.adminService.hasTrackingLink(source)) {
+    if (await this.adminService.hasTrackingLink(source)) {
       const botInfo = await ctx.telegram.getMe();
       const link = `https://t.me/${botInfo.username}?start=ref_${source}`;
       await ctx.reply(`⚠️ Source "${source}" đã tồn tại!\n\n🔗 ${link}\n\nVui lòng dùng tên khác.`);
       return;
     }
 
-    this.adminService.saveTrackingLink(source);
+    await this.adminService.saveTrackingLink(source);
     const botInfo = await ctx.telegram.getMe();
     const link = `https://t.me/${botInfo.username}?start=ref_${source}`;
     await ctx.reply(
@@ -160,7 +176,7 @@ export class BotUpdate {
 
   /** Hiện tất cả tracking links đã tạo */
   private async showTrackingLinks(ctx: BotContext): Promise<void> {
-    const links = this.adminService.getTrackingLinks();
+    const links = await this.adminService.getTrackingLinks();
     if (links.length === 0) {
       await ctx.reply('📭 Chưa có tracking link nào.\n\nDùng /newlink <source> để tạo.');
       return;
