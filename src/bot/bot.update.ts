@@ -48,6 +48,15 @@ export class BotUpdate {
       return;
     }
 
+    // User reply vào tin nhắn bot → forward tới admin như live chat
+    const replyToBot = (ctx.message as any)?.reply_to_message;
+    if (replyToBot && replyToBot.from?.is_bot) {
+      const displayName = this.botService.getDisplayName(ctx);
+      await this.adminService.forwardUserMessage(ctx.from!.id, displayName, message);
+      await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');
+      return;
+    }
+
     // User đang trong scene → để scene xử lý
     if (ctx.session?.currentStep || ctx.session?.awaitingEmail || ctx.session?.awaitingProfitTarget) {
       return next();

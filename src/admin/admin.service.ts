@@ -38,7 +38,7 @@ export class AdminService {
   /** Gửi reply của admin tới user */
   async sendReplyToUser(userId: number, text: string): Promise<boolean> {
     try {
-      await this.bot.telegram.sendMessage(userId, `💬 Admin:\n${text}`);
+      await this.bot.telegram.sendMessage(userId, text);
       return true;
     } catch (error) {
       this.logger.error(`Failed to send reply to user ${userId}`, error);
@@ -48,7 +48,10 @@ export class AdminService {
 
   /** Trích xuất userId từ tin nhắn đã forward - match cả "(ID: xxx)" và "User ID: xxx" */
   extractUserIdFromMessage(text: string): number | null {
-    const match = text.match(/\(ID:\s*(\d+)\)/) || text.match(/User ID:\s*(\d+)/);
+    const match =
+      text.match(/\(ID:\s*(\d+)\)/) ||
+      text.match(/User ID:\s*(\d+)/) ||
+      text.match(/ID:\s*(\d+)/);
     return match ? parseInt(match[1], 10) : null;
   }
 
