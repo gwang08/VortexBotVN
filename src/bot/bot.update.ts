@@ -57,12 +57,12 @@ export class BotUpdate {
       return;
     }
 
-    // User đang trong scene → để scene xử lý
-    if (ctx.session?.currentStep || ctx.session?.awaitingEmail || ctx.session?.awaitingProfitTarget) {
+    // User đang nhập text (email/profit) → để scene xử lý
+    if (ctx.session?.awaitingEmail || ctx.session?.awaitingProfitTarget) {
       return next();
     }
 
-    // User gửi tin nhắn tự do (không trong scene) → forward tới admin
+    // Tất cả tin nhắn tự do khác → forward tới admin
     const displayName = this.botService.getDisplayName(ctx);
     await this.adminService.forwardUserMessage(ctx.from!.id, displayName, message);
     await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');
