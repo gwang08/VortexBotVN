@@ -71,7 +71,7 @@ export class FollowUpService implements OnModuleInit {
         {
           reply_markup: {
             inline_keyboard: [
-              [{ text: '💰 Nạp Tiền Ngay', url: 'https://www.puprime.com/campaign?cs=BMRMasterTrader' }],
+              [{ text: '💰 Nạp Tiền Ngay', url: 'https://puprime.pro/forex-trading-account/?cs=bmrcopytrade' }],
             ],
           },
         },
@@ -89,7 +89,7 @@ export class FollowUpService implements OnModuleInit {
         {
           reply_markup: {
             inline_keyboard: [
-              [{ text: '🚀 Bắt Đầu Ngay', url: 'https://www.puprime.com/campaign?cs=BMRMasterTrader' }],
+              [{ text: '🚀 Bắt Đầu Ngay', url: 'https://puprime.pro/forex-trading-account/?cs=bmrcopytrade' }],
             ],
           },
         },
