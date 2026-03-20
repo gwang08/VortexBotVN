@@ -67,7 +67,14 @@ export class FollowUpService implements OnModuleInit {
       const pct = (Math.random() * 3 + 2).toFixed(1);
       await this.bot.telegram.sendMessage(
         userId,
-        `📊 Bot hôm nay +${pct}%\n\nBạn vẫn chưa bắt đầu.\n\n👉 Nạp tiền ngay để tham gia lợi nhuận`,
+        `📊 Bot hôm nay +${pct}%\n\nBạn vẫn chưa bắt đầu.`,
+        {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '💰 Nạp Tiền Ngay', url: 'https://www.puprime.com/campaign?cs=BMRMasterTrader' }],
+            ],
+          },
+        },
       );
     } catch (error) {
       this.logger.error(`Failed to send 6h message to ${userId}`, error);
@@ -78,7 +85,14 @@ export class FollowUpService implements OnModuleInit {
     try {
       await this.bot.telegram.sendMessage(
         userId,
-        `Đa số người dùng đã bắt đầu rồi.\n\nĐừng bỏ lỡ phiên giao dịch tiếp theo.\n\n👉 Bắt đầu ngay`,
+        `Đa số người dùng đã bắt đầu rồi.\n\nĐừng bỏ lỡ phiên giao dịch tiếp theo.`,
+        {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '🚀 Bắt Đầu Ngay', url: 'https://www.puprime.com/campaign?cs=BMRMasterTrader' }],
+            ],
+          },
+        },
       );
     } catch (error) {
       this.logger.error(`Failed to send 24h message to ${userId}`, error);
