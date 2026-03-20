@@ -37,13 +37,7 @@ export class OnboardingScene {
     ctx.session.awaitingProfitTarget = true;
     ctx.session.currentStep = 'onboarding:profit_question';
 
-    const text = await this.geminiService.generateResponse({
-      currentStep: 'Chào mừng - hỏi mục tiêu lợi nhuận',
-      userName: this.botService.getDisplayName(ctx),
-      templateText:
-        'Xin chào! Trước tiên, bạn muốn tạo ra bao nhiêu lợi nhuận mỗi tháng với BMR AI Trading? (Tính bằng đô la)',
-    });
-    await ctx.reply(text);
+    await ctx.reply('Xin chào! Trước tiên, bạn muốn tạo ra bao nhiêu lợi nhuận mỗi tháng với BMR AI Trading? (Tính bằng đô la)');
   }
 
   @On('text')
@@ -55,13 +49,7 @@ export class OnboardingScene {
       const amount = parseFloat(message.replace(/[^0-9.]/g, ''));
 
       if (isNaN(amount) || amount <= 0) {
-        const response = await this.geminiService.handleFreeText({
-          userMessage: message,
-          currentStep: 'Đang chờ số tiền mục tiêu lợi nhuận',
-          userName: this.botService.getDisplayName(ctx),
-          availableActions: ['Nhập số tiền đô la (ví dụ: 1000, 5000)'],
-        });
-        await ctx.reply(response);
+        await ctx.reply('Vui lòng nhập số tiền hợp lệ (ví dụ: 1000, 5000)');
         return;
       }
 
