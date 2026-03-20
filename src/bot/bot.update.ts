@@ -26,7 +26,12 @@ export class BotUpdate {
       return callNext();
     }
 
-    // Cho commands đi qua bình thường
+    // Handle /start directly since next() may not work in cluster mode
+    if (message === '/start') {
+      return this.onStart(ctx);
+    }
+
+    // Other commands → pass through
     if (message.startsWith('/')) {
       return callNext();
     }
