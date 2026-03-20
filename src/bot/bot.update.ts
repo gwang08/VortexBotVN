@@ -19,14 +19,16 @@ export class BotUpdate {
     const message = (ctx.message as any)?.text;
     const chatId = ctx.chat?.id;
 
+    const callNext = typeof next === 'function' ? next : () => Promise.resolve();
+
     // Chỉ xử lý tin nhắn text
     if (!message || !chatId) {
-      return next();
+      return callNext();
     }
 
     // Cho commands đi qua bình thường
     if (message.startsWith('/')) {
-      return next();
+      return callNext();
     }
 
     // Admin reply tin nhắn đã forward từ user
@@ -59,7 +61,7 @@ export class BotUpdate {
 
     // User đang nhập text (email/profit) → để scene xử lý
     if (ctx.session?.awaitingEmail || ctx.session?.awaitingProfitTarget) {
-      return next();
+      return callNext();
     }
 
     // Tất cả tin nhắn tự do khác → forward tới admin
