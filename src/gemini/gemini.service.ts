@@ -85,8 +85,8 @@ Trả lời ngắn gọn bằng tiếng Việt, xác nhận những gì người
     }
   }
 
-  async generateDepositRecommendation(profitTarget: number, userName?: string): Promise<string> {
-    const templateText = this.getDepositTemplate(profitTarget);
+  async generateDepositRecommendation(profitTarget: number, userName?: string, isVip?: boolean): Promise<string> {
+    const templateText = this.getDepositTemplate(profitTarget, isVip);
 
     if (!this.model) {
       return templateText;
@@ -111,7 +111,8 @@ QUY TẮC:
   TÍN HIỆU -> Theo dõi và bạn có thể kiếm tiền không giới hạn, học Trading - Kỹ năng thu nhập cao nhất thế kỷ
 - Giữ dưới 6 câu
 - Tự nhiên và thân thiện, dùng tiếng Việt
-- TUYỆT ĐỐI KHÔNG dùng markdown (không **, không *, không #, không backtick). Chỉ dùng text thuần.`;
+- TUYỆT ĐỐI KHÔNG dùng markdown (không **, không *, không #, không backtick). Chỉ dùng text thuần.
+${isVip ? '- Người dùng là VIP (vốn trên $5,000). Cuối câu trả lời, thêm: "Với số vốn trên $5,000, bạn là khách VIP! Bấm Hỗ Trợ VIP bên dưới để được tư vấn riêng 1-1."' : ''}`;
 
       const result = await this.model.generateContent(prompt);
       return result.response.text() || templateText;
@@ -182,17 +183,22 @@ User "${userName || 'trader'}" hỏi: "${userMessage}"`;
     }
   }
 
-  private getDepositTemplate(profitTarget: number): string {
+  private getDepositTemplate(profitTarget: number, isVip?: boolean): string {
     const minDeposit = Math.round(profitTarget / 0.8);
     const maxDeposit = Math.round(profitTarget / 0.5);
     const recommended = Math.min(profitTarget, maxDeposit);
 
-    return `Với mục tiêu $${profitTarget.toLocaleString()}/tháng của bạn, chúng tôi khuyến nghị bắt đầu với khoản nạp khoảng $${minDeposit.toLocaleString()} - $${recommended.toLocaleString()}. Với CopyTrading, bạn có thể tạo ra lợi nhuận 50-80% hàng tháng trên khoản đầu tư.
+    const base = `Với mục tiêu $${profitTarget.toLocaleString()}/tháng của bạn, chúng tôi khuyến nghị bắt đầu với khoản nạp khoảng $${minDeposit.toLocaleString()} - $${recommended.toLocaleString()}. Với CopyTrading, bạn có thể tạo ra lợi nhuận 50-80% hàng tháng trên khoản đầu tư.
 
 Vậy bạn muốn sử dụng dịch vụ nào cùng chúng tôi, TÍN HIỆU hay CopyTrading?
 
 CopyTrading -> Tạo lợi nhuận 50-80% hàng tháng
 
 TÍN HIỆU -> Theo dõi và bạn có thể kiếm tiền không giới hạn, học Trading - Kỹ năng thu nhập cao nhất thế kỷ`;
+
+    if (isVip) {
+      return base + '\n\nVới số vốn trên $5,000, bạn là khách VIP! Bấm Hỗ Trợ VIP bên dưới để được tư vấn riêng 1-1.';
+    }
+    return base;
   }
 }
