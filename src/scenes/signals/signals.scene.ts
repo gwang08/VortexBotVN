@@ -160,12 +160,9 @@ export class SignalsScene {
       return;
     }
 
-    const response = await this.geminiService.handleFreeText({
-      userMessage: message,
-      currentStep: ctx.session.currentStep || 'Flow Tín Hiệu',
-      userName: this.botService.getDisplayName(ctx),
-      availableActions: ['Sử dụng các nút bên trên để tiếp tục'],
-    });
-    await ctx.reply(response);
+    // User gõ text tự do ở bước button → forward cho admin
+    const displayName = this.botService.getDisplayName(ctx);
+    await this.adminService.forwardUserMessage(ctx.from!.id, displayName, message);
+    await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');
   }
 }

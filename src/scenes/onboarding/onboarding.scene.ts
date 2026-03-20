@@ -71,13 +71,10 @@ export class OnboardingScene {
       return;
     }
 
-    const response = await this.geminiService.handleFreeText({
-      userMessage: message,
-      currentStep: 'Menu chính - chọn giữa CopyTrading, Tín Hiệu, hoặc Liên Hệ Admin',
-      userName: this.botService.getDisplayName(ctx),
-      availableActions: ['CopyTrading', 'Tín Hiệu', 'Liên Hệ Admin'],
-    });
-    await ctx.reply(response);
+    // User gõ text tự do ở bước button → forward cho admin
+    const displayName = this.botService.getDisplayName(ctx);
+    await this.adminService.forwardUserMessage(ctx.from!.id, displayName, message);
+    await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');
   }
 
   @Action(CALLBACKS.copytrading)

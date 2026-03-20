@@ -223,17 +223,9 @@ export class CopyTradingScene {
       }
     }
 
-    const actions =
-      ctx.session.currentStep === 'copytrading:step1'
-        ? ['Tôi đã có PU Prime', 'Bước 2', 'Liên Hệ Admin']
-        : ['Sử dụng các nút bên trên để tiếp tục'];
-
-    const response = await this.geminiService.handleFreeText({
-      userMessage: message,
-      currentStep: ctx.session.currentStep || 'Flow CopyTrading',
-      userName: this.botService.getDisplayName(ctx),
-      availableActions: actions,
-    });
-    await ctx.reply(response);
+    // User gõ text tự do ở bước button → forward cho admin
+    const displayName = this.botService.getDisplayName(ctx);
+    await this.adminService.forwardUserMessage(ctx.from!.id, displayName, message);
+    await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');
   }
 }
