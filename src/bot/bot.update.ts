@@ -97,8 +97,8 @@ export class BotUpdate {
       return;
     }
 
-    // User đang nhập text (email/profit) → để scene xử lý
-    if (ctx.session?.awaitingEmail || ctx.session?.awaitingProfitTarget) {
+    // User đang nhập text (email/profit) hoặc AI chat → để scene xử lý
+    if (ctx.session?.awaitingEmail || ctx.session?.awaitingProfitTarget || ctx.session?.inAiChat) {
       return callNext();
     }
 
@@ -120,6 +120,8 @@ export class BotUpdate {
     ctx.session.awaitingEmail = false;
     ctx.session.awaitingProfitTarget = false;
     ctx.session.currentStep = undefined;
+    ctx.session.isVip = undefined;
+    ctx.session.inAiChat = false;
 
     // Extract deep link source from /start ref_<source>
     const startPayload = (ctx.message as any)?.text?.split(' ')[1] ?? '';

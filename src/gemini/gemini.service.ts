@@ -11,7 +11,7 @@ export class GeminiService {
     const apiKey = this.configService.get<string>('GEMINI_API_KEY');
     if (apiKey) {
       const genAI = new GoogleGenerativeAI(apiKey);
-      this.model = genAI.getGenerativeModel({ model: 'gemini-disabled' });
+      this.model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
     }
   }
 
@@ -115,6 +115,43 @@ QUY TẮC:
       return result.response.text() || templateText;
     } catch {
       return templateText;
+    }
+  }
+
+  /**
+   * AI support chat - trả lời câu hỏi user về dịch vụ BMR Trading.
+   */
+  async chatSupport(userMessage: string, userName?: string): Promise<string> {
+    if (!this.model) {
+      return 'Đội hỗ trợ sẽ liên hệ bạn sớm. Gõ /human để nói chuyện với nhân viên.';
+    }
+
+    try {
+      const prompt = `Bạn là trợ lý AI hỗ trợ của BMR Trading. Bạn giúp người dùng về dịch vụ CopyTrading và Signals trên sàn PU Prime.
+
+VỀ BMR TRADING:
+- Cung cấp CopyTrading (tự động copy lệnh, tiềm năng lợi nhuận 50-80%/tháng) và Signals (nhóm tín hiệu giao dịch)
+- Sử dụng sàn PU Prime
+- CopyTrading: user nạp tiền, lệnh được copy tự động từ trader chuyên nghiệp
+- Signals: user vào nhóm tín hiệu, nhận signal mua/bán, tự giao dịch
+- Cả 2 dịch vụ hiện MIỄN PHÍ
+- Link đăng ký: https://puprime.pro/forex-trading-account/?cs=bmrcopytrade
+
+QUY TẮC:
+- Thân thiện, chuyên nghiệp, ngắn gọn (2-4 câu)
+- KHÔNG BAO GIỜ cam kết lợi nhuận cụ thể. Luôn nhắc trading có rủi ro
+- Chỉ trả lời về BMR Trading, CopyTrading, Signals, PU Prime, kiến thức forex cơ bản
+- Câu hỏi ngoài phạm vi (crypto, chứng khoán, cá nhân...): từ chối lịch sự, hướng về trading
+- Nếu không trả lời được: gợi ý gõ /human để nói chuyện với nhân viên
+- Trả lời bằng tiếng Việt
+
+User "${userName || 'trader'}" hỏi: "${userMessage}"`;
+
+      const result = await this.model.generateContent(prompt);
+      return result.response.text() || 'Gõ /human để nói chuyện với nhân viên hỗ trợ.';
+    } catch (error) {
+      this.logger.error('Gemini chat support error', error);
+      return 'Xin lỗi, có lỗi kỹ thuật. Gõ /human để nói chuyện với nhân viên hỗ trợ.';
     }
   }
 
