@@ -37,15 +37,15 @@ export class GoogleSheetsService implements OnModuleInit {
       const sheetName = await this.getFirstSheetName();
       const res = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.spreadsheetId,
-        range: `'${sheetName}'!A1:G1`,
+        range: `'${sheetName}'!A1:H1`,
       });
       if (!res.data.values || res.data.values.length === 0) {
         await this.sheets.spreadsheets.values.update({
           spreadsheetId: this.spreadsheetId,
-          range: `'${sheetName}'!A1:G1`,
+          range: `'${sheetName}'!A1:H1`,
           valueInputOption: 'USER_ENTERED',
           requestBody: {
-            values: [['Timestamp', 'User ID', 'Username', 'Email', 'Flow', 'Action', 'Count']],
+            values: [['Timestamp', 'User ID', 'Username', 'Email', 'Flow', 'Action', 'Count', 'Source']],
           },
         });
         this.logger.log('Header row added to Google Sheet');
@@ -68,7 +68,8 @@ export class GoogleSheetsService implements OnModuleInit {
     username?: string;
     email?: string;
     flow: string;
-    action: 'Contact' | 'Email';
+    action: 'Contact' | 'Email' | 'Start';
+    source?: string;
   }): Promise<void> {
     if (!this.sheets) return;
 
@@ -84,20 +85,20 @@ export class GoogleSheetsService implements OnModuleInit {
 
         await this.sheets.spreadsheets.values.update({
           spreadsheetId: this.spreadsheetId,
-          range: `'${sheetName}'!A${existingRow.rowIndex}:G${existingRow.rowIndex}`,
+          range: `'${sheetName}'!A${existingRow.rowIndex}:H${existingRow.rowIndex}`,
           valueInputOption: 'USER_ENTERED',
           requestBody: {
-            values: [[timestamp, String(data.userId), displayName, data.email ?? '', data.flow, data.action, String(newCount)]],
+            values: [[timestamp, String(data.userId), displayName, data.email ?? '', data.flow, data.action, String(newCount), data.source ?? '']],
           },
         });
         this.logger.log(`Row updated: ${data.action} from ${displayName} (count: ${newCount})`);
       } else {
         const timestamp = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
-        const row = [timestamp, String(data.userId), displayName, data.email ?? '', data.flow, data.action, '1'];
+        const row = [timestamp, String(data.userId), displayName, data.email ?? '', data.flow, data.action, '1', data.source ?? ''];
 
         await this.sheets.spreadsheets.values.append({
           spreadsheetId: this.spreadsheetId,
-          range: `'${sheetName}'!A:G`,
+          range: `'${sheetName}'!A:H`,
           valueInputOption: 'USER_ENTERED',
           requestBody: { values: [row] },
         });
@@ -117,7 +118,7 @@ export class GoogleSheetsService implements OnModuleInit {
     try {
       const res = await this.sheets.spreadsheets.values.get({
         spreadsheetId: this.spreadsheetId,
-        range: `'${sheetName}'!A:G`,
+        range: `'${sheetName}'!A:H`,
       });
 
       const rows = res.data.values;
