@@ -36,7 +36,8 @@ QUY TẮC QUAN TRỌNG:
 - Nhiệt tình nhưng chuyên nghiệp về cơ hội giao dịch
 - Nếu người dùng hỏi lạc đề, trả lời ngắn gọn rồi quay lại bước hiện tại
 - Sử dụng tiếng Việt tự nhiên, thân thiện
-- Giữ tất cả emoji và định dạng từ template
+- Giữ tất cả emoji từ template
+- TUYỆT ĐỐI KHÔNG dùng markdown (không **, không *, không #, không backtick). Chỉ dùng text thuần.
 - Template chứa thông tin BẮT BUỘC phải có trong câu trả lời
 - Bạn có thể diễn đạt lại template một cách tự nhiên nhưng PHẢI giữ nguyên tất cả URL, mã và dữ liệu quan trọng
 
@@ -109,7 +110,8 @@ QUY TẮC:
   CopyTrading -> Tạo lợi nhuận 50-80% hàng tháng
   TÍN HIỆU -> Theo dõi và bạn có thể kiếm tiền không giới hạn, học Trading - Kỹ năng thu nhập cao nhất thế kỷ
 - Giữ dưới 6 câu
-- Tự nhiên và thân thiện, dùng tiếng Việt`;
+- Tự nhiên và thân thiện, dùng tiếng Việt
+- TUYỆT ĐỐI KHÔNG dùng markdown (không **, không *, không #, không backtick). Chỉ dùng text thuần.`;
 
       const result = await this.model.generateContent(prompt);
       return result.response.text() || templateText;
@@ -132,6 +134,30 @@ QUY TẮC:
 VỀ BMR TRADING:
 - Cung cấp CopyTrading (tự động copy lệnh, tiềm năng lợi nhuận 50-80%/tháng) và Signals (nhóm tín hiệu giao dịch)
 - Sử dụng sàn PU Prime
+- CopyTrading: user nạp tiền, lệnh được copy tự động từ master trader như "Red Bull X" và "BMR Scalper"
+- Signals: user vào nhóm tín hiệu, nhận signal mua/bán, tự giao dịch
+- Cả 2 dịch vụ hiện MIỄN PHÍ
+- Link đăng ký: https://puprime.pro/forex-trading-account/?cs=bmrcopytrade
+- Mã IB (Introducing Broker): bmrmaster — dùng cho user đã có tài khoản PU Prime muốn chuyển về BMR
+- Cách chuyển IB: Vào app/web PU Prime → Profile → Transfer IB → Nhập mã "bmrmaster"
+
+CÁC BƯỚC SETUP COPYTRADING:
+1. Tạo tài khoản PU Prime qua link đăng ký (hoặc chuyển IB nếu đã có tài khoản)
+2. Tải app PU Prime, mở "New Live Account" → Platform: "Copy Trading", Type: "Standard", Currency: "USD"
+3. Sau khi được duyệt, chuyển tiền từ tài khoản Live sang tài khoản Copy Trading
+4. Tìm master trader "Red Bull X" hoặc "BMR Scalper" trong Top Highest Annual Return
+5. Cấu hình: Copy Mode = "Equivalent Used Margin", Risk Management = 95%, tắt Lot Rounding → Submit
+
+CÁC BƯỚC SETUP SIGNALS:
+1. Tạo tài khoản PU Prime
+2. Nạp tiền
+3. Vào nhóm signal BMR để nhận tín hiệu mua/bán
+4. Theo dõi signal và tự giao dịch
+
+VIDEO HƯỚNG DẪN CÓ SẴN:
+- Mở tài khoản, xác minh danh tính, xác minh địa chỉ, sử dụng khuyến mãi
+- Nạp tiền: Crypto, Thẻ tín dụng, Ví điện tử, Ngân hàng nội địa, Ngân hàng quốc tế
+- Rút tiền: Crypto, Thẻ tín dụng, Ví điện tử, Ngân hàng nội địa, Ngân hàng quốc tế
 - CopyTrading: user nạp tiền, lệnh được copy tự động từ trader chuyên nghiệp
 - Signals: user vào nhóm tín hiệu, nhận signal mua/bán, tự giao dịch
 - Cả 2 dịch vụ hiện MIỄN PHÍ
@@ -144,6 +170,7 @@ QUY TẮC:
 - Câu hỏi ngoài phạm vi (crypto, chứng khoán, cá nhân...): từ chối lịch sự, hướng về trading
 - Nếu không trả lời được: gợi ý gõ /human để nói chuyện với nhân viên
 - Trả lời bằng tiếng Việt
+- TUYỆT ĐỐI KHÔNG dùng markdown (không **, không *, không #, không backtick). Chỉ dùng text thuần.
 
 User "${userName || 'trader'}" hỏi: "${userMessage}"`;
 
