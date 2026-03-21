@@ -14,10 +14,6 @@ export class BotUpdate {
     private prisma: PrismaService,
   ) {}
 
-  /**
-   * Middleware chạy TRƯỚC scenes - bắt admin reply
-   * và tin nhắn tự do của user trước khi scene xử lý.
-   */
   @Use()
   async middleware(@Ctx() ctx: BotContext, next: () => Promise<void>) {
     const message = (ctx.message as any)?.text;
@@ -25,36 +21,65 @@ export class BotUpdate {
 
     const callNext = typeof next === 'function' ? next : () => Promise.resolve();
 
-    // Chỉ xử lý tin nhắn text
     if (!message || !chatId) {
       return callNext();
     }
 
-    // Handle /start directly since next() may not work in cluster mode
     if (message.startsWith('/start')) {
       return this.onStart(ctx);
     }
 
-    // Handle /newlink for admin
-    if (message.startsWith('/newlink') && this.adminService.isAdmin(chatId)) {
-      const args = message.split(' ').slice(1).join('_');
-      if (!args) {
-        ctx.session.awaitingLinkSource = true;
-        await ctx.reply('📎 Nhập tên nguồn quảng cáo (VD: forex_vn, gold_trading, fb_ads):');
+    // --- Admin commands ---
+    if (this.adminService.isAdmin(chatId)) {
+      if (message === '/help') {
+        await this.adminService.sendHelpMessage(ctx);
         return;
       }
-      const source = args.replace(/[^a-zA-Z0-9_-]/g, '');
-      await this.createTrackingLink(ctx, source);
-      return;
+
+      if (message.startsWith('/status')) {
+        const parts = message.split(' ');
+        if (parts.length < 2) {
+          await ctx.reply('Usage: /status <telegram_id>');
+          return;
+        }
+        await this.adminService.sendUserStatus(ctx, parts[1]);
+        return;
+      }
+
+      if (message === '/stats') {
+        await this.adminService.sendStats(ctx);
+        return;
+      }
+
+      if (message.startsWith('/verify')) {
+        const parts = message.split(' ');
+        if (parts.length < 2) {
+          await ctx.reply('Usage: /verify <trading_account>');
+          return;
+        }
+        await this.adminService.verifyAccount(ctx, parts[1]);
+        return;
+      }
+
+      if (message.startsWith('/newlink')) {
+        const args = message.split(' ').slice(1).join('_');
+        if (!args) {
+          ctx.session.awaitingLinkSource = true;
+          await ctx.reply('📎 Nhập tên nguồn quảng cáo (VD: forex_vn, gold_trading, fb_ads):');
+          return;
+        }
+        const source = args.replace(/[^a-zA-Z0-9_-]/g, '');
+        await this.createTrackingLink(ctx, source);
+        return;
+      }
+
+      if (message.startsWith('/checklinks')) {
+        await this.showTrackingLinks(ctx);
+        return;
+      }
     }
 
-    // Handle /checklinks for admin
-    if (message.startsWith('/checklinks') && this.adminService.isAdmin(chatId)) {
-      await this.showTrackingLinks(ctx);
-      return;
-    }
-
-    // Other commands → pass through
+    // Other commands -> pass through
     if (message.startsWith('/')) {
       return callNext();
     }
@@ -90,23 +115,27 @@ export class BotUpdate {
       return;
     }
 
-    // User reply vào tin nhắn bot → forward tới admin như live chat
+    // --- User-side middleware ---
+
+    // User reply vào tin nhắn bot -> forward tới admin
     const replyToBot = (ctx.message as any)?.reply_to_message;
     if (replyToBot && replyToBot.from?.is_bot) {
+      if (!ctx.from) return;
       const displayName = this.botService.getDisplayName(ctx);
-      await this.adminService.forwardUserMessage(ctx.from!.id, displayName, message);
+      await this.adminService.forwardUserMessage(ctx.from.id, displayName, message);
       await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');
       return;
     }
 
-    // User đang nhập text (email/profit) hoặc AI chat → để scene xử lý
-    if (ctx.session?.awaitingEmail || ctx.session?.awaitingProfitTarget || ctx.session?.inAiChat) {
+    // User đang nhập text (email/account) hoặc AI chat -> để scene xử lý
+    if (ctx.session?.awaitingEmail || ctx.session?.awaitingAccount || ctx.session?.inAiChat) {
       return callNext();
     }
 
-    // Tất cả tin nhắn tự do khác → forward tới admin
+    // Tất cả tin nhắn tự do khác -> forward tới admin
+    if (!ctx.from) return;
     const displayName = this.botService.getDisplayName(ctx);
-    await this.adminService.forwardUserMessage(ctx.from!.id, displayName, message);
+    await this.adminService.forwardUserMessage(ctx.from.id, displayName, message);
     await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');
   }
 
@@ -116,20 +145,19 @@ export class BotUpdate {
       await ctx.scene.leave();
     } catch {}
 
-    ctx.session.profitTarget = undefined;
+    ctx.session.capitalRange = undefined;
     ctx.session.selectedFlow = undefined;
     ctx.session.email = undefined;
     ctx.session.awaitingEmail = false;
-    ctx.session.awaitingProfitTarget = false;
+    ctx.session.awaitingAccount = false;
     ctx.session.currentStep = undefined;
     ctx.session.isVip = undefined;
     ctx.session.inAiChat = false;
+    ctx.session.tier = undefined;
 
-    // Extract deep link source from /start ref_<source>
     const startPayload = (ctx.message as any)?.text?.split(' ')[1] ?? '';
     const source = startPayload.startsWith('ref_') ? startPayload.slice(4) : '';
 
-    // Upsert User record in DB
     if (ctx.from) {
       await this.prisma.user.upsert({
         where: { id: BigInt(ctx.from.id) },
@@ -157,7 +185,6 @@ export class BotUpdate {
     await ctx.scene.enter('onboarding');
   }
 
-  /** Tạo tracking link với check trùng */
   private async createTrackingLink(ctx: BotContext, source: string): Promise<void> {
     if (await this.adminService.hasTrackingLink(source)) {
       const botInfo = await ctx.telegram.getMe();
@@ -174,7 +201,6 @@ export class BotUpdate {
     );
   }
 
-  /** Hiện tất cả tracking links đã tạo */
   private async showTrackingLinks(ctx: BotContext): Promise<void> {
     const links = await this.adminService.getTrackingLinks();
     if (links.length === 0) {
