@@ -101,7 +101,7 @@ export class CopyTradingScene {
       await ctx.reply('⚡️ HƯỚNG DẪN CHUYỂN MÃ HỖ TRỢ TRÊN WEB');
     }
 
-    await this.botService.sendWithKeyboard(ctx, `Mã IB: \`${IB_CODE}\`\n\nSau khi chuyển mã xong, gửi email bạn dùng để tạo tài khoản để em xử lý giúp nhé`, { ...ctIbKeyboard(), parse_mode: 'Markdown' });
+    await this.botService.sendWithKeyboard(ctx, `Mã IB: <code>${IB_CODE}</code>\n\nSau khi chuyển mã xong, gửi email bạn dùng để tạo tài khoản để em xử lý giúp nhé`, { ...ctIbKeyboard(), parse_mode: 'HTML' });
   }
 
   private async askForTradingAccount(ctx: BotContext) {

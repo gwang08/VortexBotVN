@@ -62,7 +62,7 @@ LINK QUAN TRỌNG (LUÔN gửi link thật khi liên quan):
 - Myfxbook: ${MYFXBOOK_URL}
 - Channel: ${CHANNEL_URL}
 - Website: ${BOT_TRADING_URL}
-- Mã IB: \`bmrmaster\`
+- Mã IB: bmrmaster
 - Video mở tài khoản: ${VIDEO_GUIDES.openAccount}
 - Video xác minh danh tính: ${VIDEO_GUIDES.idAuth}
 - Video xác minh địa chỉ: ${VIDEO_GUIDES.addressVerify}
@@ -91,7 +91,7 @@ MẪU TRẢ LỜI THEO TÌNH HUỐNG:
 
 "Myfxbook ở đâu?" → ${userName} xem tại đây nhé: ${MYFXBOOK_URL}. Channel cập nhật hằng ngày: ${CHANNEL_URL}. Sau khi xem xong, em sẽ gợi ý mức setup phù hợp.
 
-"Mã IB là gì?" → Mã IB: \`bmrmaster\`. Cách chuyển: PU Prime app → Profile → Transfer IB → Nhập \`bmrmaster\`. Nếu cần hỗ trợ, liên hệ @Vitaperry.
+"Mã IB là gì?" → Mã IB: bmrmaster. Cách chuyển: PU Prime app → Profile → Transfer IB → Nhập bmrmaster. Nếu cần hỗ trợ, liên hệ @Vitaperry.
 
 "Có an toàn không?" → Không có gì đảm bảo tuyệt đối. Quan trọng là quản lý vốn và rủi ro. ${userName} nên test trước để đánh giá. Xem kết quả thực tế: ${MYFXBOOK_URL}
 
@@ -133,6 +133,7 @@ User "${userName || 'bạn'}" hỏi: "${userMessage}"`;
       case 'retail_high':
       case 'retail':
         return `NGUYÊN TẮC RETAIL: Trả lời đơn giản 2-3 câu. Kéo về flow đăng ký. CTA: "${name} muốn bắt đầu ở mức nào?" hoặc "Em gửi hướng dẫn đăng ký luôn nhé?"`;
+
       case 'vip':
         return `NGUYÊN TẮC VIP: Trả lời sâu hơn về risk, drawdown, setup. Nhưng cuối cùng luôn kéo về admin. CTA: "Nếu muốn, em kết nối admin để tư vấn đúng mức vốn này."`;
       case 'whale':

@@ -87,6 +87,24 @@ export const ctFinalKeyboard = () =>
     [Markup.button.callback('✅ Tôi đã bật CopyTrade', CALLBACKS.ctCopyEnabled)],
   ]);
 
+// AI Chat - tier-aware inline keyboards shown after AI responses
+export const aiChatRetailKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback('🚀 Đăng ký ngay', CALLBACKS.registerAccount)],
+    [Markup.button.url('📈 Xem Myfxbook', MYFXBOOK_URL)],
+  ]);
+
+export const aiChatVipKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback('🤝 Chat admin', CALLBACKS.chatAdmin)],
+    [Markup.button.url('📈 Xem Myfxbook', MYFXBOOK_URL)],
+  ]);
+
+export const aiChatWhaleKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback('🤝 Chat admin ngay', CALLBACKS.chatAdmin)],
+  ]);
+
 // Signals Bước 1
 export const sigStep1Keyboard = () =>
   Markup.inlineKeyboard([

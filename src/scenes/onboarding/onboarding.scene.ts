@@ -8,6 +8,9 @@ import {
   capitalSelectionKeyboard,
   retailActionKeyboard,
   vipActionKeyboard,
+  aiChatRetailKeyboard,
+  aiChatVipKeyboard,
+  aiChatWhaleKeyboard,
 } from '../../common/keyboards';
 import { GeminiService } from '../../gemini/gemini.service';
 import { AdminService } from '../../admin/admin.service';
@@ -167,6 +170,21 @@ export class OnboardingScene {
     await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
   }
 
+  // Return tier-appropriate keyboard for AI chat responses
+  private getAiChatKeyboard(tier?: string) {
+    switch (tier) {
+      case 'retail_low':
+      case 'retail_high':
+        return aiChatRetailKeyboard();
+      case 'vip':
+        return aiChatVipKeyboard();
+      case 'whale':
+        return aiChatWhaleKeyboard();
+      default:
+        return null; // No tier yet → will show capital selection
+    }
+  }
+
   // ── ACTION BUTTONS ──
 
   // Retail: "Đăng ký tài khoản" → enters CopyTrading scene
@@ -283,7 +301,15 @@ export class OnboardingScene {
       }
 
       const response = await this.geminiService.chatSupport(message, this.botService.getDisplayName(ctx), ctx.session.tier);
-      await ctx.reply(response);
+
+      // Send AI response with tier-aware action buttons
+      const keyboard = this.getAiChatKeyboard(ctx.session.tier);
+      if (keyboard) {
+        await ctx.reply(response, keyboard);
+      } else {
+        await ctx.reply(response);
+        await ctx.reply('Chọn mức vốn dự kiến:', capitalSelectionKeyboard());
+      }
       return;
     }
 
