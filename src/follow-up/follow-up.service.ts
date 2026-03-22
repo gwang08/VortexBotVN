@@ -106,11 +106,13 @@ export class FollowUpService implements OnModuleInit {
   }
 
   private getFollowUpMessage(user: any): { text: string; extra?: any } | null {
+    const name = user.firstName || user.username || 'anh';
+
     // A. User vào bot nhưng chưa bấm gì (status = new)
     if (user.status === 'new') {
       if (user.followUpCount === 0) {
         return {
-          text: `Anh/chị có thể xem nhanh kết quả thực tế ở đây trước nhé:\n• Myfxbook: ${MYFXBOOK_URL}\n• Channel cập nhật hằng ngày: ${CHANNEL_URL}\nKhi sẵn sàng em sẽ hướng dẫn setup rất nhanh.`,
+          text: `Anh ${name} có thể xem nhanh kết quả thực tế ở đây trước nhé:\n• Myfxbook: ${MYFXBOOK_URL}\n• Channel cập nhật hằng ngày: ${CHANNEL_URL}\nKhi sẵn sàng em sẽ hướng dẫn setup rất nhanh.`,
           extra: Markup.inlineKeyboard([
             [Markup.button.url('📈 Myfxbook', MYFXBOOK_URL)],
             [Markup.button.url('📊 Channel', CHANNEL_URL)],
@@ -118,7 +120,7 @@ export class FollowUpService implements OnModuleInit {
         };
       }
       return {
-        text: `Nếu anh/chị muốn bắt đầu nhẹ để trải nghiệm trước, có thể test từ mức nhỏ rồi theo dõi thêm.\nEm để sẵn hướng dẫn tại đây: ${PUPRIME_SIGNUP_LINK}`,
+        text: `Nếu anh ${name} muốn bắt đầu nhẹ để trải nghiệm trước, có thể test từ mức nhỏ rồi theo dõi thêm.\nEm để sẵn hướng dẫn tại đây: ${PUPRIME_SIGNUP_LINK}`,
         extra: Markup.inlineKeyboard([
           [Markup.button.url('🚀 Bắt đầu', PUPRIME_SIGNUP_LINK)],
           [Markup.button.url('📊 Channel', CHANNEL_URL)],
@@ -130,7 +132,7 @@ export class FollowUpService implements OnModuleInit {
     if (!user.capitalRange || user.status === 'new') {
       if (user.followUpCount === 0) {
         return {
-          text: `Em thấy anh/chị đã xem kết quả.\nĐể em gợi ý setup phù hợp, anh/chị dự kiến bắt đầu ở mức nào?\n• Test nhẹ\n• Trung bình\n• Tài khoản lớn`,
+          text: `Em thấy anh ${name} đã xem kết quả.\nĐể em gợi ý setup phù hợp, anh ${name} dự kiến bắt đầu ở mức nào?\n• Test nhẹ\n• Trung bình\n• Tài khoản lớn`,
         };
       }
       return {
@@ -142,7 +144,7 @@ export class FollowUpService implements OnModuleInit {
     if (user.status === 'capital_selected' && !user.isVip) {
       if (user.followUpCount === 0) {
         return {
-          text: `Với mức vốn này, anh/chị có thể bắt đầu khá đơn giản:\n1. Đăng ký tài khoản\n2. Nạp vốn\n3. Bật copytrade\nEm có sẵn hướng dẫn từng bước ở đây: ${PUPRIME_SIGNUP_LINK}`,
+          text: `Với mức vốn này, anh ${name} có thể bắt đầu khá đơn giản:\n1. Đăng ký tài khoản\n2. Nạp vốn\n3. Bật copytrade\nEm có sẵn hướng dẫn từng bước ở đây: ${PUPRIME_SIGNUP_LINK}`,
           extra: Markup.inlineKeyboard([
             [Markup.button.url('👉 Đăng ký ngay', PUPRIME_SIGNUP_LINK)],
           ]),
@@ -150,7 +152,7 @@ export class FollowUpService implements OnModuleInit {
       }
       if (user.followUpCount === 1) {
         return {
-          text: `Nếu chưa muốn vào lớn, anh/chị có thể test nhỏ trước để làm quen cách hệ thống chạy.\nKhi thấy phù hợp rồi scale sau cũng được.`,
+          text: `Nếu chưa muốn vào lớn, anh ${name} có thể test nhỏ trước để làm quen cách hệ thống chạy.\nKhi thấy phù hợp rồi scale sau cũng được.`,
         };
       }
       return {
@@ -164,7 +166,7 @@ export class FollowUpService implements OnModuleInit {
     // D. User đã đăng ký nhưng chưa nạp (registered / account_submitted)
     if (user.status === 'registered' || user.status === 'account_submitted') {
       return {
-        text: `Tài khoản đã sẵn sàng.\nBạn có thể bắt đầu với 100$ để test trước, setup chỉ mất 2 phút.`,
+        text: `Tài khoản đã sẵn sàng.\nAnh ${name} có thể bắt đầu với $100 để test trước, setup chỉ mất 2 phút.`,
         extra: Markup.inlineKeyboard([
           [Markup.button.url('💰 Nạp tiền', PUPRIME_SIGNUP_LINK)],
           [Markup.button.url('📊 Bot Trading', BOT_TRADING_URL)],
@@ -187,7 +189,7 @@ export class FollowUpService implements OnModuleInit {
         };
       }
       return {
-        text: `Em nhắc lại nhẹ: mức vốn của anh/chị phù hợp flow VIP hơn retail.\nĐi theo flow riêng sẽ đỡ mất thời gian và chuẩn hơn về risk.\n\n👤 Liên hệ: @Vitaperry`,
+        text: `Em nhắc lại nhẹ: mức vốn của anh ${name} phù hợp flow VIP hơn retail.\nĐi theo flow riêng sẽ đỡ mất thời gian và chuẩn hơn về risk.\n\n👤 Liên hệ: @Vitaperry`,
       };
     }
 
