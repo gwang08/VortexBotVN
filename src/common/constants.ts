@@ -7,13 +7,22 @@ export const PUPRIME_SIGNUP_LINK =
 // IB Code for existing PuPrime users
 export const IB_CODE = 'bmrmaster';
 
-// Bot Trading website link (VN repo)
+// External links
 export const BOT_TRADING_URL = 'https://bmrcopytrade.vn/';
+export const MYFXBOOK_URL = 'https://www.myfxbook.com/members/KevinNguyen_MMF/bmr-scalper-gold/11777645';
+export const CHANNEL_URL = 'https://t.me/BMRCopytradevn';
 
 // Follow-up cooldown schedule (hours between each follow-up)
-export const FOLLOWUP_SCHEDULE_HOURS = [6, 24, 48, 72, 72, 72, 72];
-export const MAX_FOLLOWUP_COUNT = 7;
-export const VIP_MAX_FOLLOWUP_COUNT = 2;
+// 10min, 6h, 24h, 72h (3 days), 120h (5 days)
+export const FOLLOWUP_SCHEDULE_HOURS = [0.17, 6, 24, 72, 120];
+export const MAX_FOLLOWUP_COUNT = 5;
+export const VIP_MAX_FOLLOWUP_COUNT = 3;
+
+// VN timezone: send follow-ups only during 11:30-13:30 or 20:00-23:00 ICT
+export const VN_FOLLOWUP_WINDOWS = [
+  { startHour: 11, startMin: 30, endHour: 13, endMin: 30 },
+  { startHour: 20, startMin: 0, endHour: 23, endMin: 0 },
+];
 
 // Video guide URLs
 export const VIDEO_GUIDES = {
@@ -94,7 +103,26 @@ export const IMAGES = {
 
 // Callback data keys for inline buttons
 export const CALLBACKS = {
-  // Menu selection
+  // Hook step
+  viewResults: 'view_results',
+  startNow: 'start_now',
+
+  // Proof step
+  continueToCapital: 'continue_to_capital',
+
+  // Capital selection buttons (new ranges)
+  capitalUnder100: 'capital_under_100',
+  capital100_500: 'capital_100_500',
+  capital500_2000: 'capital_500_2000',
+  capital2000_10000: 'capital_2000_10000',
+  capital10000plus: 'capital_10000_plus',
+
+  // Split action buttons
+  registerAccount: 'register_account',
+  viewGuide: 'view_guide',
+  chatAdmin: 'chat_admin',
+
+  // Menu selection (kept for CopyTrading/Signals scenes)
   copytrading: 'select_copytrading',
   signals: 'select_signals',
   contactAdmin: 'contact_admin',
@@ -113,13 +141,6 @@ export const CALLBACKS = {
   sigAlreadyHaveAccount: 'sig_already_have_account',
   sigDepositedDone: 'sig_deposited_done',
   sigVideoGuide: 'sig_video_guide',
-
-  // Capital selection buttons
-  capital100_500: 'capital_100_500',
-  capital500_2000: 'capital_500_2000',
-  capital2000_5000: 'capital_2000_5000',
-  capital5000_10000: 'capital_5000_10000',
-  capital10000plus: 'capital_10000_plus',
 
   // Status confirmation buttons
   ctRegistered: 'ct_registered',

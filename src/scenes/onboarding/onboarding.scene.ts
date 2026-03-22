@@ -1,12 +1,13 @@
 import { Logger } from '@nestjs/common';
 import { Scene, SceneEnter, On, Action, Command } from 'nestjs-telegraf';
 import type { BotContext } from '../../common/interfaces/session.interface';
-import { CALLBACKS } from '../../common/constants';
+import { CALLBACKS, PUPRIME_SIGNUP_LINK, ACCOUNT_CREATION_TEXT } from '../../common/constants';
 import {
+  hookKeyboard,
+  proofKeyboard,
   capitalSelectionKeyboard,
-  mainMenuRetailKeyboard,
-  mainMenuSemiKeyboard,
-  mainMenuVipKeyboard,
+  retailActionKeyboard,
+  vipActionKeyboard,
 } from '../../common/keyboards';
 import { GeminiService } from '../../gemini/gemini.service';
 import { AdminService } from '../../admin/admin.service';
@@ -37,62 +38,160 @@ export class OnboardingScene {
     await ctx.scene.enter('onboarding');
   }
 
+  // ── STEP 1: HOOK ──
   @SceneEnter()
   async onEnter(ctx: BotContext) {
+    ctx.session.currentStep = 'onboarding:hook';
+    const text = `🚀 Hệ thống Copytrade Gold (XAUUSD)\n\nBạn có thể kiếm lợi nhuận từ vàng mà không cần trade (tự động 100%)`;
+    await ctx.reply(text, hookKeyboard());
+  }
+
+  // ── STEP 2: PROOF ──
+  @Action(CALLBACKS.viewResults)
+  async onViewResults(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.currentStep = 'onboarding:proof';
+
+    await this.prisma.user.update({
+      where: { id: BigInt(ctx.from!.id) },
+      data: { lastStep: 'viewed_results' },
+    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+
+    const text = `📊 Bạn có thể xem kết quả thực tế tại đây:`;
+    await ctx.reply(text, proofKeyboard());
+  }
+
+  // "Bắt đầu ngay" skips proof, goes straight to capital
+  @Action(CALLBACKS.startNow)
+  async onStartNow(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.showCapitalSelection(ctx);
+  }
+
+  // After proof, continue to capital
+  @Action(CALLBACKS.continueToCapital)
+  async onContinueToCapital(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.showCapitalSelection(ctx);
+  }
+
+  // ── STEP 3: HỎI VỐN ──
+  private async showCapitalSelection(ctx: BotContext) {
     ctx.session.currentStep = 'onboarding:capital_selection';
-    const displayName = this.botService.getDisplayName(ctx);
-    const text = `Chào mừng ${displayName} đến với BMR Scalper Gold AI!\n\nBạn dự định bắt đầu với bao nhiêu vốn?`;
+    const text = `💰 Để hệ thống gợi ý setup phù hợp, bạn dự kiến bắt đầu khoảng bao nhiêu?`;
     await ctx.reply(text, capitalSelectionKeyboard());
   }
 
-  // Capital selection handlers
+  // Capital handlers with new tier mapping
+  @Action(CALLBACKS.capitalUnder100)
+  async onCapitalUnder100(ctx: BotContext) {
+    await this.handleCapitalSelection(ctx, 'under-100', 'retail_low');
+  }
+
   @Action(CALLBACKS.capital100_500)
-  async onCapital100(ctx: BotContext) { await this.handleCapitalSelection(ctx, '100-500', 'retail'); }
+  async onCapital100(ctx: BotContext) {
+    await this.handleCapitalSelection(ctx, '100-500', 'retail_low');
+  }
 
   @Action(CALLBACKS.capital500_2000)
-  async onCapital500(ctx: BotContext) { await this.handleCapitalSelection(ctx, '500-2000', 'retail'); }
+  async onCapital500(ctx: BotContext) {
+    await this.handleCapitalSelection(ctx, '500-2000', 'retail_high');
+  }
 
-  @Action(CALLBACKS.capital2000_5000)
-  async onCapital2000(ctx: BotContext) { await this.handleCapitalSelection(ctx, '2000-5000', 'semi'); }
-
-  @Action(CALLBACKS.capital5000_10000)
-  async onCapital5000(ctx: BotContext) { await this.handleCapitalSelection(ctx, '5000-10000', 'vip'); }
+  @Action(CALLBACKS.capital2000_10000)
+  async onCapital2000(ctx: BotContext) {
+    await this.handleCapitalSelection(ctx, '2000-10000', 'vip');
+  }
 
   @Action(CALLBACKS.capital10000plus)
-  async onCapital10000(ctx: BotContext) { await this.handleCapitalSelection(ctx, '10000+', 'vip'); }
+  async onCapital10000(ctx: BotContext) {
+    await this.handleCapitalSelection(ctx, '10000+', 'whale');
+  }
 
   private async handleCapitalSelection(ctx: BotContext, capitalRange: string, tier: string) {
     await ctx.answerCbQuery();
 
-    const isVip = tier === 'vip';
+    const isVip = tier === 'vip' || tier === 'whale';
     const userId = BigInt(ctx.from!.id);
 
     await this.prisma.user.update({
       where: { id: userId },
-      data: { capitalRange, tier, isVip, status: 'new' },
+      data: { capitalRange, tier, isVip, status: 'capital_selected', lastStep: 'capital_selected' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
     ctx.session.capitalRange = capitalRange;
     ctx.session.tier = tier;
     ctx.session.isVip = isVip;
-    ctx.session.currentStep = 'onboarding:main_menu';
 
-    await this.sendTierMessage(ctx, tier);
-  }
-
-  private async sendTierMessage(ctx: BotContext, tier: string) {
-    if (tier === 'retail') {
-      const text = `Tuyệt vời!\n\n3 bước đơn giản để bắt đầu:\n1. Tạo tài khoản\n2. Nạp tiền\n3. Bật copy trading\n\nKhông cần biết trade. Bắt đầu từ $100.\n\nBạn muốn sử dụng dịch vụ nào?`;
-      await ctx.reply(text, mainMenuRetailKeyboard());
-    } else if (tier === 'semi') {
-      const text = `Bạn đủ điều kiện được hỗ trợ ưu tiên.\n\n✔ Hướng dẫn cấu hình tài khoản\n✔ Tối ưu rủi ro cho vốn của bạn\n✔ Hỗ trợ trực tiếp\n\nBắt đầu ngay nào.`;
-      await ctx.reply(text, mainMenuSemiKeyboard());
+    // ── STEP 4: SPLIT LOGIC ──
+    if (isVip) {
+      await this.showVipSplit(ctx, tier);
     } else {
-      const text = `🔥 VIP Access Unlocked\n\nBạn sẽ nhận được:\n✔ Cài đặt rủi ro cá nhân hóa\n✔ Chiến lược bảo vệ vốn\n✔ Hỗ trợ 1-1 ưu tiên\n\n👉 Liên hệ ngay: @Vitaperry`;
-      await ctx.reply(text, mainMenuVipKeyboard());
+      await this.showRetailSplit(ctx);
     }
   }
 
+  // ── RETAIL (<2k$): Bot auto flow ──
+  private async showRetailSplit(ctx: BotContext) {
+    ctx.session.currentStep = 'onboarding:retail_action';
+    const text = `👍 Bạn có thể bắt đầu rất đơn giản\nchỉ cần 100–300$ để test trước\n\nNhiều anh em đang bắt đầu với 100–300$\n\nBạn có thể test nhỏ trước rồi scale dần`;
+    await ctx.reply(text, retailActionKeyboard());
+  }
+
+  // ── VIP (>=2k$): Chat admin, don't go deeper ──
+  private async showVipSplit(ctx: BotContext, tier: string) {
+    ctx.session.currentStep = 'onboarding:vip_action';
+
+    const isWhale = tier === 'whale';
+    const text = isWhale
+      ? `👑 Với tài khoản từ mức này, bên mình ưu tiên setup riêng để tối ưu quản lý vốn và support sát hơn\n\nBên mình ưu tiên tài khoản từ 5k trở lên để setup riêng`
+      : `💎 Với tài khoản lớn, bên mình sẽ setup riêng\nđể tối ưu lợi nhuận và kiểm soát rủi ro\n\nBên mình sẽ setup riêng cho mức vốn này`;
+
+    await ctx.reply(text, vipActionKeyboard());
+
+    // Notify admin immediately for VIP/whale
+    await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
+  }
+
+  // ── ACTION BUTTONS ──
+
+  // Retail: "Đăng ký tài khoản" → enters CopyTrading scene
+  @Action(CALLBACKS.registerAccount)
+  async onRegisterAccount(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.selectedFlow = 'copytrading';
+    await this.prisma.user.update({
+      where: { id: BigInt(ctx.from!.id) },
+      data: { flow: 'copytrading', lastStep: 'register_clicked' },
+    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+    await ctx.scene.enter('copytrading');
+  }
+
+  // Retail: "Xem hướng dẫn" → show account creation guide then enter copytrading
+  @Action(CALLBACKS.viewGuide)
+  async onViewGuide(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.selectedFlow = 'copytrading';
+    await this.prisma.user.update({
+      where: { id: BigInt(ctx.from!.id) },
+      data: { flow: 'copytrading', lastStep: 'guide_clicked' },
+    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+    await ctx.scene.enter('copytrading');
+  }
+
+  // VIP/Whale: "Trao đổi riêng với admin" → end of bot flow
+  @Action(CALLBACKS.chatAdmin)
+  async onChatAdmin(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.prisma.user.update({
+      where: { id: BigInt(ctx.from!.id) },
+      data: { status: 'vip_contacted', lastStep: 'chat_admin_clicked' },
+    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+
+    await ctx.reply('Trao đổi trực tiếp để setup phù hợp với vốn\n\n👤 Liên hệ: @Vitaperry\n\nAdmin sẽ liên hệ bạn sớm nhất!');
+  }
+
+  // Keep old callbacks for backward compatibility
   @Action(CALLBACKS.copytrading)
   async onCopyTrading(ctx: BotContext) {
     await ctx.answerCbQuery();
@@ -126,9 +225,7 @@ export class OnboardingScene {
   async onVipSupport(ctx: BotContext) {
     await ctx.answerCbQuery();
     await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
-    await ctx.reply(
-      '💎 Hỗ Trợ VIP\n\nBạn đã được phân bổ quản lý tài khoản riêng.\n\n👤 Liên hệ: @Vitaperry để được tư vấn 1-1!',
-    );
+    await ctx.reply('💎 Hỗ Trợ VIP\n\n👤 Liên hệ: @Vitaperry để được tư vấn 1-1!');
   }
 
   @Action(CALLBACKS.aiSupport)
@@ -145,7 +242,6 @@ export class OnboardingScene {
     const message = (ctx.message as any)?.text;
     if (!message || !ctx.from) return;
 
-    // User đang trong AI chat mode
     if (ctx.session.inAiChat) {
       if (message === '/human') {
         ctx.session.inAiChat = false;
@@ -158,7 +254,6 @@ export class OnboardingScene {
       return;
     }
 
-    // User gõ text tự do ở bước button -> forward cho admin
     const displayName = this.botService.getDisplayName(ctx);
     await this.adminService.forwardUserMessage(ctx.from.id, displayName, message);
     await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');

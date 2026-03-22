@@ -1,42 +1,43 @@
 import { Markup } from 'telegraf';
-import { CALLBACKS, BOT_TRADING_URL } from './constants';
+import { CALLBACKS, BOT_TRADING_URL, MYFXBOOK_URL, CHANNEL_URL, PUPRIME_SIGNUP_LINK } from './constants';
 
-// Capital selection (thay thế nhập profit target)
+// Step 1: Hook - Xem kết quả / Bắt đầu ngay
+export const hookKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback('👉 Xem kết quả', CALLBACKS.viewResults)],
+    [Markup.button.callback('👉 Bắt đầu ngay', CALLBACKS.startNow)],
+  ]);
+
+// Step 2: Proof - Myfxbook / Channel / Website
+export const proofKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.url('📈 Myfxbook (track record)', MYFXBOOK_URL)],
+    [Markup.button.url('📊 Channel (update mỗi ngày)', CHANNEL_URL)],
+    [Markup.button.url('🌐 Website (thông tin chi tiết)', BOT_TRADING_URL)],
+    [Markup.button.callback('👉 Tiếp tục', CALLBACKS.continueToCapital)],
+  ]);
+
+// Step 3: Capital selection (new ranges)
 export const capitalSelectionKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('💵 $100 – $500', CALLBACKS.capital100_500)],
-    [Markup.button.callback('💰 $500 – $2,000', CALLBACKS.capital500_2000)],
-    [Markup.button.callback('🏦 $2,000 – $5,000', CALLBACKS.capital2000_5000)],
-    [Markup.button.callback('💎 $5,000 – $10,000', CALLBACKS.capital5000_10000)],
-    [Markup.button.callback('👑 $10,000+', CALLBACKS.capital10000plus)],
-    [Markup.button.url('📊 Bot Trading', BOT_TRADING_URL)],
+    [Markup.button.callback('💎 Dưới 100$ (test nhẹ)', CALLBACKS.capitalUnder100)],
+    [Markup.button.callback('💎 100$ – 500$', CALLBACKS.capital100_500)],
+    [Markup.button.callback('💎 500$ – 2,000$', CALLBACKS.capital500_2000)],
+    [Markup.button.callback('💎 2,000$ – 10,000$', CALLBACKS.capital2000_10000)],
+    [Markup.button.callback('💎 Trên 10,000$', CALLBACKS.capital10000plus)],
   ]);
 
-// Menu chính - Retail
-export const mainMenuRetailKeyboard = () =>
+// Step 4: Retail split (<2k$) - Đăng ký / Xem hướng dẫn
+export const retailActionKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('📊 CopyTrading', CALLBACKS.copytrading)],
-    [Markup.button.callback('📡 Tín Hiệu (Signals)', CALLBACKS.signals)],
-    [Markup.button.callback('💬 Hỗ Trợ AI', CALLBACKS.aiSupport)],
-    [Markup.button.url('📊 Bot Trading', BOT_TRADING_URL)],
+    [Markup.button.callback('👉 Đăng ký tài khoản', CALLBACKS.registerAccount)],
+    [Markup.button.callback('👉 Xem hướng dẫn', CALLBACKS.viewGuide)],
   ]);
 
-// Menu chính - Semi
-export const mainMenuSemiKeyboard = () =>
+// Step 4: VIP split (>=2k$) - Trao đổi riêng với admin
+export const vipActionKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('📊 CopyTrading', CALLBACKS.copytrading)],
-    [Markup.button.callback('📡 Tín Hiệu (Signals)', CALLBACKS.signals)],
-    [Markup.button.callback('💬 Hỗ Trợ AI', CALLBACKS.aiSupport)],
-    [Markup.button.url('📊 Bot Trading', BOT_TRADING_URL)],
-  ]);
-
-// Menu chính - VIP
-export const mainMenuVipKeyboard = () =>
-  Markup.inlineKeyboard([
-    [Markup.button.callback('📊 CopyTrading', CALLBACKS.copytrading)],
-    [Markup.button.callback('📡 Tín Hiệu (Signals)', CALLBACKS.signals)],
-    [Markup.button.callback('💎 Hỗ Trợ VIP', CALLBACKS.vipSupport)],
-    [Markup.button.url('📊 Bot Trading', BOT_TRADING_URL)],
+    [Markup.button.callback('👉 Trao đổi riêng với admin', CALLBACKS.chatAdmin)],
   ]);
 
 // CopyTrading Bước 1 - với nút xác nhận đăng ký
