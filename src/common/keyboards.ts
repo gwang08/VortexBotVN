@@ -22,8 +22,8 @@ export const capitalSelectionKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('💵 Dưới $100 (Test nhẹ)', CALLBACKS.capitalUnder100)],
     [Markup.button.callback('💰 $100 – $500', CALLBACKS.capital100_500)],
-    [Markup.button.callback('🏦 $500 – $2,000', CALLBACKS.capital500_2000)],
-    [Markup.button.callback('💎 $2,000 – $10,000', CALLBACKS.capital2000_10000)],
+    [Markup.button.callback('💎 $500 – $2,000', CALLBACKS.capital500_2000)],
+    [Markup.button.callback('🏦 $2,000 – $10,000', CALLBACKS.capital2000_10000)],
     [Markup.button.callback('👑 Trên $10,000', CALLBACKS.capital10000plus)],
   ]);
 
