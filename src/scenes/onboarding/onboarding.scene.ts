@@ -127,14 +127,24 @@ export class OnboardingScene {
     if (isVip) {
       await this.showVipSplit(ctx, tier);
     } else {
-      await this.showRetailSplit(ctx);
+      await this.showRetailSplit(ctx, tier, capitalRange);
     }
   }
 
-  // ── RETAIL (<2k$): Bot auto flow ──
-  private async showRetailSplit(ctx: BotContext) {
+  // ── RETAIL (<2k$): Bot auto flow, message per tier ──
+  private async showRetailSplit(ctx: BotContext, _tier: string, capitalRange: string) {
     ctx.session.currentStep = 'onboarding:retail_action';
-    const text = `👍 Bạn có thể bắt đầu rất đơn giản\nchỉ cần 100–300$ để test trước\n\nNhiều anh em đang bắt đầu với 100–300$\n\nBạn có thể test nhỏ trước rồi scale dần`;
+
+    let text: string;
+    if (capitalRange === 'under-100') {
+      text = `👍 Bạn có thể bắt đầu với mức nhỏ để trải nghiệm trước\n\nChỉ cần 100$ là đủ để test hệ thống`;
+    } else if (capitalRange === '100-500') {
+      text = `👍 Mức này rất phù hợp để bắt đầu\n\nNhiều anh em đang bắt đầu với 100–300$\n\nSetup chỉ mất 2 phút`;
+    } else {
+      // 500-2000 (retail_high)
+      text = `👍 Mức vốn tốt!\n\nBên mình khuyên dùng setup cân bằng rủi ro cho mức này\n\nEm sẽ hướng dẫn từng bước`;
+    }
+
     await ctx.reply(text, retailActionKeyboard());
   }
 
