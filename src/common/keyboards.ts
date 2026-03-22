@@ -35,10 +35,11 @@ export const retailActionKeyboard = () =>
     [Markup.button.callback('💬 Hỗ Trợ AI', CALLBACKS.aiSupport)],
   ]);
 
-// Step 4: VIP split (>=2k$) - Trao đổi riêng với admin
+// Step 4: VIP split (>=2k$) - Trao đổi riêng với admin + AI
 export const vipActionKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🤝 Trao đổi riêng với admin', CALLBACKS.chatAdmin)],
+    [Markup.button.callback('💬 Hỗ Trợ AI', CALLBACKS.aiSupport)],
   ]);
 
 // CopyTrading Bước 1 - với nút xác nhận đăng ký
