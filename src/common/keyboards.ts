@@ -4,8 +4,8 @@ import { CALLBACKS, BOT_TRADING_URL, MYFXBOOK_URL, CHANNEL_URL, PUPRIME_SIGNUP_L
 // Step 1: Hook - Xem kết quả / Bắt đầu ngay
 export const hookKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('👉 Xem kết quả', CALLBACKS.viewResults)],
-    [Markup.button.callback('👉 Bắt đầu ngay', CALLBACKS.startNow)],
+    [Markup.button.callback('📈 Xem kết quả', CALLBACKS.viewResults)],
+    [Markup.button.callback('🚀 Bắt đầu ngay', CALLBACKS.startNow)],
   ]);
 
 // Step 2: Proof - Myfxbook / Channel / Website
@@ -14,7 +14,7 @@ export const proofKeyboard = () =>
     [Markup.button.url('📈 Myfxbook (Track record)', MYFXBOOK_URL)],
     [Markup.button.url('📊 Channel (Update mỗi ngày)', CHANNEL_URL)],
     [Markup.button.url('🌐 Website (Thông tin chi tiết)', BOT_TRADING_URL)],
-    [Markup.button.callback('👉 Tiếp tục', CALLBACKS.continueToCapital)],
+    [Markup.button.callback('➡️ Tiếp tục', CALLBACKS.continueToCapital)],
   ]);
 
 // Step 3: Capital selection (new ranges)
@@ -30,15 +30,15 @@ export const capitalSelectionKeyboard = () =>
 // Step 4: Retail split (<2k$) - Đăng ký / Xem hướng dẫn / AI Support
 export const retailActionKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('👉 Đăng ký tài khoản', CALLBACKS.registerAccount)],
-    [Markup.button.callback('👉 Xem hướng dẫn', CALLBACKS.viewGuide)],
+    [Markup.button.callback('🚀 Đăng ký tài khoản', CALLBACKS.registerAccount)],
+    [Markup.button.callback('📋 Xem hướng dẫn', CALLBACKS.viewGuide)],
     [Markup.button.callback('💬 Hỗ Trợ AI', CALLBACKS.aiSupport)],
   ]);
 
 // Step 4: VIP split (>=2k$) - Trao đổi riêng với admin
 export const vipActionKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('👉 Trao đổi riêng với admin', CALLBACKS.chatAdmin)],
+    [Markup.button.callback('🤝 Trao đổi riêng với admin', CALLBACKS.chatAdmin)],
   ]);
 
 // CopyTrading Bước 1 - với nút xác nhận đăng ký
