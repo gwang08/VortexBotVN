@@ -27,11 +27,12 @@ export const capitalSelectionKeyboard = () =>
     [Markup.button.callback('💎 Trên 10,000$', CALLBACKS.capital10000plus)],
   ]);
 
-// Step 4: Retail split (<2k$) - Đăng ký / Xem hướng dẫn
+// Step 4: Retail split (<2k$) - Đăng ký / Xem hướng dẫn / AI Support
 export const retailActionKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('👉 Đăng ký tài khoản', CALLBACKS.registerAccount)],
     [Markup.button.callback('👉 Xem hướng dẫn', CALLBACKS.viewGuide)],
+    [Markup.button.callback('💬 Hỗ Trợ AI', CALLBACKS.aiSupport)],
   ]);
 
 // Step 4: VIP split (>=2k$) - Trao đổi riêng với admin
