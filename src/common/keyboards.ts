@@ -11,20 +11,20 @@ export const hookKeyboard = () =>
 // Step 2: Proof - Myfxbook / Channel / Website
 export const proofKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.url('📈 Myfxbook (track record)', MYFXBOOK_URL)],
-    [Markup.button.url('📊 Channel (update mỗi ngày)', CHANNEL_URL)],
-    [Markup.button.url('🌐 Website (thông tin chi tiết)', BOT_TRADING_URL)],
+    [Markup.button.url('📈 Myfxbook (Track record)', MYFXBOOK_URL)],
+    [Markup.button.url('📊 Channel (Update mỗi ngày)', CHANNEL_URL)],
+    [Markup.button.url('🌐 Website (Thông tin chi tiết)', BOT_TRADING_URL)],
     [Markup.button.callback('👉 Tiếp tục', CALLBACKS.continueToCapital)],
   ]);
 
 // Step 3: Capital selection (new ranges)
 export const capitalSelectionKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('💎 Dưới 100$ (test nhẹ)', CALLBACKS.capitalUnder100)],
-    [Markup.button.callback('💎 100$ – 500$', CALLBACKS.capital100_500)],
-    [Markup.button.callback('💎 500$ – 2,000$', CALLBACKS.capital500_2000)],
-    [Markup.button.callback('💎 2,000$ – 10,000$', CALLBACKS.capital2000_10000)],
-    [Markup.button.callback('💎 Trên 10,000$', CALLBACKS.capital10000plus)],
+    [Markup.button.callback('💵 Dưới $100 (Test nhẹ)', CALLBACKS.capitalUnder100)],
+    [Markup.button.callback('💰 $100 – $500', CALLBACKS.capital100_500)],
+    [Markup.button.callback('🏦 $500 – $2,000', CALLBACKS.capital500_2000)],
+    [Markup.button.callback('💎 $2,000 – $10,000', CALLBACKS.capital2000_10000)],
+    [Markup.button.callback('👑 Trên $10,000', CALLBACKS.capital10000plus)],
   ]);
 
 // Step 4: Retail split (<2k$) - Đăng ký / Xem hướng dẫn / AI Support
