@@ -43,7 +43,7 @@ export class OnboardingScene {
   async onEnter(ctx: BotContext) {
     ctx.session.currentStep = 'onboarding:hook';
     const name = this.botService.getDisplayName(ctx);
-    const text = `🚀 Hệ thống Copytrade Gold (XAUUSD)\n\nChào anh ${name}, anh có thể kiếm lợi nhuận từ vàng mà không cần trade (tự động 100%)`;
+    const text = `🚀 Hệ thống Copytrade Gold (XAUUSD)\n\nChào ${name}! Bạn có thể kiếm lợi nhuận từ vàng mà không cần trade (tự động 100%)`;
     await ctx.reply(text, hookKeyboard());
   }
 
@@ -58,7 +58,7 @@ export class OnboardingScene {
       data: { lastStep: 'viewed_results' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
-    const text = `📊 Anh ${this.botService.getDisplayName(ctx)} có thể xem kết quả thực tế tại đây:`;
+    const text = `📊 ${this.botService.getDisplayName(ctx)} có thể xem kết quả thực tế tại đây:`;
     await ctx.reply(text, proofKeyboard());
   }
 
@@ -80,7 +80,7 @@ export class OnboardingScene {
   private async showCapitalSelection(ctx: BotContext) {
     ctx.session.currentStep = 'onboarding:capital_selection';
     const name = this.botService.getDisplayName(ctx);
-    const text = `💰 Để em gợi ý setup phù hợp, anh ${name} dự kiến bắt đầu khoảng bao nhiêu?`;
+    const text = `💰 Để em gợi ý setup phù hợp, ${name} dự kiến bắt đầu khoảng bao nhiêu?`;
     await ctx.reply(text, capitalSelectionKeyboard());
   }
 
@@ -140,12 +140,12 @@ export class OnboardingScene {
 
     let text: string;
     if (capitalRange === 'under-100') {
-      text = `👍 Anh ${name} có thể bắt đầu với mức nhỏ để trải nghiệm trước\n\nChỉ cần $100 là đủ để test hệ thống`;
+      text = `👍 ${name} có thể bắt đầu với mức nhỏ để trải nghiệm trước\n\nChỉ cần $100 là đủ để test hệ thống`;
     } else if (capitalRange === '100-500') {
-      text = `👍 Mức này rất phù hợp để bắt đầu anh ${name}\n\nNhiều anh em đang bắt đầu với $100–$300\n\nSetup chỉ mất 2 phút`;
+      text = `👍 Mức này rất phù hợp để bắt đầu ${name}\n\nNhiều người đang bắt đầu với $100–$300\n\nSetup chỉ mất 2 phút`;
     } else {
       // 500-2000 (retail_high)
-      text = `👍 Mức vốn tốt anh ${name}!\n\nEm khuyên dùng setup cân bằng rủi ro cho mức này\n\nEm sẽ hướng dẫn từng bước`;
+      text = `👍 Mức vốn tốt ${name}!\n\nEm khuyên dùng setup cân bằng rủi ro cho mức này\n\nEm sẽ hướng dẫn từng bước`;
     }
 
     await ctx.reply(text, retailActionKeyboard());
@@ -158,8 +158,8 @@ export class OnboardingScene {
     const name = this.botService.getDisplayName(ctx);
     const isWhale = tier === 'whale';
     const text = isWhale
-      ? `👑 Với tài khoản từ mức này, bên em ưu tiên setup riêng cho anh ${name} để tối ưu quản lý vốn và support sát hơn`
-      : `💎 Với tài khoản lớn, bên em sẽ setup riêng cho anh ${name}\nđể tối ưu lợi nhuận và kiểm soát rủi ro`;
+      ? `👑 Với tài khoản từ mức này, bên em ưu tiên setup riêng cho ${name} để tối ưu quản lý vốn và support sát hơn`
+      : `💎 Với tài khoản lớn, bên em sẽ setup riêng cho ${name}\nđể tối ưu lợi nhuận và kiểm soát rủi ro`;
 
     await ctx.reply(text, vipActionKeyboard());
 
@@ -203,7 +203,7 @@ export class OnboardingScene {
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
     const name = this.botService.getDisplayName(ctx);
-    await ctx.reply(`Trao đổi trực tiếp để setup phù hợp với vốn anh ${name}\n\n👤 Liên hệ: @Vitaperry\n\nAdmin sẽ liên hệ anh sớm nhất!`);
+    await ctx.reply(`Trao đổi trực tiếp để setup phù hợp với vốn ${name}\n\n👤 Liên hệ: @Vitaperry\n\nAdmin sẽ liên hệ ${name} sớm nhất!`);
   }
 
   // Keep old callbacks for backward compatibility
@@ -261,7 +261,7 @@ export class OnboardingScene {
       if (message === '/human') {
         ctx.session.inAiChat = false;
         await this.adminService.notifyAdmin(ctx.from.id, ctx.from?.username, ctx.from?.first_name);
-        await ctx.reply('✅ Anh đã được kết nối với nhân viên hỗ trợ. Em sẽ phản hồi sớm!');
+        await ctx.reply('✅ Đã kết nối với nhân viên hỗ trợ. Em sẽ phản hồi sớm!');
         return;
       }
       const response = await this.geminiService.chatSupport(message, this.botService.getDisplayName(ctx));
