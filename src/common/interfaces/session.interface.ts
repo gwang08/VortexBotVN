@@ -10,6 +10,7 @@ export interface BotSession extends Scenes.WizardSession {
   awaitingLinkSource?: boolean;
   isVip?: boolean;
   inAiChat?: boolean;
+  aiQuestionCount?: number;
   tier?: string;
 }
 

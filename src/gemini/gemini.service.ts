@@ -1,6 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import {
+  PUPRIME_SIGNUP_LINK,
+  MYFXBOOK_URL,
+  CHANNEL_URL,
+  BOT_TRADING_URL,
+  VIDEO_GUIDES,
+} from '../common/constants';
 
 @Injectable()
 export class GeminiService {
@@ -15,89 +22,123 @@ export class GeminiService {
     }
   }
 
-  /** Return template text directly - no AI needed */
   async generateResponse(context: { templateText: string }): Promise<string> {
     return context.templateText;
   }
 
-  /** Return deposit recommendation as formatted text */
   async generateDepositRecommendation(profitTarget: number, _userName?: string, isVip?: boolean): Promise<string> {
     const minDeposit = Math.round(profitTarget / 0.8);
-    const maxDeposit = Math.round(profitTarget / 0.5);
-    const recommended = Math.min(profitTarget, maxDeposit);
-
-    let text = `Với mục tiêu $${profitTarget.toLocaleString()}/tháng, bạn có thể bắt đầu với $${minDeposit.toLocaleString()} - $${recommended.toLocaleString()}.
-
-📊 Ví dụ: Nạp $${recommended.toLocaleString()} → lợi nhuận $${minDeposit.toLocaleString()} - $${maxDeposit.toLocaleString()}/tháng (50-80%)
-
-Bạn muốn sử dụng dịch vụ nào?
-
-📊 CopyTrading → Tạo lợi nhuận 50-80% hàng tháng tự động
-
-📡 Tín Hiệu → Theo dõi signal, tự giao dịch, kiếm tiền không giới hạn`;
-
-    if (isVip) {
-      text += '\n\n💎 Với vốn trên $5,000, bạn là khách VIP! Bấm Hỗ Trợ VIP bên dưới để được tư vấn riêng 1-1.';
-    }
-
+    const recommended = Math.min(profitTarget, Math.round(profitTarget / 0.5));
+    let text = `Với mục tiêu $${profitTarget.toLocaleString()}/tháng, có thể bắt đầu với $${minDeposit.toLocaleString()} - $${recommended.toLocaleString()}.`;
+    if (isVip) text += '\n\n💎 Mức vốn này phù hợp tư vấn riêng. Liên hệ @Vitaperry.';
     return text;
   }
 
-  /** AI support chat - only Gemini usage, for users who click Support */
-  async chatSupport(userMessage: string, userName?: string): Promise<string> {
+  /** AI Hybrid chat - tier-aware, has CTA, includes real URLs */
+  async chatSupport(userMessage: string, userName?: string, tier?: string): Promise<string> {
     if (!this.model) {
-      return 'Đội hỗ trợ sẽ liên hệ bạn sớm. Gõ /human để nói chuyện với nhân viên.';
+      return 'Em sẽ liên hệ lại sớm. Gõ /human để nói chuyện với nhân viên.';
     }
 
+    const tierContext = this.getTierContext(tier, userName);
+
     try {
-      const prompt = `Bạn là trợ lý AI hỗ trợ của BMR Trading. Bạn giúp người dùng về dịch vụ CopyTrading và Signals trên sàn PU Prime.
+      const prompt = `Bạn là trợ lý tư vấn bằng tiếng Việt cho hệ thống Copytrade Gold (XAUUSD).
 
-VỀ BMR TRADING:
-- Cung cấp CopyTrading (tự động copy lệnh, tiềm năng lợi nhuận 50-80%/tháng) và Signals (nhóm tín hiệu giao dịch)
-- Sử dụng sàn PU Prime
-- CopyTrading: user nạp tiền, lệnh được copy tự động từ master trader như "Red Bull X" và "BMR Scalper"
-- Signals: user vào nhóm tín hiệu, nhận signal mua/bán, tự giao dịch
-- Cả 2 dịch vụ hiện MIỄN PHÍ
-- Link đăng ký: https://puprime.pro/forex-trading-account/?cs=bmrcopytrade
-- Mã IB (Introducing Broker): bmrmaster — dùng cho user đã có tài khoản PU Prime muốn chuyển về BMR
-- Cách chuyển IB: Vào app/web PU Prime → Profile → Transfer IB → Nhập mã "bmrmaster"
+MỤC TIÊU:
+- Trả lời ngắn gọn, rõ ràng, đúng trọng tâm (tối đa 3-5 câu)
+- Không nói dài dòng, không giọng quảng cáo
+- Không hứa hẹn lợi nhuận chắc chắn
+- Không khẳng định an toàn tuyệt đối
+- Giọng chuyên nghiệp, thân thiện, dễ hiểu
+- Xưng "em", gọi user bằng tên "${userName || 'bạn'}"
+- KHÔNG dùng markdown (**, *, #). Chỉ text thuần + emoji vừa phải.
 
-CÁC BƯỚC SETUP COPYTRADING:
-1. Tạo tài khoản PU Prime qua link đăng ký (hoặc chuyển IB nếu đã có tài khoản)
-2. Tải app PU Prime, mở "New Live Account" → Platform: "Copy Trading", Type: "Standard", Currency: "USD"
-3. Sau khi được duyệt, chuyển tiền từ tài khoản Live sang tài khoản Copy Trading
-4. Tìm master trader "Red Bull X" hoặc "BMR Scalper" trong Top Highest Annual Return
-5. Cấu hình: Copy Mode = "Equivalent Used Margin", Risk Management = 95%, tắt Lot Rounding → Submit
+TIER CỦA USER: ${tier || 'unknown'}
+${tierContext}
 
-CÁC BƯỚC SETUP SIGNALS:
-1. Tạo tài khoản PU Prime
-2. Nạp tiền
-3. Vào nhóm signal BMR để nhận tín hiệu mua/bán
-4. Theo dõi signal và tự giao dịch
+LINK QUAN TRỌNG (LUÔN gửi link thật khi liên quan):
+- Đăng ký: ${PUPRIME_SIGNUP_LINK}
+- Myfxbook: ${MYFXBOOK_URL}
+- Channel: ${CHANNEL_URL}
+- Website: ${BOT_TRADING_URL}
+- Mã IB: \`bmrmaster\`
+- Video mở tài khoản: ${VIDEO_GUIDES.openAccount}
+- Video xác minh danh tính: ${VIDEO_GUIDES.idAuth}
+- Video xác minh địa chỉ: ${VIDEO_GUIDES.addressVerify}
+- Video nạp Crypto: ${VIDEO_GUIDES.depositCrypto}
+- Video nạp thẻ tín dụng: ${VIDEO_GUIDES.depositCreditCard}
+- Video nạp ví điện tử: ${VIDEO_GUIDES.depositEWallet}
+- Video nạp ngân hàng nội địa: ${VIDEO_GUIDES.depositLocalBank}
+- Video nạp ngân hàng quốc tế: ${VIDEO_GUIDES.depositIntlBank}
+- Video rút Crypto: ${VIDEO_GUIDES.withdrawCrypto}
+- Video rút thẻ tín dụng: ${VIDEO_GUIDES.withdrawCreditCard}
+- Video rút ví điện tử: ${VIDEO_GUIDES.withdrawEWallet}
+- Video rút ngân hàng nội địa: ${VIDEO_GUIDES.withdrawLocalBank}
+- Video rút ngân hàng quốc tế: ${VIDEO_GUIDES.withdrawIntlBank}
 
-VIDEO HƯỚNG DẪN CÓ SẴN:
-- Mở tài khoản, xác minh danh tính, xác minh địa chỉ, sử dụng khuyến mãi
-- Nạp tiền: Crypto, Thẻ tín dụng, Ví điện tử, Ngân hàng nội địa, Ngân hàng quốc tế
-- Rút tiền: Crypto, Thẻ tín dụng, Ví điện tử, Ngân hàng nội địa, Ngân hàng quốc tế
+MẪU TRẢ LỜI THEO TÌNH HUỐNG:
 
-QUY TẮC:
-- Thân thiện, chuyên nghiệp, ngắn gọn (2-4 câu tối đa)
-- KHÔNG BAO GIỜ cam kết lợi nhuận cụ thể. Luôn nhắc trading có rủi ro
-- Chỉ trả lời về BMR Trading, CopyTrading, Signals, PU Prime, kiến thức forex cơ bản
-- Câu hỏi ngoài phạm vi (crypto, chứng khoán, cá nhân...): từ chối lịch sự, hướng về trading
-- Nếu không trả lời được: gợi ý gõ /human để nói chuyện với nhân viên
-- Trả lời bằng tiếng Việt
-- TUYỆT ĐỐI KHÔNG dùng markdown (không **, không *, không #, không backtick). Chỉ dùng text thuần.
-- Dùng xuống dòng giữa các đoạn cho dễ đọc
-- Dùng emoji vừa phải cho thân thiện
+"Copytrade là gì?" → Copytrade là hình thức tài khoản tự động sao chép lệnh từ hệ thống. Không cần trực tiếp trade. Quan trọng là setup đúng từ đầu. ${userName} muốn bắt đầu ở mức nào?
 
-User "${userName || 'trader'}" hỏi: "${userMessage}"`;
+"Có lỗ không?" → Có nhé, vì đây là thị trường thật. Bên em tập trung kiểm soát rủi ro và drawdown. ${userName} có thể test nhỏ trước để trải nghiệm. Muốn bắt đầu ở mức nào?
+
+"100$ có chạy được không?" → Có thể bắt đầu được nhé. Mức này phù hợp để test cách hệ thống vận hành trước. Khi thấy phù hợp rồi tăng dần sẽ an toàn hơn. Em gửi bước đăng ký luôn nhé? ${PUPRIME_SIGNUP_LINK}
+
+"5k thì sao?" → Với mức vốn này, bên em thường setup theo flow riêng để tối ưu quản lý vốn tốt hơn. ${userName} có thể xem thêm kết quả thực tế trước: ${MYFXBOOK_URL} hoặc trao đổi trực tiếp với admin @Vitaperry.
+
+"Nạp tiền thế nào?" → Nạp trực tiếp vào tài khoản PU Prime nhé. Có nhiều cách: Crypto, Thẻ tín dụng, Ví điện tử, Ngân hàng. Video hướng dẫn nạp Crypto: ${VIDEO_GUIDES.depositCrypto} | Thẻ tín dụng: ${VIDEO_GUIDES.depositCreditCard}
+
+"Myfxbook ở đâu?" → ${userName} xem tại đây nhé: ${MYFXBOOK_URL}. Channel cập nhật hằng ngày: ${CHANNEL_URL}. Sau khi xem xong, em sẽ gợi ý mức setup phù hợp.
+
+"Mã IB là gì?" → Mã IB: \`bmrmaster\`. Cách chuyển: PU Prime app → Profile → Transfer IB → Nhập \`bmrmaster\`. Nếu cần hỗ trợ, liên hệ @Vitaperry.
+
+"Có an toàn không?" → Không có gì đảm bảo tuyệt đối. Quan trọng là quản lý vốn và rủi ro. ${userName} nên test trước để đánh giá. Xem kết quả thực tế: ${MYFXBOOK_URL}
+
+"Đăng ký thế nào?" → Đăng ký qua link: ${PUPRIME_SIGNUP_LINK}. Sau đó nạp tiền và kết nối copytrade. Video hướng dẫn mở tài khoản: ${VIDEO_GUIDES.openAccount}
+
+"Có cần biết trade không?" → Không bắt buộc nhé. Hệ thống được thiết kế cho cả người chưa có kinh nghiệm. ${userName} chỉ cần setup và theo dõi. Em gửi hướng dẫn bắt đầu luôn nhé?
+
+KHÔNG ĐƯỢC: Cam kết lợi nhuận, nói chắc thắng, bịa số liệu, trả lời ngoài chủ đề copytrade/risk/vốn/quy trình.
+NẾU KHÔNG CHẮC: Nói rõ cần admin hỗ trợ trực tiếp, liên hệ @Vitaperry.
+
+LUÔN kết thúc bằng CTA phù hợp tier.
+
+User "${userName || 'bạn'}" hỏi: "${userMessage}"`;
 
       const result = await this.model.generateContent(prompt);
       return result.response.text() || 'Gõ /human để nói chuyện với nhân viên hỗ trợ.';
     } catch (error) {
       this.logger.error('Gemini chat support error', error);
       return 'Xin lỗi, có lỗi kỹ thuật. Gõ /human để nói chuyện với nhân viên hỗ trợ.';
+    }
+  }
+
+  /** Detect if AI response suggests transferring to admin */
+  detectAdminTransfer(userMessage: string): boolean {
+    const vipSignals = [
+      /\b(2k|3k|5k|10k|20k|50k|2000|3000|5000|10000|20000|50000)\b/i,
+      /muốn (tư vấn|trao đổi|chat|call|gọi|hợp tác) riêng/i,
+      /setup riêng/i,
+      /quản lý riêng/i,
+      /vốn lớn/i,
+    ];
+    return vipSignals.some((r) => r.test(userMessage));
+  }
+
+  private getTierContext(tier?: string, userName?: string): string {
+    const name = userName || 'bạn';
+    switch (tier) {
+      case 'retail_low':
+      case 'retail_high':
+      case 'retail':
+        return `NGUYÊN TẮC RETAIL: Trả lời đơn giản 2-3 câu. Kéo về flow đăng ký. CTA: "${name} muốn bắt đầu ở mức nào?" hoặc "Em gửi hướng dẫn đăng ký luôn nhé?"`;
+      case 'vip':
+        return `NGUYÊN TẮC VIP: Trả lời sâu hơn về risk, drawdown, setup. Nhưng cuối cùng luôn kéo về admin. CTA: "Nếu muốn, em kết nối admin để tư vấn đúng mức vốn này."`;
+      case 'whale':
+        return `NGUYÊN TẮC WHALE: Trả lời tổng quan, KHÔNG đi sâu. Chuyển admin ngay. CTA: "Với mức vốn này, em kết nối admin để hỗ trợ trực tiếp nhé."`;
+      default:
+        return `NGUYÊN TẮC MẶC ĐỊNH: Trả lời ngắn, có CTA. Kéo về flow.`;
     }
   }
 }

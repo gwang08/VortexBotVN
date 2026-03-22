@@ -247,8 +247,10 @@ export class OnboardingScene {
   async onAiSupport(ctx: BotContext) {
     await ctx.answerCbQuery();
     ctx.session.inAiChat = true;
+    ctx.session.aiQuestionCount = 0;
+    const name = this.botService.getDisplayName(ctx);
     await ctx.reply(
-      '💬 Hỗ Trợ AI\n\nXin chào! Tôi là trợ lý AI của BMR Trading. Hỏi tôi bất cứ điều gì về:\n\n• CopyTrading & Tín Hiệu\n• Tạo tài khoản PU Prime\n• Nạp & rút tiền\n• Kiến thức trading cơ bản\n\nGõ /human bất cứ lúc nào để nói chuyện với nhân viên.',
+      `💬 Hỗ Trợ AI\n\nChào ${name}! Em là trợ lý AI của BMR Trading.\n\nHỏi em về:\n• Copytrade & cách hoạt động\n• Vốn & rủi ro\n• Quy trình đăng ký & nạp tiền\n\nGõ /human để nói chuyện với nhân viên.`,
     );
   }
 
@@ -260,11 +262,27 @@ export class OnboardingScene {
     if (ctx.session.inAiChat) {
       if (message === '/human') {
         ctx.session.inAiChat = false;
+        ctx.session.aiQuestionCount = 0;
         await this.adminService.notifyAdmin(ctx.from.id, ctx.from?.username, ctx.from?.first_name);
         await ctx.reply('✅ Đã kết nối với nhân viên hỗ trợ. Em sẽ phản hồi sớm!');
         return;
       }
-      const response = await this.geminiService.chatSupport(message, this.botService.getDisplayName(ctx));
+
+      // Count AI questions + detect VIP signals
+      ctx.session.aiQuestionCount = (ctx.session.aiQuestionCount || 0) + 1;
+      const shouldTransfer = this.geminiService.detectAdminTransfer(message) || ctx.session.aiQuestionCount >= 3;
+
+      // Auto-transfer to admin for VIP/whale or after 3+ questions
+      if (shouldTransfer && (ctx.session.isVip || ctx.session.aiQuestionCount >= 5)) {
+        ctx.session.inAiChat = false;
+        ctx.session.aiQuestionCount = 0;
+        await this.adminService.notifyAdmin(ctx.from.id, ctx.from?.username, ctx.from?.first_name);
+        const name = this.botService.getDisplayName(ctx);
+        await ctx.reply(`Em thấy nhu cầu của ${name} phù hợp tư vấn riêng hơn bot tự động.\nEm kết nối admin để hỗ trợ sát hơn nhé.\n\n👤 Liên hệ: @Vitaperry`);
+        return;
+      }
+
+      const response = await this.geminiService.chatSupport(message, this.botService.getDisplayName(ctx), ctx.session.tier);
       await ctx.reply(response);
       return;
     }
