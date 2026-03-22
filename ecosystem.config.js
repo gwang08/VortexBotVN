@@ -36,6 +36,7 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: "512M",
+      cron_restart: "0 */6 * * *",
       env: loadEnvFile(),
       error_file: "./logs/err.log",
       out_file: "./logs/out.log",
