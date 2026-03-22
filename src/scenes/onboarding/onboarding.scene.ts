@@ -302,13 +302,14 @@ export class OnboardingScene {
 
       const response = await this.geminiService.chatSupport(message, this.botService.getDisplayName(ctx), ctx.session.tier);
 
-      // Send AI response with tier-aware action buttons
-      const keyboard = this.getAiChatKeyboard(ctx.session.tier);
-      if (keyboard) {
-        await ctx.reply(response, keyboard);
-      } else {
+      // Show capital selection when AI/user asks about starting amount
+      const asksAboutCapital = /mức nào|bao nhiêu|mức vốn|bắt đầu.*mức/i.test(response) || /mức nào|bao nhiêu|vốn|bắt đầu/i.test(message);
+      if (asksAboutCapital) {
         await ctx.reply(response);
         await ctx.reply('Chọn mức vốn dự kiến:', capitalSelectionKeyboard());
+      } else {
+        const keyboard = this.getAiChatKeyboard(ctx.session.tier);
+        await ctx.reply(response, keyboard ?? undefined);
       }
       return;
     }
