@@ -42,6 +42,6 @@ export class BotService {
   }
 
   getDisplayName(ctx: BotContext): string {
-    return ctx.from?.username || ctx.from?.first_name || 'trader';
+    return ctx.from?.first_name || ctx.from?.username || 'trader';
   }
 }
