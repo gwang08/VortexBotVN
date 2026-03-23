@@ -61,7 +61,7 @@ export class BotUpdate {
         return;
       }
 
-      if (message.startsWith('/newlink')) {
+      if (message.startsWith('/link')) {
         const args = message.split(' ').slice(1).join('_');
         if (!args) {
           ctx.session.awaitingLinkSource = true;
@@ -84,7 +84,7 @@ export class BotUpdate {
       return callNext();
     }
 
-    // Admin đang nhập source cho /newlink
+    // Admin đang nhập source cho /link
     if (this.adminService.isAdmin(chatId) && ctx.session?.awaitingLinkSource) {
       ctx.session.awaitingLinkSource = false;
       const source = message.replace(/[^a-zA-Z0-9_-]/g, '');
@@ -204,7 +204,7 @@ export class BotUpdate {
   private async showTrackingLinks(ctx: BotContext): Promise<void> {
     const links = await this.adminService.getTrackingLinks();
     if (links.length === 0) {
-      await ctx.reply('📭 Chưa có tracking link nào.\n\nDùng /newlink <source> để tạo.');
+      await ctx.reply('📭 Chưa có tracking link nào.\n\nDùng /link <source> để tạo.');
       return;
     }
 

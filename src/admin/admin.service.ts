@@ -134,7 +134,7 @@ export class AdminService {
   async sendHelpMessage(ctx: BotContext): Promise<void> {
     const text = `📋 Admin Commands:\n
 /help        – Show this help message
-/newlink     – Create tracking link: /newlink <source>
+/link     – Create tracking link: /link <source>
 /checklinks  – List all tracking links
 /status      – View user info: /status <telegram_id>
 /stats       – User statistics by source & status
