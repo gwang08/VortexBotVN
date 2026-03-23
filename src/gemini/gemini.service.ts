@@ -30,7 +30,7 @@ export class GeminiService {
     const minDeposit = Math.round(profitTarget / 0.8);
     const recommended = Math.min(profitTarget, Math.round(profitTarget / 0.5));
     let text = `Với mục tiêu $${profitTarget.toLocaleString()}/tháng, có thể bắt đầu với $${minDeposit.toLocaleString()} - $${recommended.toLocaleString()}.`;
-    if (isVip) text += '\n\n💎 Mức vốn này phù hợp tư vấn riêng. Liên hệ @Vitaperry.';
+    if (isVip) text += '\n\n💎 Mức vốn này phù hợp tư vấn riêng. Liên hệ @KenMasterTrade.';
     return text;
   }
 
@@ -85,13 +85,13 @@ MẪU TRẢ LỜI THEO TÌNH HUỐNG:
 
 "100$ có chạy được không?" → Có thể bắt đầu được nhé. Mức này phù hợp để test cách hệ thống vận hành trước. Khi thấy phù hợp rồi tăng dần sẽ an toàn hơn. Em gửi bước đăng ký luôn nhé? ${PUPRIME_SIGNUP_LINK}
 
-"5k thì sao?" → Với mức vốn này, bên em thường setup theo flow riêng để tối ưu quản lý vốn tốt hơn. ${userName} có thể xem thêm kết quả thực tế trước: ${MYFXBOOK_URL} hoặc trao đổi trực tiếp với admin @Vitaperry.
+"5k thì sao?" → Với mức vốn này, bên em thường setup theo flow riêng để tối ưu quản lý vốn tốt hơn. ${userName} có thể xem thêm kết quả thực tế trước: ${MYFXBOOK_URL} hoặc trao đổi trực tiếp với admin @KenMasterTrade.
 
 "Nạp tiền thế nào?" → Nạp trực tiếp vào tài khoản PU Prime nhé. Có nhiều cách: Crypto, Thẻ tín dụng, Ví điện tử, Ngân hàng. Video hướng dẫn nạp Crypto: ${VIDEO_GUIDES.depositCrypto} | Thẻ tín dụng: ${VIDEO_GUIDES.depositCreditCard}
 
 "Myfxbook ở đâu?" → ${userName} xem tại đây nhé: ${MYFXBOOK_URL}. Channel cập nhật hằng ngày: ${CHANNEL_URL}. Sau khi xem xong, em sẽ gợi ý mức setup phù hợp.
 
-"Mã IB là gì?" → Mã IB: bmrmaster. Cách chuyển: PU Prime app → Profile → Transfer IB → Nhập bmrmaster. Nếu cần hỗ trợ, liên hệ @Vitaperry.
+"Mã IB là gì?" → Mã IB: bmrmaster. Cách chuyển: PU Prime app → Profile → Transfer IB → Nhập bmrmaster. Nếu cần hỗ trợ, liên hệ @KenMasterTrade.
 
 "Có an toàn không?" → Không có gì đảm bảo tuyệt đối. Quan trọng là quản lý vốn và rủi ro. ${userName} nên test trước để đánh giá. Xem kết quả thực tế: ${MYFXBOOK_URL}
 
@@ -100,7 +100,7 @@ MẪU TRẢ LỜI THEO TÌNH HUỐNG:
 "Có cần biết trade không?" → Không bắt buộc nhé. Hệ thống được thiết kế cho cả người chưa có kinh nghiệm. ${userName} chỉ cần setup và theo dõi. Em gửi hướng dẫn bắt đầu luôn nhé?
 
 KHÔNG ĐƯỢC: Cam kết lợi nhuận, nói chắc thắng, bịa số liệu, trả lời ngoài chủ đề copytrade/risk/vốn/quy trình.
-NẾU KHÔNG CHẮC: Nói rõ cần admin hỗ trợ trực tiếp, liên hệ @Vitaperry.
+NẾU KHÔNG CHẮC: Nói rõ cần admin hỗ trợ trực tiếp, liên hệ @KenMasterTrade.
 
 LUÔN kết thúc bằng CTA phù hợp tier.
 

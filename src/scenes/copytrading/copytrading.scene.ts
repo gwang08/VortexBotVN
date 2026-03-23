@@ -187,7 +187,7 @@ export class CopyTradingScene {
       data: { status: 'copy_claimed', lastStep: 'ct_copy_enabled' },
     });
 
-    await ctx.reply('🔥 Bạn đã sẵn sàng!\n\nTheo dõi kết quả hàng ngày tại kênh.\nHỗ trợ: @Vitaperry');
+    await ctx.reply('🔥 Bạn đã sẵn sàng!\n\nTheo dõi kết quả hàng ngày tại kênh.\nHỗ trợ: @KenMasterTrade');
     await ctx.scene.leave();
   }
 

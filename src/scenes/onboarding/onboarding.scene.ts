@@ -221,7 +221,7 @@ export class OnboardingScene {
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
     const name = this.botService.getDisplayName(ctx);
-    await ctx.reply(`Trao đổi trực tiếp để setup phù hợp với vốn ${name}\n\n👤 Liên hệ: @Vitaperry\n\nAdmin sẽ liên hệ ${name} sớm nhất!`);
+    await ctx.reply(`Trao đổi trực tiếp để setup phù hợp với vốn ${name}\n\n👤 Liên hệ: @KenMasterTrade\n\nAdmin sẽ liên hệ ${name} sớm nhất!`);
   }
 
   // Keep old callbacks for backward compatibility
@@ -258,7 +258,7 @@ export class OnboardingScene {
   async onVipSupport(ctx: BotContext) {
     await ctx.answerCbQuery();
     await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
-    await ctx.reply('💎 Hỗ Trợ VIP\n\n👤 Liên hệ: @Vitaperry để được tư vấn 1-1!');
+    await ctx.reply('💎 Hỗ Trợ VIP\n\n👤 Liên hệ: @KenMasterTrade để được tư vấn 1-1!');
   }
 
   @Action(CALLBACKS.aiSupport)
@@ -296,7 +296,7 @@ export class OnboardingScene {
         ctx.session.aiQuestionCount = 0;
         await this.adminService.notifyAdmin(ctx.from.id, ctx.from?.username, ctx.from?.first_name);
         const name = this.botService.getDisplayName(ctx);
-        await ctx.reply(`Em thấy nhu cầu của ${name} phù hợp tư vấn riêng hơn bot tự động.\nEm kết nối admin để hỗ trợ sát hơn nhé.\n\n👤 Liên hệ: @Vitaperry`);
+        await ctx.reply(`Em thấy nhu cầu của ${name} phù hợp tư vấn riêng hơn bot tự động.\nEm kết nối admin để hỗ trợ sát hơn nhé.\n\n👤 Liên hệ: @KenMasterTrade`);
         return;
       }
 

@@ -185,11 +185,11 @@ export class FollowUpService implements OnModuleInit {
     if (user.status === 'capital_selected' && user.isVip) {
       if (user.followUpCount === 0) {
         return {
-          text: `Với tài khoản từ mức này, bên em thường setup riêng để tối ưu quản lý vốn và support sát hơn.\n${name} nhắn admin tại đây để được tư vấn đúng flow: @Vitaperry`,
+          text: `Với tài khoản từ mức này, bên em thường setup riêng để tối ưu quản lý vốn và support sát hơn.\n${name} nhắn admin tại đây để được tư vấn đúng flow: @KenMasterTrade`,
         };
       }
       return {
-        text: `Em nhắc lại nhẹ: mức vốn của ${name} phù hợp flow VIP hơn retail.\nĐi theo flow riêng sẽ đỡ mất thời gian và chuẩn hơn về risk.\n\n👤 Liên hệ: @Vitaperry`,
+        text: `Em nhắc lại nhẹ: mức vốn của ${name} phù hợp flow VIP hơn retail.\nĐi theo flow riêng sẽ đỡ mất thời gian và chuẩn hơn về risk.\n\n👤 Liên hệ: @KenMasterTrade`,
       };
     }
 
