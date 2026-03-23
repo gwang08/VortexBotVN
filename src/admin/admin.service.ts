@@ -41,12 +41,19 @@ export class AdminService {
 
   /** Handle admin commands when called from within scenes */
   async handleCommand(ctx: BotContext, message: string): Promise<void> {
+    // Support multi-line: split by newline, process each /link command
+    const lines = message.split('\n').map((l) => l.trim()).filter(Boolean);
+    if (lines.length > 1 && lines.every((l) => l.startsWith('/link '))) {
+      await this.createTrackingLinksBatch(ctx, lines);
+      return;
+    }
+
     if (message === '/help') {
       await this.sendHelpMessage(ctx);
     } else if (message.startsWith('/link')) {
       const args = message.split(' ').slice(1).join('_');
       if (!args) {
-        await ctx.reply('Usage: /link <source>');
+        await ctx.reply('Usage: /link <source>\n\nCó thể gửi nhiều link cùng lúc:\n/link source1\n/link source2');
         return;
       }
       const source = args.replace(/[^a-zA-Z0-9_-]/g, '');
@@ -87,6 +94,39 @@ export class AdminService {
     await ctx.reply(
       `✅ Link tracking đã tạo!\n\n🔗 ${link}\n\n📊 Source: ${source}\n\nGửi link này cho channel quảng cáo.\nKhi user bấm vào, bot sẽ tự động ghi nhận source.`,
     );
+  }
+
+  /** Batch create multiple tracking links, return single summary message */
+  async createTrackingLinksBatch(ctx: BotContext, lines: string[]): Promise<void> {
+    const botInfo = await ctx.telegram.getMe();
+    const created: string[] = [];
+    const skipped: string[] = [];
+
+    for (const line of lines) {
+      const source = line.split(' ').slice(1).join('_').replace(/[^a-zA-Z0-9_-]/g, '');
+      if (!source) continue;
+
+      if (await this.hasTrackingLink(source)) {
+        skipped.push(source);
+      } else {
+        await this.saveTrackingLink(source);
+        const link = `https://t.me/${botInfo.username}?start=ref_${source}`;
+        created.push(`📊 ${source}\n🔗 ${link}`);
+      }
+    }
+
+    let text = '';
+    if (created.length > 0) {
+      text += `✅ Đã tạo ${created.length} link:\n\n${created.join('\n\n')}`;
+    }
+    if (skipped.length > 0) {
+      text += `${text ? '\n\n' : ''}⚠️ Đã tồn tại: ${skipped.join(', ')}`;
+    }
+    if (!text) {
+      text = '⚠️ Không có source hợp lệ.';
+    }
+
+    await ctx.reply(text);
   }
 
   /** Show all tracking links */
