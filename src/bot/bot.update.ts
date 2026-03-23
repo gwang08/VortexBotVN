@@ -61,20 +61,8 @@ export class BotUpdate {
         return;
       }
 
-      if (message.startsWith('/link')) {
-        const args = message.split(' ').slice(1).join('_');
-        if (!args) {
-          ctx.session.awaitingLinkSource = true;
-          await ctx.reply('📎 Nhập tên nguồn quảng cáo (VD: forex_vn, gold_trading, fb_ads):');
-          return;
-        }
-        const source = args.replace(/[^a-zA-Z0-9_-]/g, '');
-        await this.createTrackingLink(ctx, source);
-        return;
-      }
-
-      if (message.startsWith('/checklinks')) {
-        await this.showTrackingLinks(ctx);
+      if (message.startsWith('/link') || message.startsWith('/checklinks')) {
+        await this.adminService.handleCommand(ctx, message);
         return;
       }
     }
@@ -92,7 +80,7 @@ export class BotUpdate {
         await ctx.reply('⚠️ Tên không hợp lệ. Chỉ dùng chữ, số, _ và -');
         return;
       }
-      await this.createTrackingLink(ctx, source);
+      await this.adminService.createTrackingLink(ctx, source);
       return;
     }
 
@@ -185,36 +173,4 @@ export class BotUpdate {
     await ctx.scene.enter('onboarding');
   }
 
-  private async createTrackingLink(ctx: BotContext, source: string): Promise<void> {
-    if (await this.adminService.hasTrackingLink(source)) {
-      const botInfo = await ctx.telegram.getMe();
-      const link = `https://t.me/${botInfo.username}?start=ref_${source}`;
-      await ctx.reply(`⚠️ Source "${source}" đã tồn tại!\n\n🔗 ${link}\n\nVui lòng dùng tên khác.`);
-      return;
-    }
-
-    await this.adminService.saveTrackingLink(source);
-    const botInfo = await ctx.telegram.getMe();
-    const link = `https://t.me/${botInfo.username}?start=ref_${source}`;
-    await ctx.reply(
-      `✅ Link tracking đã tạo!\n\n🔗 ${link}\n\n📊 Source: ${source}\n\nGửi link này cho channel quảng cáo.\nKhi user bấm vào, bot sẽ tự động ghi nhận source.`,
-    );
-  }
-
-  private async showTrackingLinks(ctx: BotContext): Promise<void> {
-    const links = await this.adminService.getTrackingLinks();
-    if (links.length === 0) {
-      await ctx.reply('📭 Chưa có tracking link nào.\n\nDùng /link <source> để tạo.');
-      return;
-    }
-
-    const botInfo = await ctx.telegram.getMe();
-    const lines = links.map((l, i) => {
-      const link = `https://t.me/${botInfo.username}?start=ref_${l.source}`;
-      const date = new Date(l.createdAt).toLocaleDateString('vi-VN');
-      return `${i + 1}. 📊 ${l.source}\n   🔗 ${link}\n   📅 ${date}`;
-    });
-
-    await ctx.reply(`📋 Tracking Links (${links.length}):\n\n${lines.join('\n\n')}`);
-  }
 }

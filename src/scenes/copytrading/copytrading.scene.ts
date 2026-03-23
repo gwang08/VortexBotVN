@@ -203,8 +203,13 @@ export class CopyTradingScene {
     const message = (ctx.message as any)?.text;
     if (!message || !ctx.from) return;
 
-    // Let commands pass through to bot middleware
-    if (message.startsWith('/')) return;
+    // Handle admin commands directly (scene intercepts before middleware)
+    if (message.startsWith('/')) {
+      if (this.adminService.isAdmin(ctx.chat!.id)) {
+        await this.adminService.handleCommand(ctx, message);
+      }
+      return;
+    }
 
     if (ctx.session.awaitingAccount) {
       const accMatch = message.match(/(?:ACC[:\s]*)?(\d{6,10})/i);

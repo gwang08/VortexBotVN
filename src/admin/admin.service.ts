@@ -39,6 +39,74 @@ export class AdminService {
     return String(chatId) === this.adminChatId;
   }
 
+  /** Handle admin commands when called from within scenes */
+  async handleCommand(ctx: BotContext, message: string): Promise<void> {
+    if (message === '/help') {
+      await this.sendHelpMessage(ctx);
+    } else if (message.startsWith('/link')) {
+      const args = message.split(' ').slice(1).join('_');
+      if (!args) {
+        await ctx.reply('Usage: /link <source>');
+        return;
+      }
+      const source = args.replace(/[^a-zA-Z0-9_-]/g, '');
+      await this.createTrackingLink(ctx, source);
+    } else if (message.startsWith('/checklinks')) {
+      await this.showTrackingLinks(ctx);
+    } else if (message.startsWith('/status')) {
+      const parts = message.split(' ');
+      if (parts.length < 2) {
+        await ctx.reply('Usage: /status <telegram_id>');
+        return;
+      }
+      await this.sendUserStatus(ctx, parts[1]);
+    } else if (message === '/stats') {
+      await this.sendStats(ctx);
+    } else if (message.startsWith('/verify')) {
+      const parts = message.split(' ');
+      if (parts.length < 2) {
+        await ctx.reply('Usage: /verify <account>');
+        return;
+      }
+      await this.verifyAccount(ctx, parts[1]);
+    }
+  }
+
+  /** Create tracking link */
+  async createTrackingLink(ctx: BotContext, source: string): Promise<void> {
+    if (await this.hasTrackingLink(source)) {
+      const botInfo = await ctx.telegram.getMe();
+      const link = `https://t.me/${botInfo.username}?start=ref_${source}`;
+      await ctx.reply(`⚠️ Source "${source}" đã tồn tại!\n\n🔗 ${link}\n\nVui lòng dùng tên khác.`);
+      return;
+    }
+
+    await this.saveTrackingLink(source);
+    const botInfo = await ctx.telegram.getMe();
+    const link = `https://t.me/${botInfo.username}?start=ref_${source}`;
+    await ctx.reply(
+      `✅ Link tracking đã tạo!\n\n🔗 ${link}\n\n📊 Source: ${source}\n\nGửi link này cho channel quảng cáo.\nKhi user bấm vào, bot sẽ tự động ghi nhận source.`,
+    );
+  }
+
+  /** Show all tracking links */
+  async showTrackingLinks(ctx: BotContext): Promise<void> {
+    const links = await this.getTrackingLinks();
+    if (links.length === 0) {
+      await ctx.reply('📭 Chưa có tracking link nào.\n\nDùng /link <source> để tạo.');
+      return;
+    }
+
+    const botInfo = await ctx.telegram.getMe();
+    const lines = links.map((l, i) => {
+      const link = `https://t.me/${botInfo.username}?start=ref_${l.source}`;
+      const date = new Date(l.createdAt).toLocaleDateString('vi-VN');
+      return `${i + 1}. 📊 ${l.source}\n   🔗 ${link}\n   📅 ${date}`;
+    });
+
+    await ctx.reply(`📋 Tracking Links (${links.length}):\n\n${lines.join('\n\n')}`);
+  }
+
   async forwardUserMessage(userId: number, username: string, text: string): Promise<void> {
     const displayName = username ? `@${username}` : `ID:${userId}`;
     const message = `💬 Tin nhắn từ ${displayName} (ID: ${userId}):\n\n"${text}"\n\n↩️ Reply tin nhắn này để trả lời.`;
