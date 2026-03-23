@@ -277,6 +277,9 @@ export class OnboardingScene {
     const message = (ctx.message as any)?.text;
     if (!message || !ctx.from) return;
 
+    // Let commands pass through to bot middleware (admin /link, /stats, etc.)
+    if (message.startsWith('/') && message !== '/human') return;
+
     if (ctx.session.inAiChat) {
       if (message === '/human') {
         ctx.session.inAiChat = false;
