@@ -2,7 +2,7 @@ import * as path from 'path';
 
 // PuPrime signup link
 export const PUPRIME_SIGNUP_LINK =
-  'https://puprime.pro/forex-trading-account/?cs=bmrcopytrade';
+  'https://vn.puprime.pro/forex-trading-account/?affid=bmrmaster';
 
 // IB Code for existing PuPrime users
 export const IB_CODE = 'bmrmaster';
