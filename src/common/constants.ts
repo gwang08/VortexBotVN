@@ -45,6 +45,9 @@ export const VIDEO_GUIDES = {
 // Text templates for account creation (shared between CopyTrading & Signals)
 export const ACCOUNT_CREATION_TEXT = `Tạo tài khoản PU Prime theo link sau: ${PUPRIME_SIGNUP_LINK}
 
+⚠️ Nếu không truy cập được link, hãy cài app 1.1.1.1 (Cloudflare WARP) rồi bật Connect:
+📱 Tải tại: https://1.1.1.1/
+
 Video HƯỚNG DẪN:
 
 📣 Mở Tài Khoản Live PuPrime: ${VIDEO_GUIDES.openAccount}
