@@ -6,6 +6,8 @@ import {
   welcomeKeyboard,
   copytradeInfoKeyboard,
   vipSignalsKeyboard,
+  freeSignalsKeyboard,
+  freeSignalsUpsellKeyboard,
   capitalSelectionKeyboard,
   aiChatRetailKeyboard,
   aiChatVipKeyboard,
@@ -47,17 +49,10 @@ export class OnboardingScene {
     const text =
       `🔥 Chào mừng đến BMR Copytrade System\n\n` +
       `Bạn không cần biết trade vẫn có thể kiếm tiền.\n\n` +
-      `Hiện tại:\n\n` +
-      `✅ 300+ trader đang copy\n` +
-      `✅ 5–10% lợi nhuận/ngày\n` +
-      `✅ 100% tự động\n\n` +
-      `📊 Kết quả hôm nay:\n\n` +
-      `+7.2%\n+5.4%\n+8.1%\n\n` +
       `Bạn muốn:\n\n` +
-      `1️⃣ Copytrade tự động\n` +
-      `2️⃣ Nhận tín hiệu VIP\n` +
-      `3️⃣ Xem kết quả\n` +
-      `4️⃣ Liên hệ Admin`;
+      `1. Copytrade tự động\n` +
+      `2. VIP Signals\n` +
+      `3. Free Signals (miễn phí)`;
     await ctx.reply(text, welcomeKeyboard());
   }
 
@@ -108,6 +103,48 @@ export class OnboardingScene {
       `3–5 kèo mỗi ngày\n` +
       `Winrate cao`;
     await ctx.reply(text, vipSignalsKeyboard());
+  }
+
+  // ── SCREEN 2C: FREE SIGNALS (Soft Funnel) ──
+  @Action(CALLBACKS.freeSignals)
+  async onFreeSignals(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.currentStep = 'onboarding:free_signals';
+
+    await this.prisma.user.update({
+      where: { id: BigInt(ctx.from!.id) },
+      data: { flow: 'free_signals', lastStep: 'free_signals_viewed' },
+    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+
+    const text =
+      `📊 Free Signals\n\n` +
+      `Bạn sẽ nhận:\n\n` +
+      `✅ Gold signals\n` +
+      `✅ Forex signals\n` +
+      `✅ Phân tích thị trường\n\n` +
+      `👇 Join bên dưới`;
+    await ctx.reply(text, freeSignalsKeyboard());
+
+    // Upsell after showing free signals
+    const upsellText =
+      `🔥 Free Signals là bản giới hạn\n\n` +
+      `VIP sẽ:\n\n` +
+      `✅ Kèo sớm hơn\n` +
+      `✅ Risk thấp hơn\n` +
+      `✅ Lợi nhuận cao hơn`;
+    await ctx.reply(upsellText, freeSignalsUpsellKeyboard());
+  }
+
+  // ── UPGRADE VIP → enter copytrading (register → deposit → unlock) ──
+  @Action(CALLBACKS.upgradeVip)
+  async onUpgradeVip(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.selectedFlow = 'copytrading';
+    await this.prisma.user.update({
+      where: { id: BigInt(ctx.from!.id) },
+      data: { flow: 'copytrading', lastStep: 'upgrade_vip_clicked' },
+    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+    await ctx.scene.enter('copytrading');
   }
 
   // ── PERFORMANCE (view Myfxbook) ──

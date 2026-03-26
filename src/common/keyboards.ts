@@ -3,13 +3,24 @@ import { CALLBACKS, BOT_TRADING_URL, MYFXBOOK_URL, CHANNEL_URL } from './constan
 
 // ── NEW FLOW KEYBOARDS ──
 
-// Screen 1: Welcome
+// Screen 1: Welcome — 3 choices
 export const welcomeKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('🚀 Copytrade Auto', CALLBACKS.copytrading)],
+    [Markup.button.callback('🚀 Copytrade', CALLBACKS.copytrading)],
     [Markup.button.callback('📈 VIP Signals', CALLBACKS.signals)],
-    [Markup.button.callback('📊 Performance', CALLBACKS.viewPerformance)],
-    [Markup.button.callback('🧑‍💼 Support VIP', CALLBACKS.vipSupport)],
+    [Markup.button.callback('📊 Free Signals', CALLBACKS.freeSignals)],
+  ]);
+
+// Free Signals: Join channel
+export const freeSignalsKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.url('📊 Join Free Signals', CHANNEL_URL)],
+  ]);
+
+// Free Signals upsell: Upgrade VIP
+export const freeSignalsUpsellKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback('🔥 Upgrade VIP', CALLBACKS.upgradeVip)],
   ]);
 
 // Screen 2A: Copytrade info

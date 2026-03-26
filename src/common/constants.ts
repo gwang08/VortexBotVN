@@ -162,4 +162,6 @@ export const CALLBACKS = {
   startCopytradeSetup: 'start_copytrade_setup',
   depositGuide: 'deposit_guide',
   viewPerformance: 'view_performance',
+  freeSignals: 'free_signals',
+  upgradeVip: 'upgrade_vip',
 };
