@@ -165,9 +165,9 @@ export class CopyTradingScene {
     const text =
       `🔥 Chúc mừng\n\n` +
       `Bạn đã đủ điều kiện:\n\n` +
-      `✔ Copytrade\n` +
-      `✔ VIP Signals\n` +
-      `✔ Support riêng`;
+      `✅ Copytrade\n` +
+      `✅ VIP Signals\n` +
+      `✅ Support riêng`;
     await this.botService.sendWithKeyboard(ctx, text, unlockVipKeyboard());
   }
 

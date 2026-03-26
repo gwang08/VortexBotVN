@@ -48,9 +48,9 @@ export class OnboardingScene {
       `🔥 Chào mừng đến BMR Copytrade System\n\n` +
       `Bạn không cần biết trade vẫn có thể kiếm tiền.\n\n` +
       `Hiện tại:\n\n` +
-      `✔ 300+ trader đang copy\n` +
-      `✔ 5–10% lợi nhuận/ngày\n` +
-      `✔ 100% tự động\n\n` +
+      `✅ 300+ trader đang copy\n` +
+      `✅ 5–10% lợi nhuận/ngày\n` +
+      `✅ 100% tự động\n\n` +
       `📊 Kết quả hôm nay:\n\n` +
       `+7.2%\n+5.4%\n+8.1%\n\n` +
       `Bạn muốn:\n\n` +
@@ -75,9 +75,9 @@ export class OnboardingScene {
 
     const text =
       `🔥 BMR Copytrade\n\n` +
-      `✔ Không cần biết trade\n` +
-      `✔ Tự động vào lệnh\n` +
-      `✔ Copy tài khoản master\n\n` +
+      `✅ Không cần biết trade\n` +
+      `✅ Tự động vào lệnh\n` +
+      `✅ Copy tài khoản master\n\n` +
       `Lợi nhuận trung bình:\n\n` +
       `5–10% mỗi ngày\n\n` +
       `Bắt đầu:\n\n` +
@@ -101,9 +101,9 @@ export class OnboardingScene {
 
     const text =
       `📈 BMR VIP Signals\n\n` +
-      `✔ Tín hiệu Gold / Forex\n` +
-      `✔ Phân tích chi tiết\n` +
-      `✔ Risk Management\n\n` +
+      `✅ Tín hiệu Gold / Forex\n` +
+      `✅ Phân tích chi tiết\n` +
+      `✅ Risk Management\n\n` +
       `VIP nhận:\n\n` +
       `3–5 kèo mỗi ngày\n` +
       `Winrate cao`;
