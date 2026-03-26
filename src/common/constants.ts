@@ -10,7 +10,7 @@ export const IB_CODE = 'bmrmaster';
 // External links
 export const BOT_TRADING_URL = 'https://bmrcopytrade.vn/';
 export const MYFXBOOK_URL = 'https://www.myfxbook.com/members/bmrmaster/bmr-scalper-gold/11980201';
-export const CHANNEL_URL = 'https://t.me/BMRCopytradevn';
+export const CHANNEL_URL = 'https://t.me/BMRTradeGold';
 
 // Follow-up cooldown schedule (hours between each follow-up)
 // 10min, 6h, 24h, 72h (3 days), 120h (5 days)
