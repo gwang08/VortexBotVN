@@ -3,12 +3,15 @@ import { Scene, SceneEnter, Action, On, Command } from 'nestjs-telegraf';
 import type { BotContext } from '../../common/interfaces/session.interface';
 import {
   CALLBACKS,
-  ACCOUNT_CREATION_TEXT,
   IB_CODE,
   DEPOSIT_VIDEO_GUIDE_TEXT,
+  PUPRIME_SIGNUP_LINK,
 } from '../../common/constants';
 import {
-  ctStep1Keyboard,
+  registerKeyboard,
+  warpKeyboard,
+  depositKeyboard,
+  unlockVipKeyboard,
   ctIbKeyboard,
   ctAccountKeyboard,
   ctStep2Keyboard,
@@ -64,15 +67,55 @@ export class CopyTradingScene {
     await ctx.scene.enter('onboarding');
   }
 
+  // ── SCREEN 3: REGISTER BROKER ──
   @SceneEnter()
   async onEnter(ctx: BotContext) {
-    ctx.session.currentStep = 'copytrading:step1';
+    ctx.session.currentStep = 'copytrading:register';
     ctx.session.awaitingEmail = false;
     ctx.session.awaitingAccount = false;
 
-    await this.botService.sendWithKeyboard(ctx, `BƯỚC 1:\n\n${ACCOUNT_CREATION_TEXT}`, ctStep1Keyboard());
+    const text =
+      `🔥 Bước 1: Đăng ký Broker\n\n` +
+      `Đăng ký qua link dưới để tham gia BMR:\n\n` +
+      `${PUPRIME_SIGNUP_LINK}\n\n` +
+      `Sau khi đăng ký xong nhấn:\n\n` +
+      `✅ Tôi đã đăng ký\n\n` +
+      `Nếu không mở được link:\n\n` +
+      `🌐 Không mở được link`;
+    await this.botService.sendWithKeyboard(ctx, text, registerKeyboard());
   }
 
+  // ── SCREEN 4: 1.1.1.1 WARP (can't open link) ──
+  @Action(CALLBACKS.cantOpenLink)
+  async onCantOpenLink(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    const text =
+      `⚠️ Một số nhà mạng chặn link broker\n\n` +
+      `Cách xử lý:\n\n` +
+      `1. Tải 1.1.1.1\n` +
+      `2. Bật lên\n` +
+      `3. Mở lại link\n\n` +
+      `Sau khi bật xong nhấn:\n\n` +
+      `🔄 Mở lại link`;
+    await this.botService.sendWithKeyboard(ctx, text, warpKeyboard());
+  }
+
+  // ── REOPEN LINK → back to Screen 3 ──
+  @Action(CALLBACKS.reopenLink)
+  async onReopenLink(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    const text =
+      `🔥 Bước 1: Đăng ký Broker\n\n` +
+      `Đăng ký qua link dưới để tham gia BMR:\n\n` +
+      `${PUPRIME_SIGNUP_LINK}\n\n` +
+      `Sau khi đăng ký xong nhấn:\n\n` +
+      `✅ Tôi đã đăng ký\n\n` +
+      `Nếu không mở được link:\n\n` +
+      `🌐 Không mở được link`;
+    await this.botService.sendWithKeyboard(ctx, text, registerKeyboard());
+  }
+
+  // ── SCREEN 5: DEPOSIT (after registered) ──
   @Action(CALLBACKS.ctRegistered)
   async onRegistered(ctx: BotContext) {
     await ctx.answerCbQuery();
@@ -80,9 +123,70 @@ export class CopyTradingScene {
       where: { id: BigInt(ctx.from!.id) },
       data: { status: 'registered', lastStep: 'ct_registered' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+
+    ctx.session.currentStep = 'copytrading:deposit';
+    const text =
+      `💰 Bước tiếp theo: Nạp tiền\n\n` +
+      `Khuyến nghị:\n\n` +
+      `$500 – Starter\n` +
+      `$1000 – Tối ưu\n` +
+      `$5000 – VIP\n\n` +
+      `Sau khi nạp tiền nhấn:\n\n` +
+      `✅ Tôi đã nạp tiền`;
+    await this.botService.sendWithKeyboard(ctx, text, depositKeyboard());
+  }
+
+  // ── DEPOSIT GUIDE ──
+  @Action(CALLBACKS.depositGuide)
+  async onDepositGuide(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.botService.sendWithKeyboard(ctx, DEPOSIT_VIDEO_GUIDE_TEXT, depositKeyboard());
+  }
+
+  // ── SCREEN 6: UNLOCK VIP (after deposit confirmed) ──
+  @Action(CALLBACKS.ctDeposited)
+  async onDeposited(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    const userId = BigInt(ctx.from!.id);
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { status: 'deposit_claimed', lastStep: 'ct_deposit_claimed' },
+    });
+
+    await this.adminService.notifyDepositClaimed(
+      ctx.from!.id,
+      ctx.from?.username,
+      user?.tradingAccount,
+    );
+
+    ctx.session.currentStep = 'copytrading:unlock_vip';
+    const text =
+      `🔥 Chúc mừng\n\n` +
+      `Bạn đã đủ điều kiện:\n\n` +
+      `✔ Copytrade\n` +
+      `✔ VIP Signals\n` +
+      `✔ Support riêng`;
+    await this.botService.sendWithKeyboard(ctx, text, unlockVipKeyboard());
+  }
+
+  // ── START COPYTRADE SETUP → detailed steps (step 2 onwards) ──
+  @Action(CALLBACKS.startCopytradeSetup)
+  async onStartCopytradeSetup(ctx: BotContext) {
+    await ctx.answerCbQuery();
     await this.askForTradingAccount(ctx);
   }
 
+  // ── JOIN VIP → enter signals scene ──
+  @Action(CALLBACKS.joinVip)
+  async onJoinVip(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.selectedFlow = 'signals';
+    await ctx.scene.enter('signals');
+  }
+
+  // ── ALREADY HAVE PUPRIME sub-flow (kept) ──
   @Action(CALLBACKS.alreadyHavePuPrime)
   async onAlreadyHavePuPrime(ctx: BotContext) {
     await ctx.answerCbQuery();
@@ -104,6 +208,7 @@ export class CopyTradingScene {
     await this.botService.sendWithKeyboard(ctx, `Mã IB: <code>${IB_CODE}</code>\n\nSau khi chuyển mã xong, gửi email bạn dùng để tạo tài khoản để em xử lý giúp nhé`, { ...ctIbKeyboard(), parse_mode: 'HTML' });
   }
 
+  // Collect trading account number before proceeding to step 2
   private async askForTradingAccount(ctx: BotContext) {
     ctx.session.currentStep = 'copytrading:account_collection';
     ctx.session.awaitingAccount = true;
@@ -124,6 +229,8 @@ export class CopyTradingScene {
     await this.showStep2(ctx);
   }
 
+  // ── DETAILED COPYTRADE STEPS 2–5 (unchanged) ──
+
   private async showStep2(ctx: BotContext) {
     ctx.session.currentStep = 'copytrading:step2';
     try { await this.botService.sendMediaGroup(ctx, ctStep2Media()); } catch { await ctx.reply('(Hình hướng dẫn Bước 2)'); }
@@ -136,27 +243,6 @@ export class CopyTradingScene {
     ctx.session.currentStep = 'copytrading:step3';
     try { await this.botService.sendMediaGroup(ctx, ctStep3Media()); } catch { await ctx.reply('(Hình hướng dẫn Bước 3)'); }
     await this.botService.sendWithKeyboard(ctx, `BƯỚC 3:\n\nChuyển Tiền Vào Tài Khoản Copy Trading\n\nSau khi tài khoản được duyệt, vào tài khoản Live và chuyển tiền sang tài khoản Copy Trading.\n\n${DEPOSIT_VIDEO_GUIDE_TEXT}\n\nBạn sẵn sàng cho bước tiếp theo chưa?`, ctStep3Keyboard());
-  }
-
-  @Action(CALLBACKS.ctDeposited)
-  async onDeposited(ctx: BotContext) {
-    await ctx.answerCbQuery();
-    const userId = BigInt(ctx.from!.id);
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
-
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: { status: 'deposit_claimed', lastStep: 'ct_deposit_claimed' },
-    });
-
-    await this.adminService.notifyDepositClaimed(
-      ctx.from!.id,
-      ctx.from?.username,
-      user?.tradingAccount,
-    );
-
-    await ctx.reply('✅ Tuyệt vời! Chuyển sang bước tiếp theo...');
-    await this.showStep4(ctx);
   }
 
   @Action(CALLBACKS.ctNextStep4)
@@ -189,6 +275,14 @@ export class CopyTradingScene {
 
     await ctx.reply('🔥 Bạn đã sẵn sàng!\n\nTheo dõi kết quả hàng ngày tại kênh.\nHỗ trợ: @KenMasterTrade');
     await ctx.scene.leave();
+  }
+
+  // ── VIP SUPPORT / CONTACT ADMIN ──
+  @Action(CALLBACKS.vipSupport)
+  async onVipSupport(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
+    await ctx.reply('💎 Hỗ Trợ VIP\n\n👤 Liên hệ: @KenMasterTrade để được tư vấn 1-1!');
   }
 
   @Action(CALLBACKS.contactAdmin)

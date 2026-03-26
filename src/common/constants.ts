@@ -153,4 +153,13 @@ export const CALLBACKS = {
   sigRegistered: 'sig_registered',
   sigSkipAccount: 'sig_skip_account',
   sigDeposited: 'sig_deposited',
+
+  // New flow callbacks
+  cantOpenLink: 'cant_open_link',
+  installWarp: 'install_warp',
+  reopenLink: 'reopen_link',
+  joinVip: 'join_vip',
+  startCopytradeSetup: 'start_copytrade_setup',
+  depositGuide: 'deposit_guide',
+  viewPerformance: 'view_performance',
 };

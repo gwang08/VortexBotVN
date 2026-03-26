@@ -1,5 +1,65 @@
 import { Markup } from 'telegraf';
-import { CALLBACKS, BOT_TRADING_URL, MYFXBOOK_URL, CHANNEL_URL, PUPRIME_SIGNUP_LINK } from './constants';
+import { CALLBACKS, BOT_TRADING_URL, MYFXBOOK_URL, CHANNEL_URL } from './constants';
+
+// ── NEW FLOW KEYBOARDS ──
+
+// Screen 1: Welcome
+export const welcomeKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback('🚀 Copytrade Auto', CALLBACKS.copytrading)],
+    [Markup.button.callback('📈 VIP Signals', CALLBACKS.signals)],
+    [Markup.button.callback('📊 Performance', CALLBACKS.viewPerformance)],
+    [Markup.button.callback('🧑‍💼 Support VIP', CALLBACKS.vipSupport)],
+  ]);
+
+// Screen 2A: Copytrade info
+export const copytradeInfoKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback('📝 Đăng ký Broker', CALLBACKS.registerAccount)],
+    [Markup.button.callback('📖 Hướng dẫn', CALLBACKS.viewGuide)],
+    [Markup.button.callback('🧑‍💼 Support', CALLBACKS.vipSupport)],
+  ]);
+
+// Screen 2B: VIP Signals info
+export const vipSignalsKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback('🔥 Join VIP', CALLBACKS.joinVip)],
+    [Markup.button.callback('📊 Performance', CALLBACKS.viewPerformance)],
+    [Markup.button.callback('🧑‍💼 Support', CALLBACKS.vipSupport)],
+  ]);
+
+// Screen 3: Register broker
+export const registerKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback('✅ Tôi đã đăng ký', CALLBACKS.ctRegistered)],
+    [Markup.button.callback('🌐 Không mở được link', CALLBACKS.cantOpenLink)],
+    [Markup.button.callback('🧑‍💼 Support', CALLBACKS.vipSupport)],
+  ]);
+
+// Screen 4: 1.1.1.1 WARP
+export const warpKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.url('📲 Cài 1.1.1.1', 'https://1.1.1.1/')],
+    [Markup.button.callback('🔄 Mở lại link', CALLBACKS.reopenLink)],
+    [Markup.button.callback('🧑‍💼 Support', CALLBACKS.vipSupport)],
+  ]);
+
+// Screen 5: Deposit
+export const depositKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback('✅ Tôi đã nạp tiền', CALLBACKS.ctDeposited)],
+    [Markup.button.callback('📖 Hướng dẫn nạp', CALLBACKS.depositGuide)],
+    [Markup.button.callback('🧑‍💼 Support', CALLBACKS.vipSupport)],
+  ]);
+
+// Screen 6: Unlock VIP
+export const unlockVipKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.callback('🚀 Start Copytrade', CALLBACKS.startCopytradeSetup)],
+    [Markup.button.callback('📈 Join VIP', CALLBACKS.joinVip)],
+  ]);
+
+// ── LEGACY KEYBOARDS (kept for backward compatibility & existing steps) ──
 
 // Step 1: Hook - Xem kết quả / Bắt đầu ngay
 export const hookKeyboard = () =>
@@ -42,7 +102,7 @@ export const vipActionKeyboard = () =>
     [Markup.button.callback('💬 Hỗ Trợ AI', CALLBACKS.aiSupport)],
   ]);
 
-// CopyTrading Bước 1 - với nút xác nhận đăng ký
+// CopyTrading Bước 1 - với nút xác nhận đăng ký (kept for backward compat)
 export const ctStep1Keyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('✅ Tôi đã đăng ký', CALLBACKS.ctRegistered)],
