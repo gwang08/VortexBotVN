@@ -245,6 +245,9 @@ export class OnboardingScene {
     const message = (ctx.message as any)?.text;
     if (!message || !ctx.from) return;
 
+    // Skip processing for admin — handled by bot.update middleware
+    if (this.adminService.isAdmin(ctx.chat!.id)) return;
+
     // Handle admin commands directly (scene intercepts before middleware)
     if (message.startsWith('/') && message !== '/human') {
       if (this.adminService.isAdmin(ctx.chat!.id)) {
