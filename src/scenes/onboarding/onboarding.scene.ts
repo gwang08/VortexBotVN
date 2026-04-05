@@ -1,13 +1,13 @@
 import { Logger } from '@nestjs/common';
 import { Scene, SceneEnter, On, Action, Command } from 'nestjs-telegraf';
 import type { BotContext } from '../../common/interfaces/session.interface';
-import { CALLBACKS, MYFXBOOK_URL } from '../../common/constants';
+import { CALLBACKS, CHANNEL_URL } from '../../common/constants';
 import {
   welcomeKeyboard,
+  vipPackageKeyboard,
   copytradeInfoKeyboard,
-  vipSignalsKeyboard,
   freeSignalsKeyboard,
-  freeSignalsUpsellKeyboard,
+  whaleAmountKeyboard,
   capitalSelectionKeyboard,
   aiChatRetailKeyboard,
   aiChatVipKeyboard,
@@ -37,8 +37,10 @@ export class OnboardingScene {
     ctx.session.email = undefined;
     ctx.session.awaitingEmail = false;
     ctx.session.awaitingAccount = false;
+    ctx.session.awaitingUid = false;
     ctx.session.currentStep = undefined;
     ctx.session.tier = undefined;
+    ctx.session.selectedBroker = undefined;
     await ctx.scene.enter('onboarding');
   }
 
@@ -46,132 +48,91 @@ export class OnboardingScene {
   @SceneEnter()
   async onEnter(ctx: BotContext) {
     ctx.session.currentStep = 'onboarding:welcome';
-    const text =
-      `🔥 Chào mừng đến BMR Copytrade System\n\n` +
-      `Bạn không cần biết trade vẫn có thể kiếm tiền.\n\n` +
-      `Bạn muốn:\n\n` +
-      `1. Copytrade tự động\n` +
-      `2. VIP Signals\n` +
-      `3. Free Signals (miễn phí)`;
+    const text = `🔥 Chào mừng đến BMR Master Trading
+
+Bạn muốn:
+
+1. VIP Package (Education + Signals)
+2. Copytrade Auto
+3. Free Signals
+4. Hỗ trợ`;
     await ctx.reply(text, welcomeKeyboard());
   }
 
-  // ── SCREEN 2A: COPYTRADE INFO (Copytrade Auto button) ──
+  // ── SCREEN 2: VIP PACKAGE ──
+  @Action(CALLBACKS.vipPackage)
+  async onVipPackage(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.currentStep = 'onboarding:vip_package';
+    ctx.session.selectedFlow = 'signals';
+    await this.prisma.user.update({
+      where: { id: BigInt(ctx.from!.id) },
+      data: { flow: 'signals' },
+    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+
+    const text = `🚀 BMR VIP — Full Learning + Signals
+
+Trong VIP:
+
+Forex Course
+SMC Course
+
+8–12 scalping/ngày
+3–5 swing/ngày
+
+500+ pips/ngày`;
+    await ctx.reply(text, vipPackageKeyboard());
+  }
+
+  // ── SCREEN 3: COPYTRADE INFO ──
   @Action(CALLBACKS.copytrading)
   async onCopyTrading(ctx: BotContext) {
     await ctx.answerCbQuery();
-    ctx.session.selectedFlow = 'copytrading';
     ctx.session.currentStep = 'onboarding:copytrade_info';
-
+    ctx.session.selectedFlow = 'copytrading';
     await this.prisma.user.update({
       where: { id: BigInt(ctx.from!.id) },
-      data: { flow: 'copytrading', lastStep: 'copytrade_info_viewed' },
+      data: { flow: 'copytrading' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
-    const text =
-      `🔥 BMR Copytrade\n\n` +
-      `✅ Không cần biết trade\n` +
-      `✅ Tự động vào lệnh\n` +
-      `✅ Copy tài khoản master\n\n` +
-      `Lợi nhuận trung bình:\n\n` +
-      `5–10% mỗi ngày\n\n` +
-      `Bắt đầu:\n\n` +
-      `1. Đăng ký Broker\n` +
-      `2. Nạp tiền\n` +
-      `3. Kết nối copy`;
+    const text = `🤖 Copytrade tự động
+
+Không cần trade
+Không cần kinh nghiệm
+
+5–10% target/ngày`;
     await ctx.reply(text, copytradeInfoKeyboard());
   }
 
-  // ── SCREEN 2B: VIP SIGNALS INFO (VIP Signals button) ──
-  @Action(CALLBACKS.signals)
-  async onSignals(ctx: BotContext) {
-    await ctx.answerCbQuery();
-    ctx.session.selectedFlow = 'signals';
-    ctx.session.currentStep = 'onboarding:signals_info';
-
-    await this.prisma.user.update({
-      where: { id: BigInt(ctx.from!.id) },
-      data: { flow: 'signals', lastStep: 'signals_info_viewed' },
-    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
-
-    const text =
-      `📈 BMR VIP Signals\n\n` +
-      `✅ Tín hiệu Gold / Forex\n` +
-      `✅ Phân tích chi tiết\n` +
-      `✅ Risk Management\n\n` +
-      `VIP nhận:\n\n` +
-      `3–5 kèo mỗi ngày\n` +
-      `Winrate cao`;
-    await ctx.reply(text, vipSignalsKeyboard());
-  }
-
-  // ── SCREEN 2C: FREE SIGNALS (Soft Funnel) ──
+  // ── SCREEN 4: FREE SIGNALS ──
   @Action(CALLBACKS.freeSignals)
   async onFreeSignals(ctx: BotContext) {
     await ctx.answerCbQuery();
     ctx.session.currentStep = 'onboarding:free_signals';
 
-    await this.prisma.user.update({
-      where: { id: BigInt(ctx.from!.id) },
-      data: { flow: 'free_signals', lastStep: 'free_signals_viewed' },
-    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+    const text = `📊 Free Signals
 
-    const text =
-      `📊 Free Signals\n\n` +
-      `Bạn sẽ nhận:\n\n` +
-      `✅ Gold signals\n` +
-      `✅ Forex signals\n` +
-      `✅ Phân tích thị trường\n\n` +
-      `👇 Join bên dưới`;
+Gold
+Forex
+Market updates`;
     await ctx.reply(text, freeSignalsKeyboard());
-
-    // Upsell after showing free signals
-    const upsellText =
-      `🔥 Free Signals là bản giới hạn\n\n` +
-      `VIP sẽ:\n\n` +
-      `✅ Kèo sớm hơn\n` +
-      `✅ Risk thấp hơn\n` +
-      `✅ Lợi nhuận cao hơn`;
-    await ctx.reply(upsellText, freeSignalsUpsellKeyboard());
   }
 
-  // ── UPGRADE VIP → enter copytrading (register → deposit → unlock) ──
-  @Action(CALLBACKS.upgradeVip)
-  async onUpgradeVip(ctx: BotContext) {
+  // ── START SETUP (-> broker question in copytrading scene) ──
+  @Action(CALLBACKS.startSetup)
+  async onStartSetup(ctx: BotContext) {
     await ctx.answerCbQuery();
     ctx.session.selectedFlow = 'copytrading';
     await this.prisma.user.update({
       where: { id: BigInt(ctx.from!.id) },
-      data: { flow: 'copytrading', lastStep: 'upgrade_vip_clicked' },
+      data: { flow: 'copytrading', lastStep: 'start_setup' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
     await ctx.scene.enter('copytrading');
   }
 
-  // ── PERFORMANCE (view Myfxbook) ──
-  @Action(CALLBACKS.viewPerformance)
-  async onViewPerformance(ctx: BotContext) {
-    await ctx.answerCbQuery();
-    await ctx.reply(`📊 Xem kết quả thực tế:\n\n${MYFXBOOK_URL}`);
-  }
-
-  // ── VIP SUPPORT / CONTACT ADMIN ──
-  @Action(CALLBACKS.vipSupport)
-  async onVipSupport(ctx: BotContext) {
-    await ctx.answerCbQuery();
-    await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
-    await ctx.reply('💎 Hỗ Trợ VIP\n\n👤 Liên hệ: @KenMasterTrade để được tư vấn 1-1!');
-  }
-
-  @Action(CALLBACKS.contactAdmin)
-  async onContactAdmin(ctx: BotContext) {
-    await ctx.answerCbQuery();
-    await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
-    await ctx.reply('Cảm ơn anh! Admin đã được thông báo. Em sẽ liên hệ lại với anh tại đây.');
-  }
-
-  // ── REGISTER ACCOUNT → enter copytrading scene ──
-  @Action(CALLBACKS.registerAccount)
-  async onRegisterAccount(ctx: BotContext) {
+  // ── REGISTER NEW (-> copytrading scene) ──
+  @Action(CALLBACKS.registerNew)
+  async onRegisterNew(ctx: BotContext) {
     await ctx.answerCbQuery();
     ctx.session.selectedFlow = 'copytrading';
     await this.prisma.user.update({
@@ -181,19 +142,7 @@ export class OnboardingScene {
     await ctx.scene.enter('copytrading');
   }
 
-  // ── VIEW GUIDE → enter copytrading scene ──
-  @Action(CALLBACKS.viewGuide)
-  async onViewGuide(ctx: BotContext) {
-    await ctx.answerCbQuery();
-    ctx.session.selectedFlow = 'copytrading';
-    await this.prisma.user.update({
-      where: { id: BigInt(ctx.from!.id) },
-      data: { flow: 'copytrading', lastStep: 'guide_clicked' },
-    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
-    await ctx.scene.enter('copytrading');
-  }
-
-  // ── JOIN VIP → enter signals scene ──
+  // ── JOIN VIP ──
   @Action(CALLBACKS.joinVip)
   async onJoinVip(ctx: BotContext) {
     await ctx.answerCbQuery();
@@ -205,12 +154,113 @@ export class OnboardingScene {
     await ctx.scene.enter('signals');
   }
 
-  // ── BACKWARD COMPAT: old chatAdmin callback ──
+  // ── SUPPORT / WHALE FLOW ──
+  @Action(CALLBACKS.support)
+  async onSupport(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.currentStep = 'onboarding:whale_question';
+    await ctx.reply('Bạn đầu tư bao nhiêu?', whaleAmountKeyboard());
+  }
+
+  @Action(CALLBACKS.whaleAmount500)
+  async onWhale500(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.handleWhaleAmount(ctx, '$500', false);
+  }
+
+  @Action(CALLBACKS.whaleAmount1000)
+  async onWhale1000(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.handleWhaleAmount(ctx, '$1000', false);
+  }
+
+  @Action(CALLBACKS.whaleAmount5000)
+  async onWhale5000(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.handleWhaleAmount(ctx, '$5000+', true);
+  }
+
+  @Action(CALLBACKS.whaleAmount10000)
+  async onWhale10000(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.handleWhaleAmount(ctx, '$10000+', true);
+  }
+
+  private async handleWhaleAmount(ctx: BotContext, amount: string, isWhale: boolean) {
+    await this.prisma.user.update({
+      where: { id: BigInt(ctx.from!.id) },
+      data: { capitalRange: amount, isVip: isWhale, tier: isWhale ? 'vip' : 'retail' },
+    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+
+    await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
+
+    if (isWhale) {
+      const text = `VIP Private
+
+Lower risk
+Priority
+Private support
+
+👤 Liên hệ: @KenMasterTrade`;
+      await ctx.reply(text);
+    } else {
+      await ctx.reply('Cảm ơn! Admin đã được thông báo. Em sẽ liên hệ lại sớm.\n\n👤 Liên hệ: @KenMasterTrade');
+    }
+  }
+
+  // ── CONTACT ADMIN ──
+  @Action(CALLBACKS.contactAdmin)
+  async onContactAdmin(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
+    await ctx.reply('Cảm ơn! Admin đã được thông báo. Em sẽ liên hệ lại sớm.');
+  }
+
+  // ── LEGACY: VIP SUPPORT ──
+  @Action(CALLBACKS.vipSupport)
+  async onVipSupport(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
+    await ctx.reply('💎 Hỗ Trợ VIP\n\n👤 Liên hệ: @KenMasterTrade để được tư vấn 1-1!');
+  }
+
+  // ── LEGACY: chatAdmin ──
   @Action(CALLBACKS.chatAdmin)
   async onChatAdmin(ctx: BotContext) {
     await ctx.answerCbQuery();
     const name = this.botService.getDisplayName(ctx);
-    await ctx.reply(`Trao đổi trực tiếp để setup phù hợp với vốn ${name}\n\n👤 Liên hệ: @KenMasterTrade\n\nAdmin sẽ liên hệ ${name} sớm nhất!`);
+    await ctx.reply(`Trao đổi trực tiếp để setup phù hợp với vốn ${name}\n\n👤 Liên hệ: @KenMasterTrade`);
+  }
+
+  // ── PERFORMANCE ──
+  @Action(CALLBACKS.viewPerformance)
+  async onViewPerformance(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await ctx.reply(`📊 Xem kết quả thực tế:\n\n${CHANNEL_URL}`);
+  }
+
+  // ── LEGACY: upgradeVip ──
+  @Action(CALLBACKS.upgradeVip)
+  async onUpgradeVip(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.selectedFlow = 'copytrading';
+    await ctx.scene.enter('copytrading');
+  }
+
+  // ── LEGACY: registerAccount ──
+  @Action(CALLBACKS.registerAccount)
+  async onRegisterAccount(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.selectedFlow = 'copytrading';
+    await ctx.scene.enter('copytrading');
+  }
+
+  // ── LEGACY: viewGuide ──
+  @Action(CALLBACKS.viewGuide)
+  async onViewGuide(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.selectedFlow = 'copytrading';
+    await ctx.scene.enter('copytrading');
   }
 
   // ── AI SUPPORT ──
@@ -225,7 +275,6 @@ export class OnboardingScene {
     );
   }
 
-  // Return tier-appropriate keyboard for AI chat responses
   private getAiChatKeyboard(tier?: string) {
     switch (tier) {
       case 'retail_low':
@@ -245,10 +294,8 @@ export class OnboardingScene {
     const message = (ctx.message as any)?.text;
     if (!message || !ctx.from) return;
 
-    // Skip processing for admin — handled by bot.update middleware
     if (this.adminService.isAdmin(ctx.chat!.id)) return;
 
-    // Handle admin commands directly (scene intercepts before middleware)
     if (message.startsWith('/') && message !== '/human') {
       if (this.adminService.isAdmin(ctx.chat!.id)) {
         await this.adminService.handleCommand(ctx, message);
@@ -273,7 +320,7 @@ export class OnboardingScene {
         ctx.session.aiQuestionCount = 0;
         await this.adminService.notifyAdmin(ctx.from.id, ctx.from?.username, ctx.from?.first_name);
         const name = this.botService.getDisplayName(ctx);
-        await ctx.reply(`Em thấy nhu cầu của ${name} phù hợp tư vấn riêng hơn bot tự động.\nEm kết nối admin để hỗ trợ sát hơn nhé.\n\n👤 Liên hệ: @KenMasterTrade`);
+        await ctx.reply(`Em thấy nhu cầu của ${name} phù hợp tư vấn riêng hơn.\n\n👤 Liên hệ: @KenMasterTrade`);
         return;
       }
 

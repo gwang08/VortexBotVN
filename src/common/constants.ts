@@ -7,6 +7,13 @@ export const PUPRIME_SIGNUP_LINK =
 // IB Code for existing PuPrime users
 export const IB_CODE = 'bmrmaster';
 
+// Broker-specific IB info
+export const BROKER_IB = {
+  puprime: { name: 'PU Prime', ibNumber: '83272' },
+  ultima: { name: 'Ultima', ibNumber: '22593619', email: 'vietnam.cs@ultimamarkets.com' },
+  vantage: { name: 'Vantage' },
+};
+
 // External links
 export const BOT_TRADING_URL = 'https://bmrcopytrade.vn/';
 export const MYFXBOOK_URL = 'https://www.myfxbook.com/members/bmrmaster/bmr-scalper-gold/11980201';
@@ -164,4 +171,21 @@ export const CALLBACKS = {
   viewPerformance: 'view_performance',
   freeSignals: 'free_signals',
   upgradeVip: 'upgrade_vip',
+
+  // Redesigned flow callbacks
+  vipPackage: 'vip_package',
+  support: 'support_whale',
+  startSetup: 'start_setup',
+  registerNew: 'register_new',
+  transferIb: 'transfer_ib',
+  brokerPuPrime: 'broker_puprime',
+  brokerUltima: 'broker_ultima',
+  brokerVantage: 'broker_vantage',
+  ibSubmitted: 'ib_submitted',
+  sentEmail: 'sent_email',
+  sendUid: 'send_uid',
+  whaleAmount500: 'whale_500',
+  whaleAmount1000: 'whale_1000',
+  whaleAmount5000: 'whale_5000',
+  whaleAmount10000: 'whale_10000',
 };

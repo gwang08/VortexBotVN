@@ -6,7 +6,6 @@ import {
   PUPRIME_SIGNUP_LINK,
   MYFXBOOK_URL,
   CHANNEL_URL,
-  BOT_TRADING_URL,
   FOLLOWUP_SCHEDULE_HOURS,
   MAX_FOLLOWUP_COUNT,
   VIP_MAX_FOLLOWUP_COUNT,
@@ -30,7 +29,6 @@ export class FollowUpService implements OnModuleInit {
   }
 
   async processFollowUps(): Promise<void> {
-    // Only send during VN optimal hours
     if (!this.isWithinVnWindow()) return;
 
     const users = await this.prisma.user.findMany({
@@ -77,7 +75,6 @@ export class FollowUpService implements OnModuleInit {
     }
   }
 
-  /** Check if current time is within VN follow-up windows (ICT = UTC+7) */
   private isWithinVnWindow(): boolean {
     const now = new Date();
     const vnHour = (now.getUTCHours() + 7) % 24;
@@ -106,90 +103,57 @@ export class FollowUpService implements OnModuleInit {
   }
 
   private getFollowUpMessage(user: any): { text: string; extra?: any } | null {
-    const name = user.firstName || user.username || 'bạn';
+    const count = user.followUpCount;
 
-    // A. User vào bot nhưng chưa bấm gì (status = new)
-    if (user.status === 'new') {
-      if (user.followUpCount === 0) {
-        return {
-          text: `${name} có thể xem nhanh kết quả thực tế ở đây trước nhé:\n• Myfxbook: ${MYFXBOOK_URL}\n• Channel cập nhật hằng ngày: ${CHANNEL_URL}\nKhi sẵn sàng em sẽ hướng dẫn setup rất nhanh.`,
-          extra: Markup.inlineKeyboard([
-            [Markup.button.url('📈 Myfxbook', MYFXBOOK_URL)],
-            [Markup.button.url('📊 Channel', CHANNEL_URL)],
-          ]),
-        };
-      }
+    // Follow-up #1 (~10 min): "Bạn chưa hoàn tất setup"
+    if (count === 0) {
       return {
-        text: `Nếu ${name} muốn bắt đầu nhẹ để trải nghiệm trước, có thể test từ mức nhỏ rồi theo dõi thêm.\nEm để sẵn hướng dẫn tại đây: ${PUPRIME_SIGNUP_LINK}`,
+        text: `Bạn chưa hoàn tất setup.\n\nChỉ mất 2 phút để bắt đầu.`,
+        extra: Markup.inlineKeyboard([
+          [Markup.button.url('🔥 Hoàn tất Setup', PUPRIME_SIGNUP_LINK)],
+        ]),
+      };
+    }
+
+    // Follow-up #2 (~1 hour): "Trader mới vừa join"
+    if (count === 1) {
+      return {
+        text: `Trader mới vừa join và bắt đầu copy.\n\nĐừng bỏ lỡ phiên hôm nay.`,
         extra: Markup.inlineKeyboard([
           [Markup.button.url('🚀 Bắt đầu', PUPRIME_SIGNUP_LINK)],
-          [Markup.button.url('📊 Channel', CHANNEL_URL)],
         ]),
       };
     }
 
-    // B. User bấm xem kết quả nhưng chưa chọn vốn (lastStep = viewed_results, no capital)
-    if (!user.capitalRange || user.status === 'new') {
-      if (user.followUpCount === 0) {
-        return {
-          text: `Em thấy ${name} đã xem kết quả.\nĐể em gợi ý setup phù hợp, ${name} dự kiến bắt đầu ở mức nào?\n• Test nhẹ\n• Trung bình\n• Tài khoản lớn`,
-        };
-      }
+    // Follow-up #3 (~24 hours): "VIP sắp đầy"
+    if (count === 2) {
       return {
-        text: `Mỗi mức vốn sẽ có cách setup và quản lý rủi ro khác nhau.\n${name} chọn nhanh mức dự kiến, em sẽ điều hướng đúng flow để đỡ mất thời gian.`,
-      };
-    }
-
-    // C. User chọn vốn retail nhưng chưa đăng ký (capital_selected, no registration)
-    if (user.status === 'capital_selected' && !user.isVip) {
-      if (user.followUpCount === 0) {
-        return {
-          text: `Với mức vốn này, ${name} có thể bắt đầu khá đơn giản:\n1. Đăng ký tài khoản\n2. Nạp vốn\n3. Bật copytrade\nEm có sẵn hướng dẫn từng bước ở đây: ${PUPRIME_SIGNUP_LINK}`,
-          extra: Markup.inlineKeyboard([
-            [Markup.button.url('👉 Đăng ký ngay', PUPRIME_SIGNUP_LINK)],
-          ]),
-        };
-      }
-      if (user.followUpCount === 1) {
-        return {
-          text: `Nếu chưa muốn vào lớn, ${name} có thể test nhỏ trước để làm quen cách hệ thống chạy.\nKhi thấy phù hợp thì tăng dần sau cũng được.`,
-        };
-      }
-      return {
-        text: `Hôm nay hệ thống đã có cập nhật mới trong channel.\n${name} có thể xem thêm rồi quyết định sau, không cần vội: ${CHANNEL_URL}`,
+        text: `VIP sắp đầy.\n\nĐăng ký trước khi đóng.`,
         extra: Markup.inlineKeyboard([
-          [Markup.button.url('📊 Xem Channel', CHANNEL_URL)],
+          [Markup.button.url('🔥 Join ngay', PUPRIME_SIGNUP_LINK)],
         ]),
       };
     }
 
-    // D. User đã đăng ký nhưng chưa nạp (registered / account_submitted)
-    if (user.status === 'registered' || user.status === 'account_submitted') {
+    // Follow-up #4 (~72 hours): Performance nudge
+    if (count === 3) {
+      const pct = (Math.random() * 3 + 2).toFixed(1);
       return {
-        text: `Tài khoản đã sẵn sàng.\n${name} có thể bắt đầu với $100 để test trước, setup chỉ mất 2 phút.`,
+        text: `📊 Bot vừa đạt +${pct}% hôm nay.\n\nBạn đang bỏ lỡ phiên này.`,
         extra: Markup.inlineKeyboard([
-          [Markup.button.url('💰 Nạp tiền', PUPRIME_SIGNUP_LINK)],
-          [Markup.button.url('📊 Bot Trading', BOT_TRADING_URL)],
+          [Markup.button.url('📊 Xem kết quả', MYFXBOOK_URL)],
+          [Markup.button.url('🚀 Bắt đầu', PUPRIME_SIGNUP_LINK)],
         ]),
       };
     }
 
-    // E. User đã nạp, chưa bật copy (deposit_claimed)
-    if (user.status === 'deposit_claimed') {
+    // Follow-up #5 (~120 hours): Final
+    if (count === 4) {
       return {
-        text: `Đã xác nhận nạp tiền! 🎉\n\nBật copy trading ngay:\nMaster: Red Bull X / BMR Scalper\nRisk: 95%`,
-      };
-    }
-
-    // H. User chọn mức vốn VIP 2k-10k nhưng chưa chat admin
-    if (user.status === 'capital_selected' && user.isVip) {
-      if (user.followUpCount === 0) {
-        return {
-          text: `Với tài khoản từ mức này, bên em thường setup riêng để tối ưu quản lý vốn và support sát hơn.\n${name} nhắn admin tại đây để được tư vấn đúng flow: @KenMasterTrade`,
-        };
-      }
-      return {
-        text: `Em nhắc lại nhẹ: mức vốn của ${name} phù hợp flow VIP hơn retail.\nĐi theo flow riêng sẽ đỡ mất thời gian và chuẩn hơn về risk.\n\n👤 Liên hệ: @KenMasterTrade`,
+        text: `Nhắc lần cuối.\n\nSetup chỉ 2 phút. Kết quả nói lên tất cả.\n\n${MYFXBOOK_URL}`,
+        extra: Markup.inlineKeyboard([
+          [Markup.button.url('🔥 Bắt đầu', PUPRIME_SIGNUP_LINK)],
+        ]),
       };
     }
 

@@ -115,8 +115,8 @@ export class BotUpdate {
       return;
     }
 
-    // User đang nhập text (email/account) hoặc AI chat -> để scene xử lý
-    if (ctx.session?.awaitingEmail || ctx.session?.awaitingAccount || ctx.session?.inAiChat) {
+    // User đang nhập text (email/account/uid) hoặc AI chat -> để scene xử lý
+    if (ctx.session?.awaitingEmail || ctx.session?.awaitingAccount || ctx.session?.awaitingUid || ctx.session?.inAiChat) {
       return callNext();
     }
 
@@ -138,10 +138,12 @@ export class BotUpdate {
     ctx.session.email = undefined;
     ctx.session.awaitingEmail = false;
     ctx.session.awaitingAccount = false;
+    ctx.session.awaitingUid = false;
     ctx.session.currentStep = undefined;
     ctx.session.isVip = undefined;
     ctx.session.inAiChat = false;
     ctx.session.tier = undefined;
+    ctx.session.selectedBroker = undefined;
 
     const startPayload = (ctx.message as any)?.text?.split(' ')[1] ?? '';
     const source = startPayload.startsWith('ref_') ? startPayload.slice(4) : '';

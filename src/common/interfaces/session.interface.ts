@@ -7,11 +7,13 @@ export interface BotSession extends Scenes.WizardSession {
   currentStep?: string;
   awaitingEmail?: boolean;
   awaitingAccount?: boolean;
+  awaitingUid?: boolean;
   awaitingLinkSource?: boolean;
   isVip?: boolean;
   inAiChat?: boolean;
   aiQuestionCount?: number;
   tier?: string;
+  selectedBroker?: 'puprime' | 'ultima' | 'vantage';
 }
 
 export interface BotContext extends Context {
