@@ -56,9 +56,9 @@ export const warpKeyboard = () =>
 // Screen 8: Transfer IB - Choose Broker
 export const transferBrokerKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('PU Prime', CALLBACKS.brokerPuPrime)],
-    [Markup.button.callback('Ultima', CALLBACKS.brokerUltima)],
-    [Markup.button.callback('Vantage', CALLBACKS.brokerVantage)],
+    [Markup.button.callback('🟢 PU Prime', CALLBACKS.brokerPuPrime)],
+    [Markup.button.callback('🔵 Ultima', CALLBACKS.brokerUltima)],
+    [Markup.button.callback('🟠 Vantage', CALLBACKS.brokerVantage)],
   ]);
 
 // Screen 9: PU Prime Transfer
@@ -101,10 +101,10 @@ export const unlockKeyboard = () =>
 // Whale flow: Investment amount
 export const whaleAmountKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('$500', CALLBACKS.whaleAmount500)],
-    [Markup.button.callback('$1000', CALLBACKS.whaleAmount1000)],
-    [Markup.button.callback('$5000+', CALLBACKS.whaleAmount5000)],
-    [Markup.button.callback('$10000+', CALLBACKS.whaleAmount10000)],
+    [Markup.button.callback('💵 $500', CALLBACKS.whaleAmount500)],
+    [Markup.button.callback('💰 $1000', CALLBACKS.whaleAmount1000)],
+    [Markup.button.callback('💎 $5000+', CALLBACKS.whaleAmount5000)],
+    [Markup.button.callback('👑 $10000+', CALLBACKS.whaleAmount10000)],
   ]);
 
 // ── LEGACY KEYBOARDS (kept for detailed copy steps 2-5) ──

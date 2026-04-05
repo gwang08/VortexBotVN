@@ -201,6 +201,7 @@ Gửi tới: ${BROKER_IB.ultima.email}`;
       data: { status: 'registered', lastStep: 'ct_transfer_vantage' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
+    ctx.session.awaitingUid = true;
     const text = `Liên hệ support
 
 Yêu cầu chuyển IB
@@ -233,11 +234,11 @@ Gửi UID`;
   // ── SCREEN 11 (DEPOSIT) ──
   private async showDepositScreen(ctx: BotContext) {
     ctx.session.currentStep = 'copytrading:deposit';
-    const text = `Nạp tiền:
+    const text = `💰 Nạp tiền:
 
-$500
-$1000
-$5000`;
+💵 $500
+💰 $1000
+💎 $5000`;
     await ctx.reply(text, depositKeyboard());
   }
 
@@ -273,15 +274,11 @@ $5000`;
   @Action(CALLBACKS.sendUid)
   async onSendUid(ctx: BotContext) {
     await ctx.answerCbQuery();
+    ctx.session.awaitingUid = true;
 
     if (ctx.session.currentStep === 'copytrading:transfer_vantage') {
-      ctx.session.awaitingUid = true;
       ctx.session.currentStep = 'copytrading:vantage_uid';
-      await ctx.reply('Gửi UID:');
-      return;
     }
-
-    ctx.session.awaitingUid = true;
     await ctx.reply('Gửi UID:');
   }
 
@@ -447,7 +444,7 @@ VIP Package`;
 
         await this.adminService.notifyAccountSubmitted(ctx.from!.id, ctx.from?.username, uid);
 
-        if (ctx.session.currentStep === 'copytrading:vantage_uid') {
+        if (ctx.session.currentStep === 'copytrading:vantage_uid' || ctx.session.currentStep === 'copytrading:transfer_vantage') {
           await ctx.reply(`✅ UID ${uid} đã nhận.`);
           await this.showDepositScreen(ctx);
           return;
