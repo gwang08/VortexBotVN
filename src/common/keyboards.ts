@@ -73,22 +73,10 @@ export const ultimaTransferKeyboard = () =>
     [Markup.button.callback('📮 Đã gửi Email', CALLBACKS.sentEmail)],
   ]);
 
-// Screen 11: Vantage Transfer
-export const vantageTransferKeyboard = () =>
-  Markup.inlineKeyboard([
-    [Markup.button.callback('📮 Gửi UID', CALLBACKS.sendUid)],
-  ]);
-
 // Screen 11 (Deposit)
 export const depositKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('✅ Đã nạp tiền', CALLBACKS.ctDeposited)],
-  ]);
-
-// Screen 12: Verify (Send UID)
-export const verifyKeyboard = () =>
-  Markup.inlineKeyboard([
-    [Markup.button.callback('📮 Gửi UID', CALLBACKS.sendUid)],
   ]);
 
 // Screen 13: Unlock

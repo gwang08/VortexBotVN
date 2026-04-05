@@ -14,9 +14,7 @@ import {
   transferBrokerKeyboard,
   puPrimeTransferKeyboard,
   ultimaTransferKeyboard,
-  vantageTransferKeyboard,
   depositKeyboard,
-  verifyKeyboard,
   unlockKeyboard,
   ctAccountKeyboard,
   ctStep2Keyboard,
@@ -206,8 +204,8 @@ Gửi tới: ${BROKER_IB.ultima.email}`;
 
 Yêu cầu chuyển IB
 
-Gửi UID`;
-    await ctx.reply(text, vantageTransferKeyboard());
+Gửi UID:`;
+    await ctx.reply(text);
   }
 
   // ── IB SUBMITTED / SENT EMAIL -> Deposit ──
@@ -267,18 +265,6 @@ Gửi UID`;
   private async showVerifyScreen(ctx: BotContext) {
     ctx.session.currentStep = 'copytrading:verify';
     ctx.session.awaitingUid = true;
-    await ctx.reply('Gửi UID', verifyKeyboard());
-  }
-
-  // ── SEND UID button ──
-  @Action(CALLBACKS.sendUid)
-  async onSendUid(ctx: BotContext) {
-    await ctx.answerCbQuery();
-    ctx.session.awaitingUid = true;
-
-    if (ctx.session.currentStep === 'copytrading:transfer_vantage') {
-      ctx.session.currentStep = 'copytrading:vantage_uid';
-    }
     await ctx.reply('Gửi UID:');
   }
 
