@@ -158,7 +158,7 @@ Mở lại link`;
 
     const text = `Profile
 
-Transfer IB/CPA
+Chuyển IB/CPA
 
 IB Number:
 ${BROKER_IB.puprime.ibNumber}
@@ -179,13 +179,13 @@ Submit`;
       data: { status: 'registered', lastStep: 'ct_transfer_ultima' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
-    const text = `Send email:
+    const text = `Gửi email:
 
 IB ${BROKER_IB.ultima.ibNumber}
 
-Send UID
+Gửi UID
 
-Send to: ${BROKER_IB.ultima.email}`;
+Gửi tới: ${BROKER_IB.ultima.email}`;
     await ctx.reply(text, ultimaTransferKeyboard());
   }
 
@@ -201,11 +201,11 @@ Send to: ${BROKER_IB.ultima.email}`;
       data: { status: 'registered', lastStep: 'ct_transfer_vantage' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
-    const text = `Contact support
+    const text = `Liên hệ support
 
-Request IB transfer
+Yêu cầu chuyển IB
 
-Send UID`;
+Gửi UID`;
     await ctx.reply(text, vantageTransferKeyboard());
   }
 
@@ -291,7 +291,7 @@ $5000`;
     const text = `🔥 Đã mở quyền
 
 Copytrade
-VIP`;
+VIP Package`;
     await ctx.reply(text, unlockKeyboard());
   }
 

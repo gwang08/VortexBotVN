@@ -52,7 +52,7 @@ export class OnboardingScene {
 
 Bạn muốn:
 
-1. VIP Package (Education + Signals)
+1. VIP Package
 2. Copytrade Auto
 3. Free Signals
 4. Hỗ trợ`;
@@ -114,7 +114,7 @@ Không cần kinh nghiệm
 
 Gold
 Forex
-Market updates`;
+Cập nhật thị trường`;
     await ctx.reply(text, freeSignalsKeyboard());
   }
 
@@ -197,9 +197,9 @@ Market updates`;
     if (isWhale) {
       const text = `VIP Private
 
-Lower risk
-Priority
-Private support
+Rủi ro thấp hơn
+Ưu tiên
+Hỗ trợ riêng
 
 👤 Liên hệ: @KenMasterTrade`;
       await ctx.reply(text);
