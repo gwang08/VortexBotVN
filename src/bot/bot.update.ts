@@ -109,8 +109,7 @@ export class BotUpdate {
     const replyToBot = (ctx.message as any)?.reply_to_message;
     if (replyToBot && replyToBot.from?.is_bot) {
       if (!ctx.from) return;
-      const displayName = this.botService.getDisplayName(ctx);
-      await this.adminService.forwardUserMessage(ctx.from.id, displayName, message);
+      await this.adminService.forwardUserMessage(ctx.from.id, ctx.from.username, message);
       await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');
       return;
     }
@@ -122,8 +121,7 @@ export class BotUpdate {
 
     // Tất cả tin nhắn tự do khác -> forward tới admin
     if (!ctx.from) return;
-    const displayName = this.botService.getDisplayName(ctx);
-    await this.adminService.forwardUserMessage(ctx.from.id, displayName, message);
+    await this.adminService.forwardUserMessage(ctx.from.id, ctx.from.username, message);
     await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');
   }
 

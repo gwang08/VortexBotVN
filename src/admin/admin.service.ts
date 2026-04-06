@@ -147,7 +147,7 @@ export class AdminService {
     await ctx.reply(`📋 Tracking Links (${links.length}):\n\n${lines.join('\n\n')}`);
   }
 
-  async forwardUserMessage(userId: number, username: string, text: string): Promise<void> {
+  async forwardUserMessage(userId: number, username: string | undefined, text: string): Promise<void> {
     const displayName = username ? `@${username}` : `ID:${userId}`;
     const message = `💬 Tin nhắn từ ${displayName} (ID: ${userId}):\n\n"${text}"\n\n↩️ Reply tin nhắn này để trả lời.`;
 

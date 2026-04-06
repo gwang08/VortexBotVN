@@ -187,8 +187,7 @@ export class SignalsScene {
       return;
     }
 
-    const displayName = this.botService.getDisplayName(ctx);
-    await this.adminService.forwardUserMessage(ctx.from.id, displayName, message);
+    await this.adminService.forwardUserMessage(ctx.from.id, ctx.from?.username, message);
     await ctx.reply('✅ Tin nhắn đã gửi tới admin. Vui lòng chờ phản hồi!');
   }
 }
