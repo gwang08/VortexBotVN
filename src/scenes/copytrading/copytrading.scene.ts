@@ -179,9 +179,9 @@ Submit`;
 
     const text = `Gửi email:
 
-IB ${BROKER_IB.ultima.ibNumber}
+Vui lòng chuyển tài khoản của tôi xuống dưới IB ${BROKER_IB.ultima.ibNumber}
 
-Gửi UID
+UID:
 
 Gửi tới: ${BROKER_IB.ultima.email}`;
     await ctx.reply(text, ultimaTransferKeyboard());
