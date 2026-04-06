@@ -11,7 +11,7 @@ export const IB_CODE = 'bmrmaster';
 export const BROKER_IB = {
   puprime: { name: 'PU Prime', ibNumber: '83272' },
   ultima: { name: 'Ultima', ibNumber: '22593619', email: 'vietnam.cs@ultimamarkets.com' },
-  vantage: { name: 'Vantage' },
+  vantage: { name: 'Vantage', ibNumber: '26464922', email: 'vietnam.support@vantagemarkets.com' },
 };
 
 // External links

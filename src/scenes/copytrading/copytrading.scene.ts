@@ -199,13 +199,11 @@ Gửi tới: ${BROKER_IB.ultima.email}`;
       data: { status: 'registered', lastStep: 'ct_transfer_vantage' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
-    ctx.session.awaitingUid = true;
-    const text = `Liên hệ support
+    const text = `Gửi tới: ${BROKER_IB.vantage.email}
+Tiêu đề: Change account owner - (Email của bạn)
 
-Yêu cầu chuyển IB
-
-Gửi UID:`;
-    await ctx.reply(text);
+Nội dung: Please move my account under IB ${BROKER_IB.vantage.ibNumber}`;
+    await ctx.reply(text, ultimaTransferKeyboard());
   }
 
   // ── IB SUBMITTED / SENT EMAIL -> Deposit ──
@@ -429,12 +427,6 @@ VIP Package`;
         }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
         await this.adminService.notifyAccountSubmitted(ctx.from!.id, ctx.from?.username, uid);
-
-        if (ctx.session.currentStep === 'copytrading:vantage_uid' || ctx.session.currentStep === 'copytrading:transfer_vantage') {
-          await ctx.reply(`✅ UID ${uid} đã nhận.`);
-          await this.showDepositScreen(ctx);
-          return;
-        }
 
         await ctx.reply(`✅ UID ${uid} đã nhận.`);
         await this.showUnlockScreen(ctx);
