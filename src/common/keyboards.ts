@@ -7,7 +7,7 @@ import { CALLBACKS, BOT_TRADING_URL, MYFXBOOK_URL, CHANNEL_URL } from './constan
 export const welcomeKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🚀 VIP Package', CALLBACKS.vipPackage)],
-    [Markup.button.callback('🤖 Copytrade', CALLBACKS.copytrading)],
+    [Markup.button.callback('🤖 Copy Trading', CALLBACKS.copytrading)],
     [Markup.button.callback('📊 Free Signals', CALLBACKS.freeSignals)],
     [Markup.button.callback('🧑‍💼 Support', CALLBACKS.support)],
   ]);
@@ -16,7 +16,7 @@ export const welcomeKeyboard = () =>
 export const vipPackageKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🔥 Vào VIP', CALLBACKS.joinVip)],
-    [Markup.button.callback('🤖 Copytrade', CALLBACKS.startSetup)],
+    [Markup.button.callback('🤖 Copy Trading', CALLBACKS.startSetup)],
   ]);
 
 // Screen 3: Copytrade Info
@@ -82,7 +82,7 @@ export const depositKeyboard = () =>
 // Screen 13: Unlock
 export const unlockKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('🤖 Copytrade', CALLBACKS.startCopytradeSetup)],
+    [Markup.button.callback('🤖 Copy Trading', CALLBACKS.startCopytradeSetup)],
     [Markup.button.callback('🚀 VIP', CALLBACKS.joinVip)],
   ]);
 
@@ -125,7 +125,7 @@ export const ctStep4Keyboard = () =>
 
 export const ctFinalKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('✅ Tôi đã bật CopyTrade', CALLBACKS.ctCopyEnabled)],
+    [Markup.button.callback('✅ Tôi đã bật Copy Trading', CALLBACKS.ctCopyEnabled)],
   ]);
 
 // AI Chat keyboards

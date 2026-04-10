@@ -53,7 +53,7 @@ export class OnboardingScene {
 Bạn muốn:
 
 1. VIP Package
-2. Copytrade Auto
+2. Copy Trading
 3. Free Signals
 4. Hỗ trợ`;
     await ctx.reply(text, welcomeKeyboard());
@@ -95,7 +95,7 @@ SMC Course
       data: { flow: 'copytrading' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
-    const text = `🤖 Copytrade tự động
+    const text = `🤖 BMR Copy Trading
 
 Không cần trade
 Không cần kinh nghiệm
@@ -271,7 +271,7 @@ Hỗ trợ riêng
     ctx.session.aiQuestionCount = 0;
     const name = this.botService.getDisplayName(ctx);
     await ctx.reply(
-      `💬 Hỗ Trợ AI\n\nChào ${name}! Em là trợ lý AI của BMR Trading.\n\nHỏi em về:\n• Copytrade & cách hoạt động\n• Vốn & rủi ro\n• Quy trình đăng ký & nạp tiền\n\nGõ /human để nói chuyện với nhân viên.`,
+      `💬 Hỗ Trợ AI\n\nChào ${name}! Em là trợ lý AI của BMR Trading.\n\nHỏi em về:\n• Copy Trading & cách hoạt động\n• Vốn & rủi ro\n• Quy trình đăng ký & nạp tiền\n\nGõ /human để nói chuyện với nhân viên.`,
     );
   }
 

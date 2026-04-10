@@ -271,7 +271,7 @@ Nội dung: Please move my account under IB ${BROKER_IB.vantage.ibNumber}`;
     ctx.session.currentStep = 'copytrading:unlock';
     const text = `🔥 Đã mở quyền
 
-Copytrade
+Copy Trading
 VIP Package`;
     await ctx.reply(text, unlockKeyboard());
   }
