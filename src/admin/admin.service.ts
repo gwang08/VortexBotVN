@@ -81,19 +81,29 @@ export class AdminService {
 
   /** Create tracking link */
   async createTrackingLink(ctx: BotContext, source: string): Promise<void> {
-    if (await this.hasTrackingLink(source)) {
+    this.logger.log(`[link] createTrackingLink start source="${source}"`);
+    try {
+      if (await this.hasTrackingLink(source)) {
+        const botInfo = await ctx.telegram.getMe();
+        const link = `https://t.me/${botInfo.username}?start=ref_${source}`;
+        await ctx.reply(`⚠️ Source "${source}" đã tồn tại!\n\n🔗 ${link}\n\nVui lòng dùng tên khác.`);
+        this.logger.log(`[link] exists, replied for source="${source}"`);
+        return;
+      }
+
+      await this.saveTrackingLink(source);
       const botInfo = await ctx.telegram.getMe();
       const link = `https://t.me/${botInfo.username}?start=ref_${source}`;
-      await ctx.reply(`⚠️ Source "${source}" đã tồn tại!\n\n🔗 ${link}\n\nVui lòng dùng tên khác.`);
-      return;
+      await ctx.reply(
+        `✅ Link tracking đã tạo!\n\n🔗 ${link}\n\n📊 Source: ${source}\n\nGửi link này cho channel quảng cáo.\nKhi user bấm vào, bot sẽ tự động ghi nhận source.`,
+      );
+      this.logger.log(`[link] created source="${source}"`);
+    } catch (err: any) {
+      this.logger.error(`[link] failed source="${source}": ${err?.message}`, err?.stack);
+      try {
+        await ctx.reply(`❌ Không tạo được link: ${err?.message ?? 'unknown error'}`);
+      } catch {}
     }
-
-    await this.saveTrackingLink(source);
-    const botInfo = await ctx.telegram.getMe();
-    const link = `https://t.me/${botInfo.username}?start=ref_${source}`;
-    await ctx.reply(
-      `✅ Link tracking đã tạo!\n\n🔗 ${link}\n\n📊 Source: ${source}\n\nGửi link này cho channel quảng cáo.\nKhi user bấm vào, bot sẽ tự động ghi nhận source.`,
-    );
   }
 
   /** Batch create multiple tracking links, return single summary message */

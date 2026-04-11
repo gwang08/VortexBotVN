@@ -1,4 +1,5 @@
 import { Update, Start, Use, Ctx, Command } from 'nestjs-telegraf';
+import { Logger } from '@nestjs/common';
 import type { BotContext } from '../common/interfaces/session.interface';
 import { BotService } from './bot.service';
 import { AdminService } from '../admin/admin.service';
@@ -7,6 +8,8 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Update()
 export class BotUpdate {
+  private readonly logger = new Logger(BotUpdate.name);
+
   constructor(
     private botService: BotService,
     private adminService: AdminService,
@@ -23,6 +26,12 @@ export class BotUpdate {
 
     if (!message || !chatId) {
       return callNext();
+    }
+
+    if (message.startsWith('/')) {
+      this.logger.log(
+        `[cmd] chatId=${chatId} isAdmin=${this.adminService.isAdmin(chatId)} msg="${message.slice(0, 60)}"`,
+      );
     }
 
     if (message.startsWith('/start')) {
