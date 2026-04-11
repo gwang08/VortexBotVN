@@ -2,14 +2,14 @@ import * as path from 'path';
 
 // PuPrime signup link
 export const PUPRIME_SIGNUP_LINK =
-  'https://puvip.co/la-partners/vn/bmrtrading';
+  'https://puvip.co/la-partners/vn/boomerang';
 
 // IB Code for existing PuPrime users
-export const IB_CODE = 'bmrtrading';
+export const IB_CODE = 'boomerang';
 
 // Broker-specific IB info
 export const BROKER_IB = {
-  puprime: { name: 'PU Prime', ibNumber: '83284' },
+  puprime: { name: 'PU Prime', ibNumber: '7389028' },
   ultima: { name: 'Ultima', ibNumber: '22593622', email: 'vietnam.cs@ultimamarkets.com' },
   vantage: { name: 'Vantage', ibNumber: '26465155', email: 'vietnam.support@vantagemarkets.com' },
 };

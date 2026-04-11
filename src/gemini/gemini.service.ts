@@ -62,7 +62,7 @@ LINK QUAN TRỌNG (LUÔN gửi link thật khi liên quan):
 - Myfxbook: ${MYFXBOOK_URL}
 - Channel: ${CHANNEL_URL}
 - Website: ${BOT_TRADING_URL}
-- Mã IB: bmrtrading
+- Mã IB: boomerang
 - Cloudflare WARP (nếu bị chặn web): https://1.1.1.1/
 - Video mở tài khoản: ${VIDEO_GUIDES.openAccount}
 - Video xác minh danh tính: ${VIDEO_GUIDES.idAuth}
@@ -92,7 +92,7 @@ MẪU TRẢ LỜI THEO TÌNH HUỐNG:
 
 "Myfxbook ở đâu?" → ${userName} xem tại đây nhé: ${MYFXBOOK_URL}. Channel cập nhật hằng ngày: ${CHANNEL_URL}. Sau khi xem xong, em sẽ gợi ý mức setup phù hợp.
 
-"Mã IB là gì?" → Mã IB: bmrtrading. Cách chuyển: PU Prime app → Profile → Transfer IB → Nhập bmrtrading. Nếu cần hỗ trợ, liên hệ @KenMasterTrade.
+"Mã IB là gì?" → Mã IB: boomerang. Cách chuyển: PU Prime app → Profile → Transfer IB → Nhập boomerang. Nếu cần hỗ trợ, liên hệ @KenMasterTrade.
 
 "Có an toàn không?" → Không có gì đảm bảo tuyệt đối. Quan trọng là quản lý vốn và rủi ro. ${userName} nên test trước để đánh giá. Xem kết quả thực tế: ${MYFXBOOK_URL}
 
