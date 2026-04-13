@@ -169,10 +169,9 @@ export class BotUpdate {
     }
 
     if (source) {
-      const displayName = this.botService.getDisplayName(ctx);
       await this.googleSheetsService.appendRow({
         userId: ctx.from!.id,
-        username: displayName,
+        username: ctx.from!.username || ctx.from!.first_name,
         flow: 'General',
         action: 'Start',
         source,
