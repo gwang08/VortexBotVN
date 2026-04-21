@@ -5,6 +5,7 @@ import { BotService } from './bot.service';
 import { AdminService } from '../admin/admin.service';
 import { GoogleSheetsService } from '../google-sheets/google-sheets.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { RateLimitService } from '../common/rate-limit.service';
 
 @Update()
 export class BotUpdate {
@@ -15,14 +16,23 @@ export class BotUpdate {
     private adminService: AdminService,
     private googleSheetsService: GoogleSheetsService,
     private prisma: PrismaService,
+    private rateLimit: RateLimitService,
   ) {}
 
   @Use()
   async middleware(@Ctx() ctx: BotContext, next: () => Promise<void>) {
+    const callNext = typeof next === 'function' ? next : () => Promise.resolve();
+
+    // Rate limit — applies to every update (messages + callback queries). Admin exempt.
+    const fromId = ctx.from?.id;
+    if (fromId && !this.adminService.isAdmin(fromId)) {
+      if (!this.rateLimit.check(fromId, ctx.from?.username)) {
+        return; // silently drop to avoid amplification
+      }
+    }
+
     const message = (ctx.message as any)?.text;
     const chatId = ctx.chat?.id;
-
-    const callNext = typeof next === 'function' ? next : () => Promise.resolve();
 
     if (!message || !chatId) {
       return callNext();
