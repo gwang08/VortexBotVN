@@ -294,12 +294,17 @@ Hỗ trợ riêng
     const message = (ctx.message as any)?.text;
     if (!message || !ctx.from) return;
 
-    if (this.adminService.isAdmin(ctx.chat!.id)) return;
-
-    if (message.startsWith('/') && message !== '/human') {
-      if (this.adminService.isAdmin(ctx.chat!.id)) {
+    // Admin: dispatch slash commands inline. Returning early without next()
+    // would also prevent BotUpdate.@Use from running, so /link, /stats, etc.
+    // must be handled right here while the admin is inside this scene.
+    if (this.adminService.isAdmin(ctx.chat!.id)) {
+      if (message.startsWith('/')) {
         await this.adminService.handleCommand(ctx, message);
       }
+      return;
+    }
+
+    if (message.startsWith('/') && message !== '/human') {
       return;
     }
 
