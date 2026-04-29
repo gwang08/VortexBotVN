@@ -33,10 +33,15 @@ module.exports = {
       name: "vortexbotvn",
       script: "./dist/main.js",
       instances: 1,
+      exec_mode: "fork",
       autorestart: true,
       watch: false,
       max_memory_restart: "512M",
       cron_restart: "0 */6 * * *",
+      // --unhandled-rejections=strict makes Node terminate on unhandled
+      // promise rejections (e.g. Telegraf 409 polling crash) so pm2 restarts
+      // a fresh polling loop instead of leaving a zombie process.
+      node_args: "--unhandled-rejections=strict",
       env: loadEnvFile(),
       error_file: "./logs/err.log",
       out_file: "./logs/out.log",
