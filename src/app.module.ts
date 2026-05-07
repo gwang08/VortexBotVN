@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { BotModule } from './bot/bot.module';
 import { ScenesModule } from './scenes/scenes.module';
-import { GeminiModule } from './gemini/gemini.module';
 import { AdminModule } from './admin/admin.module';
 import { FollowUpModule } from './follow-up/follow-up.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -27,7 +26,6 @@ import { prismaSessionMiddleware } from './prisma/prisma-session-middleware';
     }),
     BotModule,
     ScenesModule,
-    GeminiModule,
     AdminModule,
     FollowUpModule,
   ],

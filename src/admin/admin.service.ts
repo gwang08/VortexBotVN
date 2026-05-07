@@ -10,7 +10,7 @@ import { MAX_FOLLOWUP_COUNT, VIP_MAX_FOLLOWUP_COUNT } from '../common/constants'
 @Injectable()
 export class AdminService {
   private readonly logger = new Logger(AdminService.name);
-  private readonly adminChatId: string;
+  private readonly adminChatIds: string[];
 
   constructor(
     @InjectBot() private bot: Telegraf<BotContext>,
@@ -18,7 +18,36 @@ export class AdminService {
     private googleSheetsService: GoogleSheetsService,
     private prisma: PrismaService,
   ) {
-    this.adminChatId = this.configService.get<string>('ADMIN_CHAT_ID') ?? '';
+    const raw = this.configService.get<string>('ADMIN_CHAT_ID') ?? '';
+    this.adminChatIds = raw
+      .split(',')
+      .map((id) => id.trim())
+      .filter(Boolean);
+  }
+
+  /** Format a user reference for admin messages and sheets.
+   *  Telegram @usernames cannot contain spaces, so we only prefix with `@` when
+   *  the actual username is present. firstName falls back without the prefix
+   *  to avoid bogus handles like `@Kagisho MacDonald`. */
+  private formatDisplayName(username?: string, firstName?: string, userId?: number): string {
+    if (username) return `@${username}`;
+    if (firstName) return firstName;
+    return userId ? `ID:${userId}` : 'Unknown';
+  }
+
+  /** Send a message to every configured admin; failures don't block other admins */
+  private async broadcastToAdmins(text: string): Promise<void> {
+    if (this.adminChatIds.length === 0) return;
+    const results = await Promise.allSettled(
+      this.adminChatIds.map((id) => this.bot.telegram.sendMessage(id, text)),
+    );
+    results.forEach((r, i) => {
+      if (r.status === 'rejected') {
+        this.logger.error(
+          `Failed to send admin message to ${this.adminChatIds[i]}: ${(r.reason as any)?.message ?? r.reason}`,
+        );
+      }
+    });
   }
 
   async hasTrackingLink(source: string): Promise<boolean> {
@@ -36,7 +65,7 @@ export class AdminService {
   }
 
   isAdmin(chatId: number): boolean {
-    return String(chatId) === this.adminChatId;
+    return this.adminChatIds.includes(String(chatId));
   }
 
   /** Handle admin commands when called from within scenes */
@@ -87,7 +116,6 @@ export class AdminService {
         const botInfo = await ctx.telegram.getMe();
         const link = `https://t.me/${botInfo.username}?start=ref_${source}`;
         await ctx.reply(`⚠️ Source "${source}" đã tồn tại!\n\n🔗 ${link}\n\nVui lòng dùng tên khác.`);
-        this.logger.log(`[link] exists, replied for source="${source}"`);
         return;
       }
 
@@ -97,7 +125,6 @@ export class AdminService {
       await ctx.reply(
         `✅ Link tracking đã tạo!\n\n🔗 ${link}\n\n📊 Source: ${source}\n\nGửi link này cho channel quảng cáo.\nKhi user bấm vào, bot sẽ tự động ghi nhận source.`,
       );
-      this.logger.log(`[link] created source="${source}"`);
     } catch (err: any) {
       this.logger.error(`[link] failed source="${source}": ${err?.message}`, err?.stack);
       try {
@@ -157,17 +184,19 @@ export class AdminService {
     await ctx.reply(`📋 Tracking Links (${links.length}):\n\n${lines.join('\n\n')}`);
   }
 
-  async forwardUserMessage(userId: number, username: string | undefined, text: string): Promise<void> {
-    const displayName = username ? `@${username}` : `ID:${userId}`;
+  /** Forward user message to admin for live chat */
+  async forwardUserMessage(
+    userId: number,
+    username: string | undefined,
+    firstName: string | undefined,
+    text: string,
+  ): Promise<void> {
+    const displayName = this.formatDisplayName(username, firstName, userId);
     const message = `💬 Tin nhắn từ ${displayName} (ID: ${userId}):\n\n"${text}"\n\n↩️ Reply tin nhắn này để trả lời.`;
-
-    try {
-      await this.bot.telegram.sendMessage(this.adminChatId, message);
-    } catch (error) {
-      this.logger.error('Failed to forward user message to admin', error);
-    }
+    await this.broadcastToAdmins(message);
   }
 
+  /** Send admin reply back to user */
   async sendReplyToUser(userId: number, text: string): Promise<boolean> {
     try {
       await this.bot.telegram.sendMessage(userId, text);
@@ -178,6 +207,7 @@ export class AdminService {
     }
   }
 
+  /** Extract userId from forwarded message text */
   extractUserIdFromMessage(text: string): number | null {
     const match =
       text.match(/\(ID:\s*(\d+)\)/) ||
@@ -187,37 +217,35 @@ export class AdminService {
   }
 
   async notifyAdmin(userId: number, username?: string, firstName?: string): Promise<void> {
-    const displayName = username ? `@${username}` : firstName || `ID:${userId}`;
+    const displayName = this.formatDisplayName(username, firstName, userId);
     const message = `🔔 Yêu cầu liên hệ mới!\n\nTừ: ${displayName}\nUser ID: ${userId}\n\nVui lòng liên hệ trực tiếp với họ.`;
-
-    try {
-      await this.bot.telegram.sendMessage(this.adminChatId, message);
-      this.logger.log(`Admin notified about user ${displayName}`);
-    } catch (error) {
-      this.logger.error('Failed to notify admin', error);
-    }
+    await this.broadcastToAdmins(message);
+    this.logger.log(`Admin notified about user ${displayName}`);
 
     await this.googleSheetsService.appendRow({
       userId,
-      username: username || firstName,
+      username,
+      firstName,
       flow: 'General',
       action: 'Contact',
     });
   }
 
-  async notifyAdminEmail(userId: number, username: string, email: string, flow: string): Promise<void> {
-    const displayName = username ? `@${username}` : `ID:${userId}`;
+  async notifyAdminEmail(
+    userId: number,
+    username: string | undefined,
+    firstName: string | undefined,
+    email: string,
+    flow: string,
+  ): Promise<void> {
+    const displayName = this.formatDisplayName(username, firstName, userId);
     const message = `📧 Đã nhận email!\n\nTừ: ${displayName}\nDịch vụ: ${flow}\nEmail: ${email}`;
-
-    try {
-      await this.bot.telegram.sendMessage(this.adminChatId, message);
-    } catch (error) {
-      this.logger.error('Failed to notify admin about email', error);
-    }
+    await this.broadcastToAdmins(message);
 
     await this.googleSheetsService.appendRow({
       userId,
       username,
+      firstName,
       email,
       flow,
       action: 'Email',
@@ -225,34 +253,34 @@ export class AdminService {
   }
 
   /** Notify admin when user submits trading account */
-  async notifyAccountSubmitted(userId: number, username: string | undefined, account: string): Promise<void> {
-    const displayName = username ? `@${username}` : `ID:${userId}`;
+  async notifyAccountSubmitted(
+    userId: number,
+    username: string | undefined,
+    firstName: string | undefined,
+    account: string,
+  ): Promise<void> {
+    const displayName = this.formatDisplayName(username, firstName, userId);
     const text = `🏦 Account Submitted\n\nUser: ${displayName} (ID: ${userId})\nAccount: ${account}\n\nVerify with: /verify ${account}`;
-
-    try {
-      await this.bot.telegram.sendMessage(this.adminChatId, text);
-    } catch (error) {
-      this.logger.error('Failed to notify admin about account submission', error);
-    }
+    await this.broadcastToAdmins(text);
   }
 
   /** Notify admin when user claims deposit */
-  async notifyDepositClaimed(userId: number, username: string | undefined, account: string | null | undefined): Promise<void> {
-    const displayName = username ? `@${username}` : `ID:${userId}`;
+  async notifyDepositClaimed(
+    userId: number,
+    username: string | undefined,
+    firstName: string | undefined,
+    account: string | null | undefined,
+  ): Promise<void> {
+    const displayName = this.formatDisplayName(username, firstName, userId);
     const text = `💰 Deposit Claimed\n\nUser: ${displayName} (ID: ${userId})\nAccount: ${account || 'N/A'}\n\nCheck on IB portal.`;
-
-    try {
-      await this.bot.telegram.sendMessage(this.adminChatId, text);
-    } catch (error) {
-      this.logger.error('Failed to notify admin about deposit claim', error);
-    }
+    await this.broadcastToAdmins(text);
   }
 
   /** /help - show all admin commands */
   async sendHelpMessage(ctx: BotContext): Promise<void> {
     const text = `📋 Admin Commands:\n
 /help        – Show this help message
-/link     – Create tracking link: /link <source>
+/link        – Create tracking link: /link <source>
 /checklinks  – List all tracking links
 /status      – View user info: /status <telegram_id>
 /stats       – User statistics by source & status

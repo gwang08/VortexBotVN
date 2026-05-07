@@ -1,19 +1,13 @@
 import { Context, Scenes } from 'telegraf';
 
 export interface BotSession extends Scenes.WizardSession {
-  capitalRange?: string;
-  selectedFlow?: 'copytrading' | 'signals' | 'contact';
-  email?: string;
+  selectedProduct?: 'grok' | 'bmr_copy' | 'bmr_scalper';
+  selectedBroker?: 'puprime' | 'ultima' | 'vantage';
+  isVipFlow?: boolean;
   currentStep?: string;
-  awaitingEmail?: boolean;
-  awaitingAccount?: boolean;
   awaitingUid?: boolean;
   awaitingLinkSource?: boolean;
-  isVip?: boolean;
-  inAiChat?: boolean;
-  aiQuestionCount?: number;
   tier?: string;
-  selectedBroker?: 'puprime' | 'ultima' | 'vantage';
 }
 
 export interface BotContext extends Context {

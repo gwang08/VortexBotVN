@@ -31,6 +31,7 @@ export class GoogleSheetsService implements OnModuleInit {
     this.ensureHeaderRow();
   }
 
+  /** Add header row if sheet is empty */
   private async ensureHeaderRow(): Promise<void> {
     if (!this.sheets) return;
     try {
@@ -55,6 +56,7 @@ export class GoogleSheetsService implements OnModuleInit {
     }
   }
 
+  /** Get the first sheet name dynamically */
   private async getFirstSheetName(): Promise<string> {
     const meta = await this.sheets.spreadsheets.get({
       spreadsheetId: this.spreadsheetId,
@@ -63,9 +65,11 @@ export class GoogleSheetsService implements OnModuleInit {
     return meta.data.sheets?.[0]?.properties?.title ?? 'Sheet1';
   }
 
+  /** Append or increment count for a contact/email row */
   async appendRow(data: {
     userId: number;
     username?: string;
+    firstName?: string;
     email?: string;
     flow: string;
     action: 'Contact' | 'Email' | 'Start';
@@ -74,12 +78,20 @@ export class GoogleSheetsService implements OnModuleInit {
     if (!this.sheets) return;
 
     const sheetName = await this.getFirstSheetName();
-    const displayName = data.username ? `@${data.username}` : `ID:${data.userId}`;
+    // Username is the only safe Telegram handle; firstName can contain spaces
+    // and emojis, so render it without a leading @ to avoid bogus handles.
+    const displayName = data.username
+      ? `@${data.username}`
+      : data.firstName
+        ? data.firstName
+        : `ID:${data.userId}`;
 
     try {
+      // Find existing row with same userId + flow + action
       const existingRow = await this.findExistingRow(sheetName, data.userId, data.flow, data.action);
 
       if (existingRow) {
+        // Increment count and update timestamp
         const newCount = existingRow.count + 1;
         const timestamp = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
 
@@ -93,6 +105,7 @@ export class GoogleSheetsService implements OnModuleInit {
         });
         this.logger.log(`Row updated: ${data.action} from ${displayName} (count: ${newCount})`);
       } else {
+        // New row with count = 1
         const timestamp = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
         const row = [timestamp, String(data.userId), displayName, data.email ?? '', data.flow, data.action, '1', data.source ?? ''];
 
@@ -109,6 +122,7 @@ export class GoogleSheetsService implements OnModuleInit {
     }
   }
 
+  /** Find existing row matching userId + flow + action */
   private async findExistingRow(
     sheetName: string,
     userId: number,
@@ -124,6 +138,7 @@ export class GoogleSheetsService implements OnModuleInit {
       const rows = res.data.values;
       if (!rows || rows.length <= 1) return null;
 
+      // Search from row 2 (skip header), match userId (col B) + flow (col E) + action (col F)
       for (let i = 1; i < rows.length; i++) {
         const row = rows[i];
         if (row[1] === String(userId) && row[4] === flow && row[5] === action) {
