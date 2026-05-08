@@ -76,7 +76,7 @@ Top 2 Most Copied trên PU Prime
 
     const text = `🏆 BMR Copy Trading
 
-Top Annual Return trên Ultima Markets
+Top 1 Annual Return trên Ultima Markets
 
 📊 Lợi nhuận 1 năm: +1,596%
 👥 Tổng người copy: 2,269
