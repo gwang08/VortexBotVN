@@ -37,7 +37,9 @@ export class OnboardingScene {
     ctx.session.currentStep = 'onboarding:welcome';
     const welcomeText =
       '🔥 Chào mừng đến BMR Copy Trading\n\n' +
-      'Hệ thống giao dịch chuyên nghiệp 👇';
+      '📈 AI Gold & BTC Copy Trading\n' +
+      '⚖️ Risk Management System\n' +
+      '👥 Dành cho nhà đầu tư bận rộn';
     await ctx.reply(welcomeText, welcomeKeyboard());
   }
 
@@ -50,16 +52,17 @@ export class OnboardingScene {
     ctx.session.currentStep = 'onboarding:grok_ai_gold';
 
     const text = `🤖 Grok AI Gold
-Top 3 Most Copied trên PU Prime
+
+Top 2 Most Copied trên PU Prime
 
 📊 Lợi nhuận YTD: +107,615%
-📊 Lợi nhuận 3 tháng: +14,184%
+📈 Lợi nhuận 3 tháng: +14,184%
 👥 Tổng người copy: 10,622
 ⚖️ Mức rủi ro: 3
 
-✅ Gold Scalping
-✅ Tự động hoàn toàn
-✅ Copy Trading thời gian thực`;
+✅ Gold Scalping System
+✅ AI Risk Management
+✅ Real-Time Copy Trading`;
     await this.sendPhotoWithCaption(ctx, IMAGES.grok.product1, text, grokAiGoldKeyboard());
   }
 
@@ -72,7 +75,8 @@ Top 3 Most Copied trên PU Prime
     ctx.session.currentStep = 'onboarding:bmr_copy_trading';
 
     const text = `🏆 BMR Copy Trading
-Top 1 Lợi nhuận thường niên cao nhất Ultima Markets
+
+Top Annual Return trên Ultima Markets
 
 📊 Lợi nhuận 1 năm: +1,596%
 👥 Tổng người copy: 2,269
@@ -80,9 +84,9 @@ Top 1 Lợi nhuận thường niên cao nhất Ultima Markets
 ⚖️ Mức rủi ro: 2
 💰 Vốn đề xuất: $1,000+
 
-✅ Đa chiến lược
+✅ AI Risk Management
 ✅ Giao dịch tự động
-✅ Tăng trưởng dài hạn`;
+✅ Portfolio Growth`;
     await this.sendPhotoWithCaption(ctx, IMAGES.grok.product2, text, bmrCopyTradingKeyboard());
   }
 
@@ -95,14 +99,15 @@ Top 1 Lợi nhuận thường niên cao nhất Ultima Markets
     ctx.session.currentStep = 'onboarding:bmr_scalper_gold';
 
     const text = `🚀 BMR Scalper Gold
-Hiệu suất Copy Trading mạnh trên Vantage
+
+High Performance Copy Trading trên Vantage
 
 📊 Lợi nhuận 3 tháng: +6,288.96%
 👥 Tổng người copy: 1,401
 📌 Người copy hiện tại: 95
 
-✅ Gold Scalping
-✅ Tần suất cao
+✅ Gold Scalping System
+✅ AI Trade Execution
 ✅ Social Copy Trading`;
     await this.sendPhotoWithCaption(ctx, IMAGES.grok.product3, text, bmrScalperGoldKeyboard());
   }
@@ -116,21 +121,15 @@ Hiệu suất Copy Trading mạnh trên Vantage
 
     const text = `👑 BMR VIP Package
 
-Tham gia VIP:
+Mở khóa:
+✅ AI Gold Signals
+✅ Market Analysis
+✅ Trading Education
+✅ Community Access
+✅ Priority Support
 
-Đăng ký:
-PU Prime
-Ultima Markets
-Vantage
-
-Nạp tối thiểu: $1,000
-
-Mở khoá:
-✅ Tín hiệu hàng ngày
-✅ Forex Course
-✅ SMC Course
-✅ Cộng đồng
-✅ Hỗ trợ Copy Trading`;
+📌 Điều kiện tham gia:
+Tài khoản từ $1,000+`;
     await this.sendPhotoWithCaption(ctx, IMAGES.grok.vip, text, vipPackageKeyboard());
   }
 
@@ -172,14 +171,14 @@ Mở khoá:
   async onSupport(ctx: BotContext) {
     await ctx.answerCbQuery();
     await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
-    await ctx.reply('Cảm ơn! Admin đã được thông báo. Em sẽ liên hệ lại sớm.\n\n👤 Liên hệ: @KenMasterTrade');
+    await ctx.reply('Cảm ơn! Admin đã được thông báo. Em sẽ liên hệ lại sớm.\n\n👤 Liên hệ: @FinBMR');
   }
 
   @Action(CALLBACKS.contactAdmin)
   async onContactAdmin(ctx: BotContext) {
     await ctx.answerCbQuery();
     await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
-    await ctx.reply('Cảm ơn! Admin đã được thông báo. Em sẽ liên hệ lại sớm.\n\n👤 Liên hệ: @KenMasterTrade');
+    await ctx.reply('Cảm ơn! Admin đã được thông báo. Em sẽ liên hệ lại sớm.\n\n👤 Liên hệ: @FinBMR');
   }
 
   // ── Text handler ──

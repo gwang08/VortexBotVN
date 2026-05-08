@@ -17,7 +17,7 @@ const BMR_COPY_CHANNEL = 'https://t.me/BMRCopyTrade';
 const BMR_SCALPER_CHANNEL = 'https://t.me/BMRGoldScalper';
 
 // VIP contact (VN admin)
-const KEN_VN = 'https://t.me/KenMasterTrade';
+const KEN_VN = 'https://t.me/FinBMR';
 
 const CHECK_INTERVAL_MS = 5 * 60 * 1000;
 

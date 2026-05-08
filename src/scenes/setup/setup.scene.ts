@@ -278,21 +278,21 @@ Gói VIP`;
   async onUnlockGrok(ctx: BotContext) {
     await ctx.answerCbQuery();
     await this.markDone(ctx);
-    await ctx.reply('🤖 Grok AI Gold đã kích hoạt!\n\nTheo dõi kết quả: https://t.me/GrokAIGold\nHỗ trợ: @KenMasterTrade');
+    await ctx.reply('🤖 Grok AI Gold đã kích hoạt!\n\nTheo dõi kết quả: https://t.me/GrokAIGold\nHỗ trợ: @FinBMR');
   }
 
   @Action(CALLBACKS.unlockBmrCopyTrading)
   async onUnlockBmrCopy(ctx: BotContext) {
     await ctx.answerCbQuery();
     await this.markDone(ctx);
-    await ctx.reply('🏆 BMR Copy Trading đã kích hoạt!\n\nTheo dõi kết quả: https://t.me/BMRCopyTrade\nHỗ trợ: @KenMasterTrade');
+    await ctx.reply('🏆 BMR Copy Trading đã kích hoạt!\n\nTheo dõi kết quả: https://t.me/BMRCopyTrade\nHỗ trợ: @FinBMR');
   }
 
   @Action(CALLBACKS.unlockBmrScalperGold)
   async onUnlockBmrScalper(ctx: BotContext) {
     await ctx.answerCbQuery();
     await this.markDone(ctx);
-    await ctx.reply(`🚀 BMR Scalper Gold đã kích hoạt!\n\nTheo dõi kết quả: ${CHANNEL_URL}\nHỗ trợ: @KenMasterTrade`);
+    await ctx.reply(`🚀 BMR Scalper Gold đã kích hoạt!\n\nTheo dõi kết quả: ${CHANNEL_URL}\nHỗ trợ: @FinBMR`);
   }
 
   @Action(CALLBACKS.unlockVipPackage)
@@ -302,7 +302,7 @@ Gói VIP`;
       where: { id: BigInt(ctx.from!.id) },
       data: { status: 'done', isVip: true, tier: 'vip', lastStep: 'unlock_vip' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
-    await ctx.reply(`👑 Gói VIP đã kích hoạt!\n\nTheo dõi kết quả: ${CHANNEL_URL}\nHỗ trợ: @KenMasterTrade`);
+    await ctx.reply(`👑 Gói VIP đã kích hoạt!\n\nTheo dõi kết quả: ${CHANNEL_URL}\nHỗ trợ: @FinBMR`);
   }
 
   // ── Contact Admin ──
@@ -310,7 +310,7 @@ Gói VIP`;
   async onContactAdmin(ctx: BotContext) {
     await ctx.answerCbQuery();
     await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
-    await ctx.reply('Cảm ơn! Admin đã được thông báo. Em sẽ liên hệ lại sớm.\n\n👤 Liên hệ: @KenMasterTrade');
+    await ctx.reply('Cảm ơn! Admin đã được thông báo. Em sẽ liên hệ lại sớm.\n\n👤 Liên hệ: @FinBMR');
   }
 
   // ── Register callbacks from VIP flow (scene-level) ──
