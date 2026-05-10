@@ -79,9 +79,8 @@ Top 2 Most Copied trên PU Prime
 Top 1 Annual Return trên Ultima Markets
 
 📊 Lợi nhuận 1 năm: +1,596%
-👥 Tổng người copy: 2,269
 🎯 Tỷ lệ thắng: 68.88%
-⚖️ Mức rủi ro: 2
+📈 Copy AUM: $364K+
 💰 Vốn đề xuất: $1,000+
 
 ✅ AI Risk Management
