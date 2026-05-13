@@ -5,7 +5,7 @@ import { CALLBACKS } from './constants';
 export const welcomeKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🏆 BMR Copy Trading', CALLBACKS.selectBmrCopyTrading)],
-    [Markup.button.callback('🤖 Grok AI Gold', CALLBACKS.selectGrokAiGold)],
+    // [Markup.button.callback('🤖 Grok AI Gold', CALLBACKS.selectGrokAiGold)], // tạm ẩn, chờ sản phẩm mới
     [Markup.button.callback('🚀 BMR Scalper Gold', CALLBACKS.selectBmrScalperGold)],
     [Markup.button.callback('👑 Gói VIP', CALLBACKS.vipPackage)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.support)],
@@ -95,7 +95,7 @@ export const verifyKeyboard = () =>
 // ── Screen 15: Unlock (choose system) ──
 export const unlockKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('🤖 Grok AI Gold', CALLBACKS.unlockGrokAiGold)],
+    // [Markup.button.callback('🤖 Grok AI Gold', CALLBACKS.unlockGrokAiGold)], // tạm ẩn, chờ sản phẩm mới
     [Markup.button.callback('🏆 BMR Copy Trading', CALLBACKS.unlockBmrCopyTrading)],
     [Markup.button.callback('🚀 BMR Scalper Gold', CALLBACKS.unlockBmrScalperGold)],
     [Markup.button.callback('👑 Gói VIP', CALLBACKS.unlockVipPackage)],
