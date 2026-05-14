@@ -1,0 +1,37 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          # bore.mated.dev runs SSH on port 22005 as user gwang. The PM2
+          # process is named "vortexbotvn" and lives at ~/apps/VortexBotVN.
+          # Build uses SWC for faster compilation (matches ecosystem.config.js
+          # post-deploy hook). Only secret needed: SERVER_SSH_KEY.
+          host: bore.mated.dev
+          username: gwang
+          port: 22005
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script_stop: true
+          command_timeout: 10m
+          script: |
+            source ~/.bashrc
+            source ~/.nvm/nvm.sh
+            nvm use 20
+            cd ~/apps/VortexBotVN
+            git fetch origin
+            git reset --hard origin/main
+            npm ci
+            npm install --save-dev @swc/cli @swc/core
+            npx nest build --builder swc
+            pm2 reload ecosystem.config.js
+            pm2 save
+            echo "Deployed $(git log -1 --oneline)"
