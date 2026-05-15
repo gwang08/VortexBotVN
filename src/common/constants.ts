@@ -32,22 +32,21 @@ export const FOLLOWUP_SCHEDULE_HOURS = [0.17, 1, 24, 48, 72, 120, 168, 240, 360,
 export const MAX_FOLLOWUP_COUNT = 10;
 export const VIP_MAX_FOLLOWUP_COUNT = 5;
 
-// Video guide URLs
+// Video guide URLs (Telegram channel @bmrvideos)
 export const VIDEO_GUIDES = {
-  openAccount: 'https://youtu.be/VUeNnUB3H-o',
-  idAuth: 'https://youtu.be/z5njeC7gMBQ',
-  addressVerify: 'https://youtu.be/DnSmbl0qIAw',
-  usePromotions: 'https://youtu.be/eI37GTcC7Lo',
-  depositCrypto: 'https://youtu.be/mx9SljaMA5Q',
-  depositCreditCard: 'https://youtu.be/lk8NUU2YiwU',
-  depositEWallet: 'https://youtu.be/riuYXG0eZCs',
-  depositLocalBank: 'https://youtu.be/p2hD1mI0rMo',
-  depositIntlBank: 'https://youtu.be/W86fkYNEsrQ',
-  withdrawCrypto: 'https://youtu.be/6TSqmaw_13o',
-  withdrawCreditCard: 'https://youtu.be/LX4WmhdfToo',
-  withdrawEWallet: 'https://youtu.be/WjUpZ30puz8',
-  withdrawLocalBank: 'https://youtu.be/ScWcdubn7ZE',
-  withdrawIntlBank: 'https://youtu.be/FocCgOkemmM',
+  openAccount: 'https://t.me/bmrvideos/6',
+  idAuth: 'https://t.me/bmrvideos/10',
+  addressVerify: 'https://t.me/bmrvideos/11',
+  usePromotions: 'https://t.me/bmrvideos/14',
+  depositCrypto: 'https://t.me/bmrvideos/15',
+  depositCreditCard: 'https://t.me/bmrvideos/16',
+  depositEWallet: 'https://t.me/bmrvideos/17',
+  depositLocalBank: 'https://t.me/bmrvideos/18',
+  depositIntlBank: 'https://t.me/bmrvideos/19',
+  withdrawCrypto: 'https://t.me/bmrvideos/20',
+  withdrawCreditCard: 'https://t.me/bmrvideos/21',
+  withdrawLocalBank: 'https://t.me/bmrvideos/22',
+  withdrawIntlBank: 'https://t.me/bmrvideos/23',
 };
 
 // Image paths

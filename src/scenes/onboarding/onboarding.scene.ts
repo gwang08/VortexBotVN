@@ -98,12 +98,11 @@ Top 1 Annual Return trên Ultima Markets
     ctx.session.currentStep = 'onboarding:bmr_scalper_gold';
 
     const text = `🚀 BMR Scalper Gold
+Top 3 Copy Trading Performance trên PU Prime & Vantage
 
-High Performance Copy Trading trên Vantage
-
-📊 Lợi nhuận 3 tháng: +6,288.96%
-👥 Tổng người copy: 1,401
-📌 Người copy hiện tại: 95
+📊 Lợi nhuận YTD: +16,753%
+👥 Tổng người copy: 3,717
+🥇 Winrate: 66.84%
 
 ✅ Gold Scalping System
 ✅ AI Trade Execution

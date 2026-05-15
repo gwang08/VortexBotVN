@@ -6,6 +6,7 @@ import {
   BROKER_IB,
   BROKER_SIGNUP_LINKS,
   CHANNEL_URL,
+  VIDEO_GUIDES,
 } from '../../common/constants';
 import {
   registerKeyboard,
@@ -61,7 +62,21 @@ export class SetupScene {
     const name = names[broker] || 'PU Prime';
 
     ctx.session.currentStep = 'setup:register';
-    const text = `Đăng ký ${name}: ${link}\n\nSau khi đăng ký bấm: Đã đăng ký`;
+    // PU Prime hiển thị STEP 1 đầy đủ với video; Ultima/Vantage giữ nguyên ngắn
+    const text = broker === 'puprime'
+      ? `BƯỚC 1:
+
+Tạo tài khoản PU Prime theo link: ${link}
+
+Video hướng dẫn:
+
+📣 Mở tài khoản Live PuPrime: ${VIDEO_GUIDES.openAccount}
+💋 Xác minh CMND/CCCD: ${VIDEO_GUIDES.idAuth}
+⭐️ Xác minh địa chỉ: ${VIDEO_GUIDES.addressVerify}
+🎲 Sử dụng khuyến mãi: ${VIDEO_GUIDES.usePromotions}
+
+Nếu đã có tài khoản PU Prime hãy bấm nút bên dưới`
+      : `Đăng ký ${name}: ${link}\n\nSau khi đăng ký bấm: Đã đăng ký`;
     await this.botService.sendWithKeyboard(ctx, text, registerKeyboard());
   }
 
@@ -211,16 +226,28 @@ Please move my account under IB ${BROKER_IB.vantage.ibNumber}`;
     await this.showDepositScreen(ctx);
   }
 
-  // ── Screen 13: Deposit ──
+  // ── Screen 13: Deposit (BƯỚC 3) ──
   private async showDepositScreen(ctx: BotContext) {
     ctx.session.currentStep = 'setup:deposit';
-    const text = `Mức nạp đề xuất
+    const text = `BƯỚC 3:
 
-Copy Trading:
-$500+
+Chuyển tiền sang tài khoản Copy Trading
 
-VIP:
-$1000+`;
+Sau khi tài khoản Copy Trading được duyệt, vào tài khoản Live có sẵn số dư và chuyển tiền sang tài khoản Copy Trading mới để bắt đầu copy trading.
+
+Video hướng dẫn:
+
+🔪 Nạp bằng Crypto: ${VIDEO_GUIDES.depositCrypto}
+⭐️ Nạp bằng thẻ tín dụng: ${VIDEO_GUIDES.depositCreditCard}
+💸 Nạp bằng E-Wallet: ${VIDEO_GUIDES.depositEWallet}
+🍒 Nạp bằng ngân hàng nội địa: ${VIDEO_GUIDES.depositLocalBank}
+💝 Nạp bằng ngân hàng quốc tế: ${VIDEO_GUIDES.depositIntlBank}
+🍀 Rút tiền Crypto: ${VIDEO_GUIDES.withdrawCrypto}
+🔺 Rút tiền bằng thẻ tín dụng: ${VIDEO_GUIDES.withdrawCreditCard}
+💠 Rút tiền bằng ngân hàng nội địa: ${VIDEO_GUIDES.withdrawLocalBank}
+💻 Rút tiền bằng ngân hàng quốc tế: ${VIDEO_GUIDES.withdrawIntlBank}
+
+Sẵn sàng cho bước tiếp theo?`;
     await ctx.reply(text, depositKeyboard());
   }
 

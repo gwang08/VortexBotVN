@@ -27,9 +27,10 @@ export const bmrCopyTradingKeyboard = () =>
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
   ]);
 
-// ── Screen 4: BMR Scalper Gold (Vantage) ──
+// ── Screen 4: BMR Scalper Gold (PU Prime + Vantage) ──
 export const bmrScalperGoldKeyboard = () =>
   Markup.inlineKeyboard([
+    [Markup.button.callback('🚀 Đăng ký PU Prime', CALLBACKS.registerPuPrime)],
     [Markup.button.callback('🔥 Đăng ký Vantage', CALLBACKS.registerVantage)],
     [Markup.button.callback('🔄 Đã có tài khoản', CALLBACKS.alreadyHaveAccount)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
