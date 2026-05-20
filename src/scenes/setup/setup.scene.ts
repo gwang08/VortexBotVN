@@ -57,7 +57,7 @@ export class SetupScene {
   // ── Screen 6/7/8: Register (per broker) ──
   private async showRegisterScreen(ctx: BotContext) {
     const broker = ctx.session.selectedBroker || 'puprime';
-    const names: Record<string, string> = { puprime: 'PU Prime', ultima: 'Ultima Markets', vantage: 'Vantage' };
+    const names: Record<string, string> = { puprime: 'PU Prime', ultima: 'Ultima Markets', vantage: 'Vantage', startrader: 'STARTRADER' };
     const link = BROKER_SIGNUP_LINKS[broker] || BROKER_SIGNUP_LINKS.puprime;
     const name = names[broker] || 'PU Prime';
 
@@ -316,10 +316,10 @@ Gói VIP`;
   }
 
   @Action(CALLBACKS.unlockBmrCopy)
-  async onUnlockBmrCopyPu(ctx: BotContext) {
+  async onUnlockDulcieGold(ctx: BotContext) {
     await ctx.answerCbQuery();
     await this.markDone(ctx);
-    await ctx.reply('🔥 BMR Copy đã kích hoạt!\n\nTheo dõi kết quả: https://t.me/BMRCopyTrade\nHỗ trợ: @FinBMR');
+    await ctx.reply('🔥 Dulcie Gold đã kích hoạt!\n\nTheo dõi kết quả: https://t.me/BMRCopyTrade\nHỗ trợ: @FinBMR');
   }
 
   @Action(CALLBACKS.unlockBmrScalperGold)
@@ -366,6 +366,13 @@ Gói VIP`;
   async onRegisterVantage(ctx: BotContext) {
     await ctx.answerCbQuery();
     ctx.session.selectedBroker = 'vantage';
+    await this.showRegisterScreen(ctx);
+  }
+
+  @Action(CALLBACKS.registerStarTrader)
+  async onRegisterStarTrader(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.selectedBroker = 'startrader';
     await this.showRegisterScreen(ctx);
   }
 

@@ -6,7 +6,7 @@ import {
   welcomeKeyboard,
   grokAiGoldKeyboard,
   bmrCopyTradingKeyboard,
-  bmrCopyKeyboard,
+  dulcieGoldKeyboard,
   bmrScalperGoldKeyboard,
   vipPackageKeyboard,
 } from '../../common/keyboards';
@@ -90,26 +90,25 @@ Top 1 Annual Return trên Ultima Markets
     await this.sendPhotoWithCaption(ctx, IMAGES.grok.product2, text, bmrCopyTradingKeyboard());
   }
 
-  // ── Screen 3b: BMR COPY (PU Prime) — placeholder, update sau ──
+  // ── Screen 3b: DULCIE GOLD (STARTRADER) ──
   @Action(CALLBACKS.selectBmrCopy)
-  async onBmrCopy(ctx: BotContext) {
+  async onDulcieGold(ctx: BotContext) {
     await ctx.answerCbQuery();
     ctx.session.selectedProduct = 'bmr_copy_pu';
-    ctx.session.selectedBroker = 'puprime';
-    ctx.session.currentStep = 'onboarding:bmr_copy';
+    ctx.session.selectedBroker = 'startrader';
+    ctx.session.currentStep = 'onboarding:dulcie_gold';
 
-    const text = `🔥 BMR Copy
-Premium Copy Trading trên PU Prime
+    const text = `🔥 Dulcie Gold
+Premium Copy Trading trên STARTRADER
 
-📊 Lợi nhuận 1 năm: +850%
-🎯 Tỷ lệ thắng: 72%
-📈 Copy AUM: $180K+
+📊 Lợi nhuận 1 năm: +4,495%
+🎯 Tỷ lệ thắng: 66.66%
 💰 Vốn đề xuất: $500+
 
 ✅ Chuyên Gold
 ✅ AI tự động
 ✅ Phù hợp người mới`;
-    await this.sendPhotoWithCaption(ctx, IMAGES.grok.product1, text, bmrCopyKeyboard());
+    await this.sendPhotoWithCaption(ctx, IMAGES.grok.dulcieGold, text, dulcieGoldKeyboard());
   }
 
   // ── Screen 4: BMR SCALPER GOLD (Vantage) ──
@@ -175,6 +174,14 @@ Tài khoản từ $1,000+`;
   async onRegisterVantage(ctx: BotContext) {
     await ctx.answerCbQuery();
     ctx.session.selectedBroker = 'vantage';
+    ctx.session.currentStep = 'setup:register';
+    await ctx.scene.enter('setup');
+  }
+
+  @Action(CALLBACKS.registerStarTrader)
+  async onRegisterStarTrader(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.selectedBroker = 'startrader';
     ctx.session.currentStep = 'setup:register';
     await ctx.scene.enter('setup');
   }

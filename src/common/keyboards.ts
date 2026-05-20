@@ -5,7 +5,7 @@ import { CALLBACKS } from './constants';
 export const welcomeKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🏆 BMR Copy Trading', CALLBACKS.selectBmrCopyTrading)],
-    [Markup.button.callback('🔥 BMR Copy', CALLBACKS.selectBmrCopy)],
+    [Markup.button.callback('🔥 Dulcie Gold', CALLBACKS.selectBmrCopy)],
     // [Markup.button.callback('🤖 Grok AI Gold', CALLBACKS.selectGrokAiGold)], // tạm ẩn, chờ sản phẩm mới
     // [Markup.button.callback('🚀 BMR Scalper Gold', CALLBACKS.selectBmrScalperGold)], // tạm ẩn
     [Markup.button.callback('👑 Gói VIP', CALLBACKS.vipPackage)],
@@ -28,11 +28,11 @@ export const bmrCopyTradingKeyboard = () =>
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
   ]);
 
-// ── Screen 3b: BMR Copy (PU Prime) ──
-export const bmrCopyKeyboard = () =>
+// ── Screen 3b: Dulcie Gold (STARTRADER) ──
+export const dulcieGoldKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('🔥 Đăng ký PU Prime', CALLBACKS.registerPuPrime)],
-    [Markup.button.callback('🔄 Đã có tài khoản', CALLBACKS.alreadyHaveAccount)],
+    [Markup.button.callback('🔥 Đăng ký STARTRADER', CALLBACKS.registerStarTrader)],
+    [Markup.button.callback('🔄 Đã có tài khoản STARTRADER', CALLBACKS.alreadyHaveAccount)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
   ]);
 
@@ -107,7 +107,7 @@ export const unlockKeyboard = () =>
   Markup.inlineKeyboard([
     // [Markup.button.callback('🤖 Grok AI Gold', CALLBACKS.unlockGrokAiGold)], // tạm ẩn, chờ sản phẩm mới
     [Markup.button.callback('🏆 BMR Copy Trading', CALLBACKS.unlockBmrCopyTrading)],
-    [Markup.button.callback('🔥 BMR Copy', CALLBACKS.unlockBmrCopy)],
+    [Markup.button.callback('🔥 Dulcie Gold', CALLBACKS.unlockBmrCopy)],
     // [Markup.button.callback('🚀 BMR Scalper Gold', CALLBACKS.unlockBmrScalperGold)], // tạm ẩn
     [Markup.button.callback('👑 Gói VIP', CALLBACKS.unlockVipPackage)],
   ]);
