@@ -315,6 +315,13 @@ Gói VIP`;
     await ctx.reply('🏆 BMR Copy Trading đã kích hoạt!\n\nTheo dõi kết quả: https://t.me/BMRCopyTrade\nHỗ trợ: @FinBMR');
   }
 
+  @Action(CALLBACKS.unlockBmrCopy)
+  async onUnlockBmrCopyPu(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.markDone(ctx);
+    await ctx.reply('🔥 BMR Copy đã kích hoạt!\n\nTheo dõi kết quả: https://t.me/BMRCopyTrade\nHỗ trợ: @FinBMR');
+  }
+
   @Action(CALLBACKS.unlockBmrScalperGold)
   async onUnlockBmrScalper(ctx: BotContext) {
     await ctx.answerCbQuery();

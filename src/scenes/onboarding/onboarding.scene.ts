@@ -6,6 +6,7 @@ import {
   welcomeKeyboard,
   grokAiGoldKeyboard,
   bmrCopyTradingKeyboard,
+  bmrCopyKeyboard,
   bmrScalperGoldKeyboard,
   vipPackageKeyboard,
 } from '../../common/keyboards';
@@ -78,15 +79,37 @@ Top 2 Most Copied trên PU Prime
 
 Top 1 Annual Return trên Ultima Markets
 
-📊 Lợi nhuận 1 năm: +1,596%
-🎯 Tỷ lệ thắng: 68.88%
-📈 Copy AUM: $364K+
+📊 Lợi nhuận 1 năm: +2,030%
+🎯 Tỷ lệ thắng: 70%
+📈 Copy AUM: $337K+
 💰 Vốn đề xuất: $1,000+
 
 ✅ AI Risk Management
 ✅ Giao dịch tự động
 ✅ Portfolio Growth`;
     await this.sendPhotoWithCaption(ctx, IMAGES.grok.product2, text, bmrCopyTradingKeyboard());
+  }
+
+  // ── Screen 3b: BMR COPY (PU Prime) — placeholder, update sau ──
+  @Action(CALLBACKS.selectBmrCopy)
+  async onBmrCopy(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.selectedProduct = 'bmr_copy_pu';
+    ctx.session.selectedBroker = 'puprime';
+    ctx.session.currentStep = 'onboarding:bmr_copy';
+
+    const text = `🔥 BMR Copy
+Premium Copy Trading trên PU Prime
+
+📊 Lợi nhuận 1 năm: +850%
+🎯 Tỷ lệ thắng: 72%
+📈 Copy AUM: $180K+
+💰 Vốn đề xuất: $500+
+
+✅ Chuyên Gold
+✅ AI tự động
+✅ Phù hợp người mới`;
+    await this.sendPhotoWithCaption(ctx, IMAGES.grok.product1, text, bmrCopyKeyboard());
   }
 
   // ── Screen 4: BMR SCALPER GOLD (Vantage) ──

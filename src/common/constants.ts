@@ -70,6 +70,7 @@ export const CALLBACKS = {
   // Product selection
   selectGrokAiGold: 'select_grok_ai_gold',
   selectBmrCopyTrading: 'select_bmr_copy_trading',
+  selectBmrCopy: 'select_bmr_copy',
   selectBmrScalperGold: 'select_bmr_scalper_gold',
   vipPackage: 'vip_package',
   support: 'support_contact',
@@ -102,6 +103,7 @@ export const CALLBACKS = {
   // Unlock system selection
   unlockGrokAiGold: 'unlock_grok_ai_gold',
   unlockBmrCopyTrading: 'unlock_bmr_copy_trading',
+  unlockBmrCopy: 'unlock_bmr_copy',
   unlockBmrScalperGold: 'unlock_bmr_scalper_gold',
   unlockVipPackage: 'unlock_vip_package',
 };

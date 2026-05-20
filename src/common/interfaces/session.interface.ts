@@ -1,7 +1,7 @@
 import { Context, Scenes } from 'telegraf';
 
 export interface BotSession extends Scenes.WizardSession {
-  selectedProduct?: 'grok' | 'bmr_copy' | 'bmr_scalper';
+  selectedProduct?: 'grok' | 'bmr_copy' | 'bmr_copy_pu' | 'bmr_scalper';
   selectedBroker?: 'puprime' | 'ultima' | 'vantage';
   isVipFlow?: boolean;
   currentStep?: string;
