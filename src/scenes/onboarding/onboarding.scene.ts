@@ -40,7 +40,7 @@ export class OnboardingScene {
       '🔥 Chào mừng đến BMR Copy Trading\n' +
       'Hạ tầng AI Gold Trading chuyên nghiệp 👇\n' +
       '━━━━━━━━━━━━━━\n' +
-      '🌍 Global VIP Support: 👉 @KevinBMR';
+      '🇻🇳 VN VIP Support: 👉 @FinBMR';
     await ctx.reply(welcomeText, welcomeKeyboard());
   }
 
