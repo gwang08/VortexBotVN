@@ -36,13 +36,26 @@ export class SetupScene {
   @Command('start')
   async onRestart(ctx: BotContext) {
     await ctx.scene.leave();
+    this.resetSession(ctx);
+    await ctx.scene.enter('onboarding');
+  }
+
+  // ── Quay lại Menu (works inside setup scene sub-screens) ──
+  @Action(CALLBACKS.backToMenu)
+  async onBackToMenu(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await ctx.scene.leave();
+    this.resetSession(ctx);
+    await ctx.scene.enter('onboarding');
+  }
+
+  private resetSession(ctx: BotContext) {
     ctx.session.selectedProduct = undefined;
     ctx.session.selectedBroker = undefined;
     ctx.session.isVipFlow = undefined;
     ctx.session.currentStep = undefined;
     ctx.session.awaitingUid = undefined;
     ctx.session.tier = undefined;
-    await ctx.scene.enter('onboarding');
   }
 
   // ── Scene entry: register or already-have branching ──
