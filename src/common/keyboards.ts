@@ -32,7 +32,7 @@ export const bmrCopyTradingKeyboard = () =>
 export const dulcieGoldKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🔥 Đăng ký STARTRADER', CALLBACKS.registerStarTrader)],
-    [Markup.button.callback('🔄 Đã có tài khoản STARTRADER', CALLBACKS.alreadyHaveAccount)],
+    [Markup.button.callback('🔄 Đã có tài khoản', CALLBACKS.alreadyHaveAccount)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
   ]);
 

@@ -37,10 +37,10 @@ export class OnboardingScene {
   async onEnter(ctx: BotContext) {
     ctx.session.currentStep = 'onboarding:welcome';
     const welcomeText =
-      '🔥 Chào mừng đến BMR Copy Trading\n\n' +
-      '📈 AI Gold & BTC Copy Trading\n' +
-      '⚖️ Risk Management System\n' +
-      '👥 Dành cho nhà đầu tư bận rộn';
+      '🔥 Chào mừng đến BMR Copy Trading\n' +
+      'Hạ tầng AI Gold Trading chuyên nghiệp 👇\n' +
+      '━━━━━━━━━━━━━━\n' +
+      '🌍 Global VIP Support: 👉 @KevinBMR';
     await ctx.reply(welcomeText, welcomeKeyboard());
   }
 
@@ -75,18 +75,18 @@ Top 2 Most Copied trên PU Prime
     ctx.session.selectedBroker = 'ultima';
     ctx.session.currentStep = 'onboarding:bmr_copy_trading';
 
-    const text = `🏆 BMR Copy Trading
-
-Top 1 Annual Return trên Ultima Markets
+    const text = `🏆 BMR Copy Trading Strategy
+Top 1 Performing Gold System trên Ultima Markets
 
 📊 Lợi nhuận 1 năm: +2,030%
+👥 Active Copiers: 2,800+
+📈 Community AUM: $406,000+
 🎯 Tỷ lệ thắng: 70%
-📈 Copy AUM: $337K+
-💰 Vốn đề xuất: $1,000+
+💰 Vốn tối thiểu: $100 (Đề xuất: $500+)
 
-✅ AI Risk Management
-✅ Giao dịch tự động
-✅ Portfolio Growth`;
+✅ Tự động hoàn toàn
+✅ Tích hợp trực tiếp Ultima
+✅ Tăng trưởng bền vững dài hạn`;
     await this.sendPhotoWithCaption(ctx, IMAGES.grok.product2, text, bmrCopyTradingKeyboard());
   }
 
@@ -98,16 +98,18 @@ Top 1 Annual Return trên Ultima Markets
     ctx.session.selectedBroker = 'startrader';
     ctx.session.currentStep = 'onboarding:dulcie_gold';
 
-    const text = `🔥 Dulcie Gold
-Premium Copy Trading trên STARTRADER
+    const text = `🔥 Dulcie Gold Strategy
+Premium AI-Driven Portfolio trên STARTRADER
 
-📊 Lợi nhuận 1 năm: +4,495%
-🎯 Tỷ lệ thắng: 66.66%
-💰 Vốn đề xuất: $500+
+📊 Lợi nhuận YTD: +4,495%
+🎯 Tỷ lệ thắng: 66.6%
+💰 Vốn tối thiểu: $100 (Đề xuất: $500+)
 
-✅ Chuyên Gold
-✅ AI tự động
-✅ Phù hợp người mới`;
+✅ Chuyên Gold (XAU/USD)
+✅ AI tự động 100%
+✅ Không cần kinh nghiệm trading
+
+👇 Chọn bên dưới để đăng ký hoặc kết nối tài khoản sẵn có.`;
     await this.sendPhotoWithCaption(ctx, IMAGES.grok.dulcieGold, text, dulcieGoldKeyboard());
   }
 
