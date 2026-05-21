@@ -18,6 +18,7 @@ export const grokAiGoldKeyboard = () =>
     [Markup.button.callback('🔥 Đăng ký PU Prime', CALLBACKS.registerPuPrime)],
     [Markup.button.callback('🔄 Đã Có Tài Khoản', CALLBACKS.alreadyHaveAccount)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
 // ── Screen 3: BMR Copy Trading (Ultima) ──
@@ -26,6 +27,7 @@ export const bmrCopyTradingKeyboard = () =>
     [Markup.button.callback('🔥 Đăng ký Ultima Markets', CALLBACKS.registerUltima)],
     [Markup.button.callback('🔄 Đã có tài khoản Ultima', CALLBACKS.alreadyHaveAccount)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
 // ── Screen 3b: Dulcie Gold (STARTRADER) ──
@@ -34,6 +36,7 @@ export const dulcieGoldKeyboard = () =>
     [Markup.button.callback('🔥 Đăng ký STARTRADER', CALLBACKS.registerStarTrader)],
     [Markup.button.callback('🔄 Đã Có Tài Khoản', CALLBACKS.alreadyHaveAccount)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
 // ── Screen 4: BMR Scalper Gold (PU Prime + Vantage) ──
@@ -43,6 +46,7 @@ export const bmrScalperGoldKeyboard = () =>
     [Markup.button.callback('🔥 Đăng ký Vantage', CALLBACKS.registerVantage)],
     [Markup.button.callback('🔄 Đã Có Tài Khoản', CALLBACKS.alreadyHaveAccount)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
 // ── Screen 5: VIP Package (choose broker) ──
@@ -52,6 +56,7 @@ export const vipPackageKeyboard = () =>
     [Markup.button.callback('🚀 Ultima', CALLBACKS.registerUltima)],
     [Markup.button.callback('🏆 Vantage', CALLBACKS.registerVantage)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
 // ── Screen 6/7/8: Register (shared for all brokers) ──

@@ -78,6 +78,7 @@ export const CALLBACKS = {
   vipPackage: 'vip_package',
   support: 'support_contact',
   contactAdmin: 'contact_admin',
+  backToMenu: 'back_to_menu',
 
   // Register per broker
   registerPuPrime: 'register_puprime',

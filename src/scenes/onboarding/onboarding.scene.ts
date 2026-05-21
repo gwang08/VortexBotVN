@@ -32,6 +32,15 @@ export class OnboardingScene {
     await ctx.scene.enter('onboarding');
   }
 
+  // ── Quay lại Menu (reset session + về welcome) ──
+  @Action(CALLBACKS.backToMenu)
+  async onBackToMenu(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await ctx.scene.leave();
+    this.resetSession(ctx);
+    await ctx.scene.enter('onboarding');
+  }
+
   // ── Screen 1: WELCOME ──
   @SceneEnter()
   async onEnter(ctx: BotContext) {
