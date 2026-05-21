@@ -30,8 +30,13 @@ jobs:
             git fetch origin
             git reset --hard origin/main
             npm ci
+            # Generate Prisma client BEFORE build — tsc reads types from
+            # node_modules/.prisma/client which only exists after generate.
+            # Without this, bot crashes with "Cannot find module .prisma/client/default".
+            npx prisma generate
+            npx prisma migrate deploy
             npm install --save-dev @swc/cli @swc/core
-            npx nest build --builder swc
+            NODE_OPTIONS="--max-old-space-size=1024" npx nest build --builder swc
             pm2 reload ecosystem.config.js
             pm2 save
             echo "Deployed $(git log -1 --oneline)"

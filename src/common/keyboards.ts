@@ -16,7 +16,7 @@ export const welcomeKeyboard = () =>
 export const grokAiGoldKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🔥 Đăng ký PU Prime', CALLBACKS.registerPuPrime)],
-    [Markup.button.callback('🔄 Đã có tài khoản', CALLBACKS.alreadyHaveAccount)],
+    [Markup.button.callback('🔄 Đã Có Tài Khoản', CALLBACKS.alreadyHaveAccount)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
   ]);
 
@@ -32,7 +32,7 @@ export const bmrCopyTradingKeyboard = () =>
 export const dulcieGoldKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🔥 Đăng ký STARTRADER', CALLBACKS.registerStarTrader)],
-    [Markup.button.callback('🔄 Đã có tài khoản', CALLBACKS.alreadyHaveAccount)],
+    [Markup.button.callback('🔄 Đã Có Tài Khoản', CALLBACKS.alreadyHaveAccount)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
   ]);
 
@@ -41,7 +41,7 @@ export const bmrScalperGoldKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🚀 Đăng ký PU Prime', CALLBACKS.registerPuPrime)],
     [Markup.button.callback('🔥 Đăng ký Vantage', CALLBACKS.registerVantage)],
-    [Markup.button.callback('🔄 Đã có tài khoản', CALLBACKS.alreadyHaveAccount)],
+    [Markup.button.callback('🔄 Đã Có Tài Khoản', CALLBACKS.alreadyHaveAccount)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
   ]);
 
