@@ -91,10 +91,11 @@ Video hướng dẫn:
 
 Nếu đã có tài khoản PU Prime hãy bấm nút bên dưới`;
     } else if (broker === 'ultima') {
-      text = `Đăng ký Ultima Markets: ${link}
-
-⭐️ Đăng ký bằng UM App:
+      // Video URL first so Telegram shows the preview for it
+      text = `⭐️ Đăng ký bằng UM App:
 ${VIDEO_GUIDES.signUpUltima}
+
+Đăng ký Ultima Markets: ${link}
 
 Sau khi đăng ký bấm: Đã đăng ký`;
     } else {
