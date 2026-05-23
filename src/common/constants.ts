@@ -49,6 +49,12 @@ export const VIDEO_GUIDES = {
   withdrawCreditCard: 'https://t.me/bmrvideos/21',
   withdrawLocalBank: 'https://t.me/bmrvideos/22',
   withdrawIntlBank: 'https://t.me/bmrvideos/23',
+  // Ultima-specific videos
+  signUpUltima: 'https://t.me/bmrvideos/27',
+  depositUltimaApp: 'https://t.me/bmrvideos/28',
+  loginMt5: 'https://t.me/bmrvideos/29',
+  loginMt5Laptop: 'https://t.me/bmrvideos/30',
+  ultimaPromotion: 'https://t.me/bmrvideos/31',
 };
 
 // Image paths

@@ -75,9 +75,10 @@ export class SetupScene {
     const name = names[broker] || 'PU Prime';
 
     ctx.session.currentStep = 'setup:register';
-    // PU Prime hiển thị STEP 1 đầy đủ với video; Ultima/Vantage giữ nguyên ngắn
-    const text = broker === 'puprime'
-      ? `BƯỚC 1:
+    // PU Prime / Ultima hiển thị STEP 1 đầy đủ với video; còn lại giữ ngắn
+    let text: string;
+    if (broker === 'puprime') {
+      text = `BƯỚC 1:
 
 Tạo tài khoản PU Prime theo link: ${link}
 
@@ -88,8 +89,17 @@ Video hướng dẫn:
 ⭐️ Xác minh địa chỉ: ${VIDEO_GUIDES.addressVerify}
 🎲 Sử dụng khuyến mãi: ${VIDEO_GUIDES.usePromotions}
 
-Nếu đã có tài khoản PU Prime hãy bấm nút bên dưới`
-      : `Đăng ký ${name}: ${link}\n\nSau khi đăng ký bấm: Đã đăng ký`;
+Nếu đã có tài khoản PU Prime hãy bấm nút bên dưới`;
+    } else if (broker === 'ultima') {
+      text = `Đăng ký Ultima Markets: ${link}
+
+⭐️ Đăng ký bằng UM App:
+${VIDEO_GUIDES.signUpUltima}
+
+Sau khi đăng ký bấm: Đã đăng ký`;
+    } else {
+      text = `Đăng ký ${name}: ${link}\n\nSau khi đăng ký bấm: Đã đăng ký`;
+    }
     await this.botService.sendWithKeyboard(ctx, text, registerKeyboard());
   }
 
@@ -242,14 +252,24 @@ Please move my account under IB ${BROKER_IB.vantage.ibNumber}`;
   // ── Screen 13: Deposit (BƯỚC 3) ──
   private async showDepositScreen(ctx: BotContext) {
     ctx.session.currentStep = 'setup:deposit';
-    const text = `BƯỚC 3:
+    const broker = ctx.session.selectedBroker;
+    const header = `BƯỚC 3:
 
 Chuyển tiền sang tài khoản Copy Trading
 
 Sau khi tài khoản Copy Trading được duyệt, vào tài khoản Live có sẵn số dư và chuyển tiền sang tài khoản Copy Trading mới để bắt đầu copy trading.
 
-Video hướng dẫn:
-
+Video hướng dẫn:`;
+    const ultimaVideos = `
+💸 Hướng dẫn nạp tiền bằng UM App
+${VIDEO_GUIDES.depositUltimaApp}
+💠 Hướng dẫn đăng nhập MT5
+${VIDEO_GUIDES.loginMt5}
+💻 Hướng dẫn đăng nhập MT5 trên máy tính
+${VIDEO_GUIDES.loginMt5Laptop}
+💝 Hướng dẫn nhận khuyến mãi Ultima Markets
+${VIDEO_GUIDES.ultimaPromotion}`;
+    const defaultVideos = `
 🔪 Nạp bằng Crypto: ${VIDEO_GUIDES.depositCrypto}
 ⭐️ Nạp bằng thẻ tín dụng: ${VIDEO_GUIDES.depositCreditCard}
 💸 Nạp bằng E-Wallet: ${VIDEO_GUIDES.depositEWallet}
@@ -258,7 +278,8 @@ Video hướng dẫn:
 🍀 Rút tiền Crypto: ${VIDEO_GUIDES.withdrawCrypto}
 🔺 Rút tiền bằng thẻ tín dụng: ${VIDEO_GUIDES.withdrawCreditCard}
 💠 Rút tiền bằng ngân hàng nội địa: ${VIDEO_GUIDES.withdrawLocalBank}
-💻 Rút tiền bằng ngân hàng quốc tế: ${VIDEO_GUIDES.withdrawIntlBank}
+💻 Rút tiền bằng ngân hàng quốc tế: ${VIDEO_GUIDES.withdrawIntlBank}`;
+    const text = `${header}${broker === 'ultima' ? ultimaVideos : defaultVideos}
 
 Sẵn sàng cho bước tiếp theo?`;
     await ctx.reply(text, depositKeyboard());
