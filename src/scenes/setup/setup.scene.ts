@@ -253,14 +253,16 @@ Please move my account under IB ${BROKER_IB.vantage.ibNumber}`;
   private async showDepositScreen(ctx: BotContext) {
     ctx.session.currentStep = 'setup:deposit';
     const broker = ctx.session.selectedBroker;
-    const header = `BƯỚC 3:
+    // STARTRADER chưa có video — chỉ hiện text, không có phần Video hướng dẫn
+    const baseText = `BƯỚC 3:
 
 Chuyển tiền sang tài khoản Copy Trading
 
-Sau khi tài khoản Copy Trading được duyệt, vào tài khoản Live có sẵn số dư và chuyển tiền sang tài khoản Copy Trading mới để bắt đầu copy trading.
-
-Video hướng dẫn:`;
+Sau khi tài khoản Copy Trading được duyệt, vào tài khoản Live có sẵn số dư và chuyển tiền sang tài khoản Copy Trading mới để bắt đầu copy trading.`;
     const ultimaVideos = `
+
+Video hướng dẫn:
+
 💸 Hướng dẫn nạp tiền bằng UM App
 ${VIDEO_GUIDES.depositUltimaApp}
 💠 Hướng dẫn đăng nhập MT5
@@ -270,6 +272,9 @@ ${VIDEO_GUIDES.loginMt5Laptop}
 💝 Hướng dẫn nhận khuyến mãi Ultima Markets
 ${VIDEO_GUIDES.ultimaPromotion}`;
     const defaultVideos = `
+
+Video hướng dẫn:
+
 🔪 Nạp bằng Crypto: ${VIDEO_GUIDES.depositCrypto}
 ⭐️ Nạp bằng thẻ tín dụng: ${VIDEO_GUIDES.depositCreditCard}
 💸 Nạp bằng E-Wallet: ${VIDEO_GUIDES.depositEWallet}
@@ -279,7 +284,10 @@ ${VIDEO_GUIDES.ultimaPromotion}`;
 🔺 Rút tiền bằng thẻ tín dụng: ${VIDEO_GUIDES.withdrawCreditCard}
 💠 Rút tiền bằng ngân hàng nội địa: ${VIDEO_GUIDES.withdrawLocalBank}
 💻 Rút tiền bằng ngân hàng quốc tế: ${VIDEO_GUIDES.withdrawIntlBank}`;
-    const text = `${header}${broker === 'ultima' ? ultimaVideos : defaultVideos}
+    let videos = '';
+    if (broker === 'ultima') videos = ultimaVideos;
+    else if (broker !== 'startrader') videos = defaultVideos;
+    const text = `${baseText}${videos}
 
 Sẵn sàng cho bước tiếp theo?`;
     await ctx.reply(text, depositKeyboard());

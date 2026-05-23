@@ -4,7 +4,7 @@ import * as path from 'path';
 export const PUPRIME_SIGNUP_LINK = 'https://puvip.co/la-partners/vn/boomerang';
 export const ULTIMA_SIGNUP_LINK = 'https://ultgo.com/la-asia/bmrtrading';
 export const VANTAGE_SIGNUP_LINK = 'https://vigco.co/la-com-inv/bmrtrading';
-export const STARTRADER_SIGNUP_LINK = 'https://strex.live/la-ibpcom141/BjXqz5Eq';
+export const STARTRADER_SIGNUP_LINK = 'https://www.startrader.com/live-account/?affid=Mjc4MjE1ODU';
 
 // IB Code for existing PuPrime users
 export const IB_CODE = 'boomerang';
