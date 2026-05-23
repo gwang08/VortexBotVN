@@ -34,11 +34,11 @@ export class BotService {
     }
   }
 
-  async sendWithKeyboard(ctx: BotContext, text: string, keyboard: any): Promise<void> {
-    await ctx.reply(text, {
-      ...keyboard,
-      link_preview_options: { is_disabled: true },
-    });
+  async sendWithKeyboard(ctx: BotContext, text: string, keyboard: any, previewUrl?: string): Promise<void> {
+    const link_preview_options = previewUrl
+      ? { is_disabled: false, url: previewUrl, prefer_large_media: true }
+      : { is_disabled: true };
+    await ctx.reply(text, { ...keyboard, link_preview_options });
   }
 
   getDisplayName(ctx: BotContext): string {

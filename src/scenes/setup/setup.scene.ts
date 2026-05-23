@@ -101,7 +101,9 @@ Sau khi đăng ký bấm: Đã đăng ký`;
     } else {
       text = `Đăng ký ${name}: ${link}\n\nSau khi đăng ký bấm: Đã đăng ký`;
     }
-    await this.botService.sendWithKeyboard(ctx, text, registerKeyboard());
+    // Ultima register preview video UM App
+    const previewUrl = broker === 'ultima' ? VIDEO_GUIDES.signUpUltima : undefined;
+    await this.botService.sendWithKeyboard(ctx, text, registerKeyboard(), previewUrl);
   }
 
   // ── Đã đăng ký → Deposit ──
