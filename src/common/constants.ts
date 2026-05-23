@@ -24,6 +24,49 @@ export const BROKER_SIGNUP_LINKS: Record<string, string> = {
   startrader: STARTRADER_SIGNUP_LINK,
 };
 
+// Community channels
+export const COMMUNITY_GLOBAL = 'https://t.me/BMRCopyTrade';
+export const COMMUNITY_CHANNELS = {
+  middleEast: [
+    { flag: '🇮🇶', name: 'Iraq', url: 'https://t.me/BMRCopyIraq' },
+    { flag: '🇹🇷', name: 'Turkey', url: 'https://t.me/BMRTurkiye' },
+    { flag: '🇦🇪', name: 'UAE', url: 'https://t.me/BMRCopyTradingUAE' },
+    { flag: '🇸🇦', name: 'Arabia', url: 'https://t.me/BMRCopyArabia' },
+    { flag: '🌍', name: 'MENA', url: 'https://t.me/BMRCopyMENA' },
+    { flag: '🇪🇬', name: 'Egypt', url: 'https://t.me/BMRCopyTradingEG' },
+    { flag: '🇮🇷', name: 'Iran', url: 'https://t.me/BMRCopyTradeIR' },
+  ],
+  asia: [
+    { flag: '🇮🇩', name: 'Indonesia', url: 'https://t.me/BMRCopyTradeID' },
+    { flag: '🇻🇳', name: 'Vietnam', url: 'https://t.me/BMRCopytradevn' },
+    { flag: '🇹🇭', name: 'Thailand', url: 'https://t.me/BMRCopyTradeTH' },
+    { flag: '🇲🇾', name: 'Malaysia', url: 'https://t.me/BMRCopyTradingMY' },
+    { flag: '🇵🇭', name: 'Philippines', url: 'https://t.me/BMRCopyTradingPH' },
+    { flag: '🇮🇳', name: 'India', url: 'https://t.me/BMRCopyTradingIN' },
+    { flag: '🇵🇰', name: 'Pakistan', url: 'https://t.me/BMRPakistan' },
+    { flag: '🇧🇩', name: 'Bangladesh', url: 'https://t.me/BMRCopyTradeBD' },
+    { flag: '🇺🇿', name: 'Uzbekistan', url: 'https://t.me/BMRCopyUZ' },
+    { flag: '🇯🇵', name: 'Japan', url: 'https://t.me/BMRCopyJP' },
+    { flag: '🇨🇳', name: 'China', url: 'https://t.me/BMRUltimaCN' },
+  ],
+  africa: [
+    { flag: '🇳🇬', name: 'Nigeria', url: 'https://t.me/BMRCopyTradingNG' },
+    { flag: '🇪🇬', name: 'Egypt', url: 'https://t.me/BMRCopyTradingEG' },
+  ],
+  latam: [
+    { flag: '🇧🇷', name: 'Brazil', url: 'https://t.me/BMRCopyBrasil' },
+    { flag: '🌎', name: 'LATAM', url: 'https://t.me/BMRCopyTradingLATAM' },
+    { flag: '🇪🇸', name: 'Spain', url: 'https://t.me/BMRCopyTradingES' },
+  ],
+  europe: [
+    { flag: '🇷🇺', name: 'Russia', url: 'https://t.me/BMRCopyTradingRU' },
+    { flag: '🌍', name: 'CIS', url: 'https://t.me/BMRCopyTradingCIS' },
+    { flag: '🇺🇿', name: 'Uzbekistan', url: 'https://t.me/BMRCopyUZ' },
+    { flag: '🇫🇷', name: 'France', url: 'https://t.me/BMRCopyTradingFR' },
+    { flag: '🇮🇹', name: 'Italy', url: 'https://t.me/BMRCopyTradeIT' },
+  ],
+};
+
 // External links — VN giữ domain bmrcopytrade.vn
 export const BOT_TRADING_URL = 'https://bmrcopytrade.vn/';
 export const MYFXBOOK_URL = 'https://www.myfxbook.com/members/bmrmaster/bmr-scalper-gold/11980201';
@@ -85,6 +128,12 @@ export const CALLBACKS = {
   support: 'support_contact',
   contactAdmin: 'contact_admin',
   backToMenu: 'back_to_menu',
+  communityAccess: 'community_access',
+  communityMiddleEast: 'community_middle_east',
+  communityAsia: 'community_asia',
+  communityAfrica: 'community_africa',
+  communityLatam: 'community_latam',
+  communityEurope: 'community_europe',
 
   // Register per broker
   registerPuPrime: 'register_puprime',

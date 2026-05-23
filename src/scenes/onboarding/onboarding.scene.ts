@@ -9,6 +9,12 @@ import {
   dulcieGoldKeyboard,
   bmrScalperGoldKeyboard,
   vipPackageKeyboard,
+  communityRegionsKeyboard,
+  middleEastKeyboard,
+  asiaKeyboard,
+  africaKeyboard,
+  latamKeyboard,
+  europeKeyboard,
 } from '../../common/keyboards';
 import { AdminService } from '../../admin/admin.service';
 import { BotService } from '../../bot/bot.service';
@@ -203,6 +209,44 @@ Tài khoản từ $1,000+`;
     await ctx.answerCbQuery();
     ctx.session.currentStep = 'setup:already_have';
     await ctx.scene.enter('setup');
+  }
+
+  // ── Community Access ──
+  @Action(CALLBACKS.communityAccess)
+  async onCommunityAccess(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.currentStep = 'onboarding:community';
+    await ctx.reply('🌍 Chọn khu vực của bạn:', communityRegionsKeyboard());
+  }
+
+  @Action(CALLBACKS.communityMiddleEast)
+  async onCommunityMiddleEast(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await ctx.reply('🌍 Middle East & MENA — chọn cộng đồng:', middleEastKeyboard());
+  }
+
+  @Action(CALLBACKS.communityAsia)
+  async onCommunityAsia(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await ctx.reply('🌏 Asia — chọn cộng đồng:', asiaKeyboard());
+  }
+
+  @Action(CALLBACKS.communityAfrica)
+  async onCommunityAfrica(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await ctx.reply('🌍 Africa — chọn cộng đồng:', africaKeyboard());
+  }
+
+  @Action(CALLBACKS.communityLatam)
+  async onCommunityLatam(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await ctx.reply('🌎 LATAM — chọn cộng đồng:', latamKeyboard());
+  }
+
+  @Action(CALLBACKS.communityEurope)
+  async onCommunityEurope(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await ctx.reply('🇪🇺 Europe & CIS — chọn cộng đồng:', europeKeyboard());
   }
 
   // ── Support ──

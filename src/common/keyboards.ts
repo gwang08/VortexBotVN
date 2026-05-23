@@ -1,5 +1,5 @@
 import { Markup } from 'telegraf';
-import { CALLBACKS } from './constants';
+import { CALLBACKS, COMMUNITY_CHANNELS, COMMUNITY_GLOBAL } from './constants';
 
 // ── Screen 1: Welcome ──
 export const welcomeKeyboard = () =>
@@ -9,6 +9,7 @@ export const welcomeKeyboard = () =>
     // [Markup.button.callback('🤖 Grok AI Gold', CALLBACKS.selectGrokAiGold)], // tạm ẩn, chờ sản phẩm mới
     // [Markup.button.callback('🚀 BMR Scalper Gold', CALLBACKS.selectBmrScalperGold)], // tạm ẩn
     [Markup.button.callback('👑 Gói VIP', CALLBACKS.vipPackage)],
+    [Markup.button.callback('🌍 Community Access', CALLBACKS.communityAccess)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.support)],
   ]);
 
@@ -124,3 +125,29 @@ export const unlockKeyboard = () =>
     [Markup.button.callback('👑 Gói VIP', CALLBACKS.unlockVipPackage)],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
+
+// ── Community: Region picker ──
+export const communityRegionsKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.url('🌐 Global', COMMUNITY_GLOBAL)],
+    [Markup.button.callback('🌍 Middle East & MENA', CALLBACKS.communityMiddleEast)],
+    [Markup.button.callback('🌏 Asia', CALLBACKS.communityAsia)],
+    [Markup.button.callback('🌍 Africa', CALLBACKS.communityAfrica)],
+    [Markup.button.callback('🌎 LATAM', CALLBACKS.communityLatam)],
+    [Markup.button.callback('🇪🇺 Europe & CIS', CALLBACKS.communityEurope)],
+    [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
+  ]);
+
+// Helper: build country list keyboard with back buttons
+function regionKeyboard(channels: Array<{ flag: string; name: string; url: string }>) {
+  const buttons: any[][] = channels.map((c) => [Markup.button.url(`${c.flag} ${c.name}`, c.url)]);
+  buttons.push([Markup.button.callback('🔙 Quay Lại Khu Vực', CALLBACKS.communityAccess)]);
+  buttons.push([Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)]);
+  return Markup.inlineKeyboard(buttons);
+}
+
+export const middleEastKeyboard = () => regionKeyboard(COMMUNITY_CHANNELS.middleEast);
+export const asiaKeyboard = () => regionKeyboard(COMMUNITY_CHANNELS.asia);
+export const africaKeyboard = () => regionKeyboard(COMMUNITY_CHANNELS.africa);
+export const latamKeyboard = () => regionKeyboard(COMMUNITY_CHANNELS.latam);
+export const europeKeyboard = () => regionKeyboard(COMMUNITY_CHANNELS.europe);
