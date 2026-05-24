@@ -93,11 +93,11 @@ Top 2 Most Copied trên PU Prime
     const text = `🏆 BMR Copy Trading Strategy
 Top 1 Performing Gold System trên Ultima Markets
 
-📊 Lợi nhuận 1 năm: +2,030%
-👥 Active Copiers: 2,800+
-📈 Community AUM: $406,000+
-🎯 Tỷ lệ thắng: 70%
-💰 Vốn tối thiểu: $100 (Đề xuất: $500+)
+📊 Lợi nhuận 1 năm: +2,276%
+👥 Active Copiers: 2,844+
+📈 Community AUM: $460,000+
+🎯 Tỷ lệ thắng: 69.28%
+💰 Vốn tối thiểu: $200 (Đề xuất: $500+)
 
 ✅ Tự động hoàn toàn
 ✅ Tích hợp trực tiếp Ultima
