@@ -95,7 +95,7 @@ Nếu đã có tài khoản PU Prime hãy bấm nút bên dưới`;
       text = `⭐️ Đăng ký bằng UM App:
 ${VIDEO_GUIDES.signUpUltima}
 
-Đăng ký Ultima Markets: ${link}
+<b>Link Đăng ký:</b> ${link}
 
 Sau khi đăng ký bấm: Đã đăng ký`;
     } else {
@@ -103,7 +103,8 @@ Sau khi đăng ký bấm: Đã đăng ký`;
     }
     // Ultima register preview video UM App
     const previewUrl = broker === 'ultima' ? VIDEO_GUIDES.signUpUltima : undefined;
-    await this.botService.sendWithKeyboard(ctx, text, registerKeyboard(), previewUrl);
+    const parseMode = broker === 'ultima' ? 'HTML' : undefined;
+    await this.botService.sendWithKeyboard(ctx, text, registerKeyboard(), previewUrl, parseMode);
   }
 
   // ── Đã đăng ký → Deposit ──
