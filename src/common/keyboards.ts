@@ -107,7 +107,6 @@ export const emailTransferKeyboard = (mailtoUrl?: string) => {
 export const screenshotConfirmKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.url('💬 Nhắn @KevinBMR', 'https://t.me/KevinBMR')],
-    [Markup.button.callback('✅ Đã gửi screenshot', CALLBACKS.sentScreenshot)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
