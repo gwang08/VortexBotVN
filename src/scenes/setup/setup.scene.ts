@@ -215,9 +215,6 @@ Submit`;
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
     const subject = 'IB Transfer Request';
-    const body = `Please transfer my account to be under IB ${BROKER_IB.ultima.ibNumber}\nMy information:\nUID: (Your UID)`;
-    const mailto = buildMailto(BROKER_IB.ultima.email!, subject, body);
-
     const text = `📩 Gửi đến: ${BROKER_IB.ultima.email}
 
 📋 Tiêu đề: ${subject}
@@ -227,8 +224,9 @@ Please transfer my account to be under IB ${BROKER_IB.ultima.ibNumber}
 My information:
 UID: (Your UID)
 
-Bấm "Mở App Email" để mở mail có sẵn template — chỉ cần thay (Your UID) bằng UID thật của bạn.`;
-    await ctx.reply(text, emailTransferKeyboard(mailto));
+Copy đoạn trên và gửi email từ địa chỉ email đã đăng ký Ultima. Thay (Your UID) bằng UID thật của bạn trước khi gửi.`;
+    // Telegram không hỗ trợ mailto: trong inline button — user copy tay.
+    await ctx.reply(text, emailTransferKeyboard());
   }
 
   // ── Screen 11c: STARTRADER Transfer ──
@@ -255,8 +253,6 @@ Bấm "Mở App Email" để mở mail có sẵn template — chỉ cần thay (
 
     const subject = 'Transfer request';
     const body = `Dear team, please move my account to under new IB ${BROKER_IB.startrader.ibNumber}. Thanks.`;
-    const mailto = buildMailto(BROKER_IB.startrader.email!, subject, body);
-
     const text = `📩 Gửi đến: ${BROKER_IB.startrader.email}
 
 📋 Tiêu đề: ${subject}
@@ -264,8 +260,9 @@ Bấm "Mở App Email" để mở mail có sẵn template — chỉ cần thay (
 📝 Nội dung:
 ${body}
 
-Bấm "Mở App Email" để mở mail có sẵn template.`;
-    await ctx.reply(text, emailTransferKeyboard(mailto));
+Copy đoạn trên và gửi email từ địa chỉ đã đăng ký STARTRADER.`;
+    // Telegram không hỗ trợ mailto: trong inline button — user copy tay.
+    await ctx.reply(text, emailTransferKeyboard());
   }
 
   // ── Screen 12: Vantage Transfer ──
