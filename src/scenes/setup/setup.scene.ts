@@ -68,6 +68,10 @@ export class SetupScene {
   @SceneEnter()
   async onEnter(ctx: BotContext) {
     if (ctx.session.currentStep === 'setup:already_have') {
+      // If onboarding preset selectedBroker, skip the picker and go straight
+      // to that broker's transfer flow.
+      if (ctx.session.selectedBroker === 'ultima') return this.showUltimaTransfer(ctx);
+      if (ctx.session.selectedBroker === 'startrader') return this.showStartraderTransfer(ctx);
       return this.showAlreadyHaveAccount(ctx);
     }
     return this.showRegisterScreen(ctx);
