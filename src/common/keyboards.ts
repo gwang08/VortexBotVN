@@ -25,7 +25,7 @@ export const grokAiGoldKeyboard = () =>
 export const bmrCopyTradingKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🔥 Đăng ký Ultima Markets', CALLBACKS.registerUltima)],
-    [Markup.button.callback('🔄 Đã có tài khoản Ultima', CALLBACKS.alreadyHaveAccount)],
+    [Markup.button.callback('🔄 Đã có tài khoản Ultima', CALLBACKS.alreadyHaveUltima)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
@@ -34,7 +34,7 @@ export const bmrCopyTradingKeyboard = () =>
 export const dulcieGoldKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🔥 Đăng ký STARTRADER', CALLBACKS.registerStarTrader)],
-    [Markup.button.callback('🔄 Đã Có Tài Khoản', CALLBACKS.alreadyHaveAccount)],
+    [Markup.button.callback('🔄 Đã Có Tài Khoản', CALLBACKS.alreadyHaveStartrader)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
@@ -92,10 +92,22 @@ export const puPrimeTransferKeyboard = () =>
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
-// ── Screen 11/12: Ultima / Vantage Transfer ──
-export const emailTransferKeyboard = () =>
+// ── Screen 11/12: Ultima / Vantage / STARTRADER Transfer ──
+// Optional mailtoUrl shows an "Open Email App" button that pre-fills subject + body.
+export const emailTransferKeyboard = (mailtoUrl?: string) => {
+  const rows: any[][] = [];
+  if (mailtoUrl) rows.push([Markup.button.url('📧 Mở App Email', mailtoUrl)]);
+  rows.push([Markup.button.callback('📩 Đã gửi email', CALLBACKS.sentEmail)]);
+  rows.push([Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)]);
+  rows.push([Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)]);
+  return Markup.inlineKeyboard(rows);
+};
+
+// ── Screen 11b: Screenshot confirmation (sau khi "Đã gửi email") ──
+export const screenshotConfirmKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('📩 Đã gửi email', CALLBACKS.sentEmail)],
+    [Markup.button.url('💬 Nhắn @KevinBMR', 'https://t.me/KevinBMR')],
+    [Markup.button.callback('✅ Đã gửi screenshot', CALLBACKS.sentScreenshot)],
     [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);

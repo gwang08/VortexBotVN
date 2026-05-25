@@ -12,8 +12,9 @@ export const IB_CODE = 'boomerang';
 // Broker-specific IB info
 export const BROKER_IB = {
   puprime: { name: 'PU Prime', ibNumber: '7389028' },
-  ultima: { name: 'Ultima', ibNumber: '22593622', email: 'vietnam.cs@ultimamarkets.com' },
+  ultima: { name: 'Ultima', ibNumber: '22593622', email: 'info.vietnam@ultimamarkets.com' },
   vantage: { name: 'Vantage', ibNumber: '26465155', email: 'vietnam.support@vantagemarkets.com' },
+  startrader: { name: 'STARTRADER', ibNumber: '27821585', email: 'info@startrader.com' },
 };
 
 // Broker signup links map (keyed by selectedBroker value)
@@ -143,17 +144,21 @@ export const CALLBACKS = {
 
   // Already have account
   alreadyHaveAccount: 'already_have_account',
+  alreadyHaveUltima: 'already_have_ultima',
+  alreadyHaveStartrader: 'already_have_startrader',
 
   // Transfer IB - choose broker
   brokerPuPrime: 'broker_puprime',
   brokerUltima: 'broker_ultima',
   brokerVantage: 'broker_vantage',
+  brokerStartrader: 'broker_startrader',
 
   // Status confirmations
   ctRegistered: 'ct_registered',
   ctDeposited: 'ct_deposited',
   ibSubmitted: 'ib_submitted',
   sentEmail: 'sent_email',
+  sentScreenshot: 'sent_screenshot',
   sendUid: 'send_uid',
 
   // Navigation

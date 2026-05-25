@@ -14,6 +14,7 @@ import {
   alreadyHaveAccountKeyboard,
   puPrimeTransferKeyboard,
   emailTransferKeyboard,
+  screenshotConfirmKeyboard,
   depositKeyboard,
   verifyKeyboard,
   unlockKeyboard,
@@ -22,6 +23,11 @@ import { puPrimeTransferMedia } from '../../common/media';
 import { AdminService } from '../../admin/admin.service';
 import { BotService } from '../../bot/bot.service';
 import { PrismaService } from '../../prisma/prisma.service';
+
+// Build mailto: URL with pre-filled subject + body so user only edits UID.
+function buildMailto(to: string, subject: string, body: string): string {
+  return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
 
 @Scene('setup')
 export class SetupScene {
@@ -182,9 +188,20 @@ Submit`;
   }
 
   // ── Screen 11: Ultima Transfer ──
+  // Vào thẳng từ "Đã có tài khoản Ultima" (skip broker picker)
+  @Action(CALLBACKS.alreadyHaveUltima)
+  async onAlreadyHaveUltima(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    return this.showUltimaTransfer(ctx);
+  }
+
   @Action(CALLBACKS.brokerUltima)
   async onBrokerUltima(ctx: BotContext) {
     await ctx.answerCbQuery();
+    return this.showUltimaTransfer(ctx);
+  }
+
+  private async showUltimaTransfer(ctx: BotContext) {
     ctx.session.selectedBroker = 'ultima';
     ctx.session.currentStep = 'setup:transfer_ultima';
 
@@ -193,16 +210,58 @@ Submit`;
       data: { status: 'registered', lastStep: 'transfer_ultima' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
 
-    const text = `Gửi email:
+    const subject = 'IB Transfer Request';
+    const body = `Please transfer my account to be under IB ${BROKER_IB.ultima.ibNumber}\nMy information:\nUID: (Your UID)`;
+    const mailto = buildMailto(BROKER_IB.ultima.email!, subject, body);
 
-Vui lòng chuyển tài khoản của tôi sang IB ${BROKER_IB.ultima.ibNumber}
+    const text = `📩 Gửi đến: ${BROKER_IB.ultima.email}
 
-Thông tin của tôi:
-UID: (UID của bạn)
+📋 Tiêu đề: ${subject}
 
-Gửi đến:
-${BROKER_IB.ultima.email}`;
-    await ctx.reply(text, emailTransferKeyboard());
+📝 Nội dung:
+Please transfer my account to be under IB ${BROKER_IB.ultima.ibNumber}
+My information:
+UID: (Your UID)
+
+Bấm "Mở App Email" để mở mail có sẵn template — chỉ cần thay (Your UID) bằng UID thật của bạn.`;
+    await ctx.reply(text, emailTransferKeyboard(mailto));
+  }
+
+  // ── Screen 11c: STARTRADER Transfer ──
+  @Action(CALLBACKS.alreadyHaveStartrader)
+  async onAlreadyHaveStartrader(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    return this.showStartraderTransfer(ctx);
+  }
+
+  @Action(CALLBACKS.brokerStartrader)
+  async onBrokerStartrader(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    return this.showStartraderTransfer(ctx);
+  }
+
+  private async showStartraderTransfer(ctx: BotContext) {
+    ctx.session.selectedBroker = 'startrader';
+    ctx.session.currentStep = 'setup:transfer_startrader';
+
+    await this.prisma.user.update({
+      where: { id: BigInt(ctx.from!.id) },
+      data: { status: 'registered', lastStep: 'transfer_startrader' },
+    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+
+    const subject = 'Transfer request';
+    const body = `Dear team, please move my account to under new IB ${BROKER_IB.startrader.ibNumber}. Thanks.`;
+    const mailto = buildMailto(BROKER_IB.startrader.email!, subject, body);
+
+    const text = `📩 Gửi đến: ${BROKER_IB.startrader.email}
+
+📋 Tiêu đề: ${subject}
+
+📝 Nội dung:
+${body}
+
+Bấm "Mở App Email" để mở mail có sẵn template.`;
+    await ctx.reply(text, emailTransferKeyboard(mailto));
   }
 
   // ── Screen 12: Vantage Transfer ──
@@ -250,6 +309,24 @@ Please move my account under IB ${BROKER_IB.vantage.ibNumber}`;
       where: { id: BigInt(ctx.from!.id) },
       data: { lastStep: 'email_sent' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+    ctx.session.currentStep = 'setup:screenshot_confirm';
+    const text = `📸 Gửi screenshot cho @KevinBMR để xác nhận:
+
+1. Tài khoản copy trading của bạn
+2. Email bạn đã gửi
+
+Admin sẽ kiểm tra và mở khoá copy trading cho bạn.`;
+    await ctx.reply(text, screenshotConfirmKeyboard());
+  }
+
+  @Action(CALLBACKS.sentScreenshot)
+  async onSentScreenshot(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    await this.prisma.user.update({
+      where: { id: BigInt(ctx.from!.id) },
+      data: { lastStep: 'screenshot_sent' },
+    }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
+    await this.adminService.notifyAdmin(ctx.from!.id, ctx.from?.username, ctx.from?.first_name);
     await this.showDepositScreen(ctx);
   }
 
