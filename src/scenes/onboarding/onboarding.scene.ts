@@ -211,6 +211,24 @@ Tài khoản từ $1,000+`;
     await ctx.scene.enter('setup');
   }
 
+  // Broker-specific shortcuts: skip the broker picker, go straight to that
+  // broker's transfer flow in setup scene.
+  @Action(CALLBACKS.alreadyHaveUltima)
+  async onAlreadyHaveUltima(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.selectedBroker = 'ultima';
+    ctx.session.currentStep = 'setup:already_have';
+    await ctx.scene.enter('setup');
+  }
+
+  @Action(CALLBACKS.alreadyHaveStartrader)
+  async onAlreadyHaveStartrader(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    ctx.session.selectedBroker = 'startrader';
+    ctx.session.currentStep = 'setup:already_have';
+    await ctx.scene.enter('setup');
+  }
+
   // ── Community Access ──
   @Action(CALLBACKS.communityAccess)
   async onCommunityAccess(ctx: BotContext) {
