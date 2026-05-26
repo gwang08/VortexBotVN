@@ -10,6 +10,7 @@ export const welcomeKeyboard = () =>
     // [Markup.button.callback('🚀 BMR Scalper Gold', CALLBACKS.selectBmrScalperGold)], // tạm ẩn
     // [Markup.button.callback('👑 Gói VIP', CALLBACKS.vipPackage)], // tạm ẩn
     [Markup.button.callback('🌍 Community Access', CALLBACKS.communityAccess)],
+    [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
   ]);
 
 // ── Screen 2: Grok AI Gold (PU Prime) ──
