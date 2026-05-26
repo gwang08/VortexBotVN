@@ -8,7 +8,7 @@ export const welcomeKeyboard = () =>
     [Markup.button.callback('🔥 Dulcie Gold', CALLBACKS.selectBmrCopy)],
     // [Markup.button.callback('🤖 Grok AI Gold', CALLBACKS.selectGrokAiGold)], // tạm ẩn, chờ sản phẩm mới
     // [Markup.button.callback('🚀 BMR Scalper Gold', CALLBACKS.selectBmrScalperGold)], // tạm ẩn
-    [Markup.button.callback('👑 Gói VIP', CALLBACKS.vipPackage)],
+    // [Markup.button.callback('👑 Gói VIP', CALLBACKS.vipPackage)], // tạm ẩn
     [Markup.button.callback('🌍 Community Access', CALLBACKS.communityAccess)],
   ]);
 
@@ -132,7 +132,7 @@ export const unlockKeyboard = () =>
     [Markup.button.callback('🏆 BMR Copy Trading', CALLBACKS.unlockBmrCopyTrading)],
     [Markup.button.callback('🔥 Dulcie Gold', CALLBACKS.unlockBmrCopy)],
     // [Markup.button.callback('🚀 BMR Scalper Gold', CALLBACKS.unlockBmrScalperGold)], // tạm ẩn
-    [Markup.button.callback('👑 Gói VIP', CALLBACKS.unlockVipPackage)],
+    // [Markup.button.callback('👑 Gói VIP', CALLBACKS.unlockVipPackage)], // tạm ẩn
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
