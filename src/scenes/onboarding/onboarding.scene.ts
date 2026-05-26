@@ -52,10 +52,9 @@ export class OnboardingScene {
   async onEnter(ctx: BotContext) {
     ctx.session.currentStep = 'onboarding:welcome';
     const welcomeText =
-      '🔥 Chào mừng đến BMR Copy Trading\n' +
-      'Hạ tầng AI Gold Trading chuyên nghiệp 👇\n' +
-      '━━━━━━━━━━━━━━\n' +
-      '🇻🇳 VN VIP Support: 👉 @FinBMR';
+      '🔥 Chào mừng đến BMR Copy Trading\n\n' +
+      'Dashboard chiến lược Gold hỗ trợ bởi AI và hướng dẫn copy trading chuyên nghiệp.\n\n' +
+      'Khám phá thông tin chiến lược, thiết lập rủi ro, các bước mở tài khoản và truy cập cộng đồng bên dưới.';
     await ctx.reply(welcomeText, welcomeKeyboard());
   }
 
