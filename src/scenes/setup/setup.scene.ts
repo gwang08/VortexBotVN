@@ -311,7 +311,7 @@ Please move my account under IB ${BROKER_IB.vantage.ibNumber}`;
       data: { lastStep: 'email_sent' },
     }).catch((e) => this.logger.warn(`User update failed: ${e.message}`));
     ctx.session.currentStep = 'setup:screenshot_confirm';
-    const text = `📸 Gửi screenshot cho @KevinBMR để xác nhận:
+    const text = `📸 Gửi screenshot cho @FinBMR để xác nhận:
 
 1. Tài khoản copy trading của bạn
 2. Email bạn đã gửi

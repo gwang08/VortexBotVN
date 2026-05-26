@@ -10,7 +10,7 @@ export const welcomeKeyboard = () =>
     // [Markup.button.callback('🚀 BMR Scalper Gold', CALLBACKS.selectBmrScalperGold)], // tạm ẩn
     // [Markup.button.callback('👑 Gói VIP', CALLBACKS.vipPackage)], // tạm ẩn
     [Markup.button.callback('🌍 Community Access', CALLBACKS.communityAccess)],
-    [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.url('👨‍💻 Hỗ trợ', 'https://t.me/FinBMR')],
   ]);
 
 // ── Screen 2: Grok AI Gold (PU Prime) ──
@@ -18,7 +18,7 @@ export const grokAiGoldKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🔥 Đăng ký PU Prime', CALLBACKS.registerPuPrime)],
     [Markup.button.callback('🔄 Đã Có Tài Khoản', CALLBACKS.alreadyHaveAccount)],
-    [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.url('👨‍💻 Hỗ trợ', 'https://t.me/FinBMR')],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
@@ -27,7 +27,7 @@ export const bmrCopyTradingKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🔥 Đăng ký Ultima Markets', CALLBACKS.registerUltima)],
     [Markup.button.callback('🔄 Đã có tài khoản Ultima', CALLBACKS.alreadyHaveUltima)],
-    [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.url('👨‍💻 Hỗ trợ', 'https://t.me/FinBMR')],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
@@ -36,7 +36,7 @@ export const dulcieGoldKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('🔥 Đăng ký STARTRADER', CALLBACKS.registerStarTrader)],
     [Markup.button.callback('🔄 Đã Có Tài Khoản', CALLBACKS.alreadyHaveStartrader)],
-    [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.url('👨‍💻 Hỗ trợ', 'https://t.me/FinBMR')],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
@@ -46,7 +46,7 @@ export const bmrScalperGoldKeyboard = () =>
     [Markup.button.callback('🚀 Đăng ký PU Prime', CALLBACKS.registerPuPrime)],
     [Markup.button.callback('🔥 Đăng ký Vantage', CALLBACKS.registerVantage)],
     [Markup.button.callback('🔄 Đã Có Tài Khoản', CALLBACKS.alreadyHaveAccount)],
-    [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.url('👨‍💻 Hỗ trợ', 'https://t.me/FinBMR')],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
@@ -56,7 +56,7 @@ export const vipPackageKeyboard = () =>
     [Markup.button.callback('🤖 PU Prime', CALLBACKS.registerPuPrime)],
     [Markup.button.callback('🚀 Ultima', CALLBACKS.registerUltima)],
     [Markup.button.callback('🏆 Vantage', CALLBACKS.registerVantage)],
-    [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.url('👨‍💻 Hỗ trợ', 'https://t.me/FinBMR')],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
@@ -89,7 +89,7 @@ export const alreadyHaveAccountKeyboard = () =>
 export const puPrimeTransferKeyboard = () =>
   Markup.inlineKeyboard([
     [Markup.button.callback('📩 Đã gửi', CALLBACKS.ibSubmitted)],
-    [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.url('👨‍💻 Hỗ trợ', 'https://t.me/FinBMR')],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
@@ -99,7 +99,7 @@ export const emailTransferKeyboard = (mailtoUrl?: string) => {
   const rows: any[][] = [];
   if (mailtoUrl) rows.push([Markup.button.url('📧 Mở App Email', mailtoUrl)]);
   rows.push([Markup.button.callback('📩 Đã gửi email', CALLBACKS.sentEmail)]);
-  rows.push([Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)]);
+  rows.push([Markup.button.url('👨‍💻 Hỗ trợ', 'https://t.me/FinBMR')]);
   rows.push([Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)]);
   return Markup.inlineKeyboard(rows);
 };
@@ -107,8 +107,8 @@ export const emailTransferKeyboard = (mailtoUrl?: string) => {
 // ── Screen 11b: Screenshot confirmation (sau khi "Đã gửi email") ──
 export const screenshotConfirmKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.url('💬 Nhắn @KevinBMR', 'https://t.me/KevinBMR')],
-    [Markup.button.callback('👨‍💻 Hỗ trợ', CALLBACKS.contactAdmin)],
+    [Markup.button.url('💬 Nhắn @FinBMR', 'https://t.me/FinBMR')],
+    [Markup.button.url('👨‍💻 Hỗ trợ', 'https://t.me/FinBMR')],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
