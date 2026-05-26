@@ -15,6 +15,7 @@ import {
   africaKeyboard,
   latamKeyboard,
   europeKeyboard,
+  backToMenuKeyboard,
 } from '../../common/keyboards';
 import { AdminService } from '../../admin/admin.service';
 import { BotService } from '../../bot/bot.service';
@@ -52,10 +53,30 @@ export class OnboardingScene {
   async onEnter(ctx: BotContext) {
     ctx.session.currentStep = 'onboarding:welcome';
     const welcomeText =
-      '🔥 Chào mừng đến BMR Copy Trading\n\n' +
-      'Dashboard chiến lược Gold hỗ trợ bởi AI và hướng dẫn copy trading chuyên nghiệp.\n\n' +
-      'Khám phá thông tin chiến lược, thiết lập rủi ro, các bước mở tài khoản và truy cập cộng đồng bên dưới.';
+      '🔥 Chào mừng đến BMR Assistant\n\n' +
+      'Dashboard chiến lược hỗ trợ bởi AI, cảnh báo rủi ro, hướng dẫn truy cập và cộng đồng.\n\n' +
+      'Khám phá thông tin chiến lược có cấu trúc, cảnh báo rủi ro, các bước nền tảng và tài nguyên cộng đồng bên dưới.';
     await ctx.reply(welcomeText, welcomeKeyboard());
+  }
+
+  // ── Cảnh báo rủi ro ──
+  @Action(CALLBACKS.riskWarning)
+  async onRiskWarning(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    const text =
+      '⚠️ Cảnh báo rủi ro\n\n' +
+      'Giao dịch luôn đi kèm rủi ro. Kết quả quá khứ không đảm bảo lợi nhuận tương lai. Bot này chỉ cung cấp thông tin chiến lược và hướng dẫn mang tính giáo dục.';
+    await ctx.reply(text, backToMenuKeyboard());
+  }
+
+  // ── Trợ giúp ──
+  @Action(CALLBACKS.helpCenter)
+  async onHelpCenter(ctx: BotContext) {
+    await ctx.answerCbQuery();
+    const text =
+      '❓ Trợ giúp\n\n' +
+      'Để được hỗ trợ, vui lòng đọc hướng dẫn trước. Cần hỗ trợ thêm vui lòng liên hệ @FinBMR.';
+    await ctx.reply(text, backToMenuKeyboard());
   }
 
   // ── Screen 2: GROK AI GOLD (PU Prime) ──
