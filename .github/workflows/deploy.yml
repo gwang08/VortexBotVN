@@ -29,7 +29,11 @@ jobs:
             cd ~/apps/VortexBotVN
             git fetch origin
             git reset --hard origin/main
-            npm ci
+            # Use incremental install (not `npm ci`) — :22005 is RAM-limited and
+            # ci wipes+reinstalls node_modules, which can OOM/drop SSH mid-install
+            # and leave deps like `effect` (prisma/config) missing. install keeps
+            # the existing tree and only reconciles changes.
+            npm install --no-audit --no-fund
             # Generate Prisma client BEFORE build — tsc reads types from
             # node_modules/.prisma/client which only exists after generate.
             # Without this, bot crashes with "Cannot find module .prisma/client/default".
