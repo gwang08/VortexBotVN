@@ -130,8 +130,6 @@ export const CALLBACKS = {
   contactAdmin: 'contact_admin',
   backToMenu: 'back_to_menu',
   communityAccess: 'community_access',
-  riskWarning: 'risk_warning',
-  helpCenter: 'help_center',
   communityMiddleEast: 'community_middle_east',
   communityAsia: 'community_asia',
   communityAfrica: 'community_africa',

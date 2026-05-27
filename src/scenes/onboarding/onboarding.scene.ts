@@ -15,7 +15,6 @@ import {
   africaKeyboard,
   latamKeyboard,
   europeKeyboard,
-  backToMenuKeyboard,
 } from '../../common/keyboards';
 import { AdminService } from '../../admin/admin.service';
 import { BotService } from '../../bot/bot.service';
@@ -53,30 +52,11 @@ export class OnboardingScene {
   async onEnter(ctx: BotContext) {
     ctx.session.currentStep = 'onboarding:welcome';
     const welcomeText =
-      '🔥 Chào mừng đến BMR Assistant\n\n' +
-      'Dashboard chiến lược hỗ trợ bởi AI, cảnh báo rủi ro, hướng dẫn truy cập và cộng đồng.\n\n' +
-      'Khám phá thông tin chiến lược có cấu trúc, cảnh báo rủi ro, các bước nền tảng và tài nguyên cộng đồng bên dưới.';
+      '🔥 Chào mừng đến BMR Copy Trading\n' +
+      'Hạ tầng AI Gold Trading chuyên nghiệp 👇\n' +
+      '━━━━━━━━━━━━━━\n' +
+      '🇻🇳 VN VIP Support: 👉 @FinBMR';
     await ctx.reply(welcomeText, welcomeKeyboard());
-  }
-
-  // ── Cảnh báo rủi ro ──
-  @Action(CALLBACKS.riskWarning)
-  async onRiskWarning(ctx: BotContext) {
-    await ctx.answerCbQuery();
-    const text =
-      '⚠️ Cảnh báo rủi ro\n\n' +
-      'Giao dịch luôn đi kèm rủi ro. Kết quả quá khứ không đảm bảo lợi nhuận tương lai. Bot này chỉ cung cấp thông tin chiến lược và hướng dẫn mang tính giáo dục.';
-    await ctx.reply(text, backToMenuKeyboard());
-  }
-
-  // ── Trợ giúp ──
-  @Action(CALLBACKS.helpCenter)
-  async onHelpCenter(ctx: BotContext) {
-    await ctx.answerCbQuery();
-    const text =
-      '❓ Trợ giúp\n\n' +
-      'Để được hỗ trợ, vui lòng đọc hướng dẫn trước. Cần hỗ trợ thêm vui lòng liên hệ @FinBMR.';
-    await ctx.reply(text, backToMenuKeyboard());
   }
 
   // ── Screen 2: GROK AI GOLD (PU Prime) ──
@@ -113,7 +93,6 @@ Top 2 Most Copied trên PU Prime
     const text = `🏆 BMR Copy Trading Strategy
 Top 1 Performing Gold System trên Ultima Markets
 
-📊 Lợi nhuận 1 năm: +2,276%
 👥 Active Copiers: 2,844+
 📈 Community AUM: $460,000+
 🎯 Tỷ lệ thắng: 69.28%

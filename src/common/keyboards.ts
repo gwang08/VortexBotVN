@@ -4,14 +4,12 @@ import { CALLBACKS, COMMUNITY_CHANNELS, COMMUNITY_GLOBAL } from './constants';
 // ── Screen 1: Welcome ──
 export const welcomeKeyboard = () =>
   Markup.inlineKeyboard([
-    [Markup.button.callback('🏆 BMR Dashboard', CALLBACKS.selectBmrCopyTrading)],
-    [Markup.button.callback('⚠️ Cảnh báo rủi ro', CALLBACKS.riskWarning)],
-    [Markup.button.callback('💎 Hướng dẫn truy cập', CALLBACKS.vipPackage)],
-    // [Markup.button.callback('🔥 Dulcie Gold', CALLBACKS.selectBmrCopy)], // tạm ẩn
+    [Markup.button.callback('🏆 BMR Copy Trading', CALLBACKS.selectBmrCopyTrading)],
+    [Markup.button.callback('🔥 Dulcie Gold', CALLBACKS.selectBmrCopy)],
     // [Markup.button.callback('🤖 Grok AI Gold', CALLBACKS.selectGrokAiGold)], // tạm ẩn, chờ sản phẩm mới
     // [Markup.button.callback('🚀 BMR Scalper Gold', CALLBACKS.selectBmrScalperGold)], // tạm ẩn
+    [Markup.button.callback('👑 Gói VIP', CALLBACKS.vipPackage)],
     [Markup.button.callback('🌍 Community Access', CALLBACKS.communityAccess)],
-    [Markup.button.callback('❓ Trợ giúp', CALLBACKS.helpCenter)],
   ]);
 
 // ── Screen 2: Grok AI Gold (PU Prime) ──
@@ -132,15 +130,9 @@ export const unlockKeyboard = () =>
   Markup.inlineKeyboard([
     // [Markup.button.callback('🤖 Grok AI Gold', CALLBACKS.unlockGrokAiGold)], // tạm ẩn, chờ sản phẩm mới
     [Markup.button.callback('🏆 BMR Copy Trading', CALLBACKS.unlockBmrCopyTrading)],
-    // [Markup.button.callback('🔥 Dulcie Gold', CALLBACKS.unlockBmrCopy)], // tạm ẩn
+    [Markup.button.callback('🔥 Dulcie Gold', CALLBACKS.unlockBmrCopy)],
     // [Markup.button.callback('🚀 BMR Scalper Gold', CALLBACKS.unlockBmrScalperGold)], // tạm ẩn
-    // [Markup.button.callback('👑 Gói VIP', CALLBACKS.unlockVipPackage)], // tạm ẩn
-    [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
-  ]);
-
-// ── Back-to-Menu only (cho Risk Warning, Help Center) ──
-export const backToMenuKeyboard = () =>
-  Markup.inlineKeyboard([
+    [Markup.button.callback('👑 Gói VIP', CALLBACKS.unlockVipPackage)],
     [Markup.button.callback('🔙 Quay Lại Menu', CALLBACKS.backToMenu)],
   ]);
 
