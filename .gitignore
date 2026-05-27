@@ -3,3 +3,8 @@ dist
 .env
 sessions.json
 logs
+
+# Local private files
+CLAUDE.md
+PRIVOS.md
+.recyclebin/
